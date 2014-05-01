@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="cage_animation">100</integer>
+    <integer name="simple_cop_shooting_animation">200</integer>
+    <integer name="simple_cop_walking_animation">500</integer>
+    <integer name="ninja_walking_animation">500</integer>
+    <integer name="ninja_shooting_animation">180</integer>
+</resources>
