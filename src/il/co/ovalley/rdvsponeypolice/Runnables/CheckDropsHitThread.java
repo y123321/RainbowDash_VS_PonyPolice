@@ -52,7 +52,7 @@ public class CheckDropsHitThread implements Runnable {
     }
 }
 
-    private void Kill(final DropController drop, CopController cop) {
+    private void Kill(final DropController drop, final CopController cop) {
         m_Drops.remove(drop);
         m_Cops.remove(cop);
         drop.getModel().setDead(true);
