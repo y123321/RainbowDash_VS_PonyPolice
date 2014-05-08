@@ -1,6 +1,5 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
 import il.co.ovalley.rdvsponeypolice.R;
 
 /**
@@ -8,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class DropView extends GameView {
 
-    public DropView(GameLayout container) {
+    public DropView(GameLayoutView container) {
         super(container);
         setImageResource(R.drawable.shit);
 

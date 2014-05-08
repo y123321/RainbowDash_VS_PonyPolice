@@ -29,8 +29,8 @@ abstract public class GameController {
             @Override
             public void run() {
                 try {
-
                     runUpdate();
+                    killDeadObjects();
                 } catch (Exception e) {
                     Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString() + "\nGameView wasnt updated");
                 }
@@ -39,6 +39,19 @@ abstract public class GameController {
     }
     abstract protected void runUpdate();
     protected abstract void changeDirection();
+    public boolean killDeadObjects(){
+        if(getModel().isDead()){
+            m_View.getContainer().removeView(m_View);
+            try {
+                Common.getGameManager().removeGameObject(this);
+            } catch (Exception e) {
+                Log.d("test",e.toString());
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
+    }
 
 
     public GameObject getModel() {
@@ -49,16 +62,7 @@ abstract public class GameController {
         return m_View;
     }
 
-    public void remove(){
-        m_View.getContainer().removeView(m_View);
-        try {
-            Common.getGameManager().removeGameObject(this);
-        } catch (Exception e) {
-            Log.d("test",e.toString());
-            e.printStackTrace();
-        }
 
-    }
     public Context getContext() {
         return m_Context;
     }
@@ -66,6 +70,7 @@ abstract public class GameController {
         m_View.setDirection(Direction.RIGHT);
         //      isRight=true;
     }
+
     protected void setUp() {
         m_View.setDirectionVertical(Direction.UP);
     }

@@ -25,7 +25,6 @@
         private ArrayList<Cop> m_deadCops;
         private Object m_PauseObject;
         private boolean m_Pause;
-        private GameLayout m_layout;
         private volatile boolean m_IsGameRunning;
         private int m_copsLimit;
         private int m_hasteCopSpawnInterval;
@@ -39,9 +38,7 @@
 
         private int m_copsCounter;
 
-        public GameLayout getGameLayout() {
-            return m_layout;
-        }
+
 
         private int m_totalCopsCounter;
         private volatile RainbowDash m_rainbowDash;
@@ -50,11 +47,7 @@
             return m_rainbowDash;
         }
 
-        public GameRunnable(GameLayout layout){
-            m_layout=layout;
 
-            init();
-        }
         private void init(){
             m_cops = new ArrayList<Cop>();
             m_drops=new ArrayList<Drop>();

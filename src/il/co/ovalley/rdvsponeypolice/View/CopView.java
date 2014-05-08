@@ -6,7 +6,6 @@ import android.graphics.drawable.AnimationDrawable;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.CopDrawables;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
 
 /**
  * Created by yuval on 30/04/2014.
@@ -16,7 +15,7 @@ public class CopView extends GameView {
     private CopDrawables m_Drawables;
 
 
-    public CopView(GameLayout container) {
+    public CopView(GameLayoutView container) {
         super(container, Common.getStickToBottomParams());
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom

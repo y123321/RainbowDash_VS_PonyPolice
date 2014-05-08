@@ -5,24 +5,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
 
 /**
  * Created by yuval on 18/04/2014.
  */
 public abstract class GameView extends ImageView {
 
-    private GameLayout m_container;
+    private GameLayoutView m_container;
     private Direction direction;
     private Direction directionVertical;
     private float xSpeed;
     private float ySpeed;
-    public GameView(GameLayout container) {
+    public GameView(GameLayoutView container) {
         super(container.getContext());
         m_container=container;
         container.addView(this);
     }
-    public GameView(final GameLayout container,final RelativeLayout.LayoutParams params){
+    public GameView(final GameLayoutView container,final RelativeLayout.LayoutParams params){
         super(container.getContext());
         m_container=container;
         final View view=this;
@@ -42,7 +41,7 @@ public abstract class GameView extends ImageView {
         return direction;
     }
 
-    public GameLayout getContainer() {
+    public GameLayoutView getContainer() {
         return m_container;
     }
 
@@ -51,7 +50,7 @@ public abstract class GameView extends ImageView {
     }
 
 
-    public void setContainer(GameLayout container) {
+    public void setContainer(GameLayoutView container) {
         m_container = container;
     }
 

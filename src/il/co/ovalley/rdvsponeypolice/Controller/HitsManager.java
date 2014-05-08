@@ -1,7 +1,5 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
-import il.co.ovalley.rdvsponeypolice.GameManager;
-
 /**
  * Created by yuval on 30/04/2014.
  */

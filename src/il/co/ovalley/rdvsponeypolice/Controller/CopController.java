@@ -27,35 +27,48 @@ public class CopController extends GameController {
 
     @Override
     public void runUpdate() {
-        float x = m_CopView.getX();
-        if (x <=Common.SCREEN_BORDERS) m_CopView.setDirection(Direction.RIGHT);
-        else if (x >= Common.getScreenSize(m_CopView.getContext()).x - Common.SCREEN_BORDERS)
-            m_CopView.setDirection(Direction.LEFT);
-        if (m_CopObject.isDead()) {
-            remove();
-            return;
+        setCopDirection();
+
+        if (shootIfShooting()) return;
+        if (loadIfLoading()) return;
+        move();
+
+        decideIfToShoot();
+
+    }
+
+    private void decideIfToShoot() {
+        int rand = Common.random.nextInt(((int) m_CopObject.getChanceNotToShoot()));
+        if (rand == 1) {
+            shoot();
         }
-        if (m_CopObject.isShooting()) {
-            m_CopView.shootAnimation();
-            m_CopObject.setShooting(false);
-            return;
-        }
+    }
+
+    private boolean loadIfLoading() {
         if (m_CopObject.isLoading()) {
             if (m_CopObject.getLoadingTimeCounter() == 0) {
                 m_CopObject.setShooting(true);
                 m_CopObject.setLoading(false);
             } else m_CopObject.decreaseLoadingTimeCounter();
-            return;
+            return true;
         }
-        move();
-        m_CopObject.setStepCounter(m_CopObject.getStepCounter() - (int) m_CopObject.getXSpeed());
-        if (m_CopObject.getStepCounter() == 0) changeDirection();
+        return false;
+    }
 
-        int rand = Common.random.nextInt(((int) m_CopObject.getChanceNotToShoot()));
-        if (rand == 1) {
-            shoot();
+    private boolean shootIfShooting() {
+        if (m_CopObject.isShooting()) {
+            m_CopView.shootAnimation();
+            m_CopObject.setShooting(false);
+            return true;
         }
+        return false;
+    }
 
+    private void setCopDirection() {
+        float x = m_CopView.getX();
+        if (x <= Common.SCREEN_BORDERS) m_CopView.setDirection(Direction.RIGHT);
+        else if (x >= Common.getScreenSize(m_CopView.getContext()).x - Common.SCREEN_BORDERS)
+            m_CopView.setDirection(Direction.LEFT);
     }
 
     @Override
@@ -72,6 +85,9 @@ public class CopController extends GameController {
         if (m_CopObject.getStepCounter() % 3 == 0) {
             m_CopView.walkAnimation();
             chooseDirectionAndGo();
+            m_CopObject.setStepCounter(m_CopObject.getStepCounter() - (int) m_CopObject.getXSpeed());
+            if (m_CopObject.getStepCounter() == 0) changeDirection();
+
         }
     }
 

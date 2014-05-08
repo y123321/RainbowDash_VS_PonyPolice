@@ -53,8 +53,8 @@ public class CheckDropsHitThread implements Runnable {
 }
 
     private void Kill(final DropController drop, final CopController cop) {
-        m_Drops.remove(drop);
-        m_Cops.remove(cop);
+    //    m_Drops.remove(drop);
+   //     m_Cops.remove(cop);
         drop.getModel().setDead(true);
         cop.getModel().setDead(true);
         Log.d("test","kill!");

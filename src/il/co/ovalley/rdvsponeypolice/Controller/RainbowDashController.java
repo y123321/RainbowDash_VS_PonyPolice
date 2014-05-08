@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
+import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 import il.co.ovalley.rdvsponeypolice.Model.RainbowDash;
 import il.co.ovalley.rdvsponeypolice.R;
@@ -19,7 +19,7 @@ import il.co.ovalley.rdvsponeypolice.View.RainbowDashView;
 public class RainbowDashController extends GameController {
     public RainbowDash m_RainbowDash;
     public RainbowDashView m_RainbowDashView;
-    public GameLayout m_Layout;
+    public GameLayoutView m_Layout;
     public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
         super(context, rainbowDash, rainbowDashView);
         m_RainbowDash = rainbowDash;
@@ -169,6 +169,7 @@ public class RainbowDashController extends GameController {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_DOWN){
+                    m_RainbowDash.setDropping(true);
                     Log.d("test", "release");
                     releaseAnimation();
                     m_RainbowDash.setCaged(false);

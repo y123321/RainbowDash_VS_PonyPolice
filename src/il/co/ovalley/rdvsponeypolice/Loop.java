@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice;
 
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
+import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
 import il.co.ovalley.rdvsponeypolice.Runnables.RainbowDashThread;
 
 /**

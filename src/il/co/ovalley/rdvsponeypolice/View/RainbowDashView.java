@@ -3,7 +3,6 @@ package il.co.ovalley.rdvsponeypolice.View;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
 import il.co.ovalley.rdvsponeypolice.R;
 
 /**
@@ -11,7 +10,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class RainbowDashView extends GameView {
 
-    public RainbowDashView(GameLayout container) {
+    public RainbowDashView(GameLayoutView container) {
         super(container);
         setX(0);
         setY(0);

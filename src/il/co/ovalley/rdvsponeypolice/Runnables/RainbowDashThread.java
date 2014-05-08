@@ -1,17 +1,8 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
-import android.view.MotionEvent;
-import android.view.View;
-import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.DropController;
-import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Controller.RainbowDashController;
-import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
-import il.co.ovalley.rdvsponeypolice.Model.Loc;
-import il.co.ovalley.rdvsponeypolice.Model.RainbowDash;
-import il.co.ovalley.rdvsponeypolice.View.DropView;
-import il.co.ovalley.rdvsponeypolice.View.GameView;
+import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 import java.util.ArrayList;
 
@@ -20,7 +11,7 @@ import java.util.ArrayList;
  */
 public class RainbowDashThread implements Runnable {
     private RainbowDashController m_RainbowDashController;
-    private GameLayout m_Layout;
+    private GameLayoutView m_Layout;
     private int iterationsCounter;
     private volatile ArrayList<DropController> m_Drops;
 
@@ -29,7 +20,6 @@ public class RainbowDashThread implements Runnable {
         m_Layout=controller.m_Layout;
         m_Drops=new ArrayList<DropController>();
         iterationsCounter=0;
-        startRDListener();
     }
 
     @Override
@@ -49,59 +39,14 @@ public class RainbowDashThread implements Runnable {
                     }
                 }
 
-                Thread.sleep(Common.ITERATION_PAUSE_TIME);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
-    public void startRDListener() {
-        m_Layout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                RainbowDash rd = (RainbowDash) m_RainbowDashController.getModel();
-                if (rd.isDead() || rd.isCaged() || rd.isLost()) return true;
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        m_RainbowDashController.setGoal(event.getX(), event.getY());
-                        m_RainbowDashController.changeDirection();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        m_RainbowDashController.setGoal(event.getX(), event.getY());
-                        m_RainbowDashController.changeDirection();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        releaseDrop();
-                        break;
-                }
-                return true;
-            }
-        });
-        m_RainbowDashController.getView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return false;
-            }
-        });
-    }
-    public void stopRDListener() {
-        m_Layout.setOnTouchListener(null);
-    }
 
-    private void releaseDrop() {
-        DropController dc= GameFactory.createDropController(m_Layout);
-        DropView drop=(DropView)dc.getView();
-        Loc rdLocation= Common.getViewLocation(m_RainbowDashController.getView());
-        Common.setViewLocation(m_RainbowDashController.getView(),rdLocation);
-        adjustDropLocToGameViewBehind(rdLocation, m_RainbowDashController.getView());
-        Common.setViewLocation(drop,rdLocation);
-        m_Drops.add(dc);
-    }
-    private static void adjustDropLocToGameViewBehind(Loc location,GameView view) {
-        if(view.getDirection()== Direction.LEFT){
-            location.x+=view.getWidth();
-        }
-    }
+
+
 
 }

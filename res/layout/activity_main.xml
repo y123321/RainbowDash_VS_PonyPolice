@@ -1,8 +1,8 @@
-<il.co.ovalley.rdvsponeypolice.Model.GameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<il.co.ovalley.rdvsponeypolice.View.GameLayoutView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout"
     android:background="@drawable/equestria"
     tools:context="il.co.ovalley.dashvsponypolice.app.MainActivity">
-</il.co.ovalley.rdvsponeypolice.Model.GameLayout>
+</il.co.ovalley.rdvsponeypolice.View.GameLayoutView>

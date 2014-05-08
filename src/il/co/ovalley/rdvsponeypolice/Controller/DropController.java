@@ -15,14 +15,19 @@ public class DropController extends GameController {
 
     @Override
     public void runUpdate() {
-        if(m_Model.isDead()) {
-            remove();
-            return;
-        }
-        float y = m_View.getY();
-        m_View.setY(y + m_Model.getYSpeed());
-        if (y > Common.getScreenSize(getContext()).y)
+
+        move();
+        checkIfDead();
+
+    }
+
+    private void checkIfDead() {
+        if (m_View.getY() > Common.getScreenSize(getContext()).y)
             m_Model.setDead(true);
+    }
+
+    private void move() {
+        m_View.setY(m_View.getY() + m_Model.getYSpeed());
     }
 
     @Override

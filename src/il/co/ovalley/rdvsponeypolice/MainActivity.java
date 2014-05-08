@@ -5,12 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
-import il.co.ovalley.rdvsponeypolice.Model.GameLayout;
+import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
+import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
 
 
 public class MainActivity extends Activity {
     GameRunnable m_GameRunnable;
-    GameLayout m_Layout;
+    GameLayoutView m_Layout;
     Loop m_loop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
-         m_Layout=(GameLayout)findViewById(R.id.layout);
+         m_Layout=(GameLayoutView)findViewById(R.id.layout);
         Common.setGameManager(new GameManager(this,m_Layout));
         try {
             m_loop=new Loop(Common.getGameManager());

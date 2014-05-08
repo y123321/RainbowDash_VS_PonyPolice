@@ -4,6 +4,7 @@ package il.co.ovalley.rdvsponeypolice.Model;
  * Created by yuval on 18/04/2014.
  */
 public class RainbowDash extends GameObject {
+    private boolean isDropping;
     private float m_pullDownSpeedAdvance;
     private boolean isReleased;
 
@@ -49,10 +50,12 @@ public class RainbowDash extends GameObject {
         isCaged=false;
         pullDownSpeedAdvance=0.3f;
         pulledDownSpeed=1;
+        isDropping=false;
     }
-    public void addToPulledDownSpeed(float pullDownSpeedAdvance) {
+    public void advancePullDownSpeed() {
+        pulledDownSpeed+=pullDownSpeedAdvance;
+    }
 
-    }
     public int getStepCounter() {
         return stepCounter;
     }
@@ -68,6 +71,14 @@ public class RainbowDash extends GameObject {
 
     public void setPullDownSpeedAdvance(float m_pullDownSpeedAdvance) {
         this.m_pullDownSpeedAdvance = m_pullDownSpeedAdvance;
+    }
+
+    public boolean isDropping() {
+        return isDropping;
+    }
+
+    public void setDropping(boolean isDropping) {
+        this.isDropping = isDropping;
     }
 
     public boolean isReleased() {

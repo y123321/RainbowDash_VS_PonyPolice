@@ -6,6 +6,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 
 import java.util.Random;
