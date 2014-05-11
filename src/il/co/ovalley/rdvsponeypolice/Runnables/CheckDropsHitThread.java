@@ -4,6 +4,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.CopController;
 import il.co.ovalley.rdvsponeypolice.Controller.DropController;
+import il.co.ovalley.rdvsponeypolice.Controller.GameController;
 
 import java.util.ArrayList;
 
@@ -11,51 +12,41 @@ import java.util.ArrayList;
  * Created by yuval on 30/04/2014.
  */
 public class CheckDropsHitThread implements Runnable {
+
     volatile ArrayList<CopController> m_Cops;
     volatile ArrayList<DropController> m_Drops;
-    CheckDropsHitThread(ArrayList<DropController> drops,ArrayList<CopController> cops){
-        m_Cops=cops;
-        m_Drops=drops;
+    public CheckDropsHitThread(ArrayList<GameController> controllers){
+        m_Cops=new ArrayList<CopController>();
+        m_Drops=new ArrayList<DropController>();
+        for(GameController controller:controllers){
+            if(controller instanceof CopController) m_Cops.add((CopController)controller);
+            if(controller instanceof DropController) m_Drops.add((DropController)controller);
+
+        }
     }
     @Override
     public void run() {
         while (true){
-        int i=0;
-        while (i<m_Cops.size() &&i>=0){
-            try {
-                CopController cop=m_Cops.get(i);
+            for(CopController cop:m_Cops){
+                if(cop.isOutOfGame()) continue;
                 Rect copRect=new Rect();
                 cop.getView().getHitRect(copRect);
-                int j=0;
-                while (j<m_Drops.size() &&j>=0){
-                    DropController drop=m_Drops.get(j);
+                for(DropController drop: m_Drops){
+                    if(drop.isOutOfGame()) continue;
                     Rect dropRect=new Rect();
                     drop.getView().getHitRect(dropRect);
-                    if(dropRect.intersect(copRect)){
-                        Kill(drop, cop);
-                        i--;
-                        j--;
-                        break;
-                    }
+                    if(dropRect.intersect(copRect)) kill(drop, cop);
                 }
             }
-            catch (Exception e){
-                Log.d("test","hit check threw an exception" + e.toString());
-                e.printStackTrace();
-                break;
-            }
 
-
-        }
     }
 }
 
-    private void Kill(final DropController drop, final CopController cop) {
+    private void kill(final DropController drop, final CopController cop) {
     //    m_Drops.remove(drop);
    //     m_Cops.remove(cop);
         drop.getModel().setDead(true);
         cop.getModel().setDead(true);
-        Log.d("test","kill!");
-
+        Log.d("test","HIT!");
     }
     }

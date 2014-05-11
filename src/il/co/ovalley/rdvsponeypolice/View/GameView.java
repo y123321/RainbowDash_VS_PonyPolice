@@ -40,9 +40,9 @@ public abstract class GameView extends ImageView {
         return m_container;
     }
 
-    public void removeView() {
+  /*  public void removeView() {
         m_container.removeView(this);
-    }
+    }*/
 
 
     public void setContainer(GameLayoutView container) {

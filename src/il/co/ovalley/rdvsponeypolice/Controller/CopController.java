@@ -16,8 +16,8 @@ public class CopController extends GameController {
     private Cop m_CopObject;
     private CopView m_CopView;
 
-    protected CopController(Context context, Cop gameObject, CopView gameView) {
-        super(context, gameObject, gameView);
+    protected CopController(Context context, Cop gameObject, CopView gameView,boolean isOutOfGame) {
+        super(context, gameObject, gameView,isOutOfGame);
         m_CopObject = gameObject;
         m_CopView = gameView;
         m_CopView.setDrawables(gameObject.getDrawables());
@@ -57,7 +57,7 @@ public class CopController extends GameController {
 
     private boolean shootIfShooting() {
         if (m_CopObject.isShooting()) {
-            m_CopView.shootAnimation();
+          //  m_CopView.shootAnimation();
             m_CopObject.setShooting(false);
             return true;
         }

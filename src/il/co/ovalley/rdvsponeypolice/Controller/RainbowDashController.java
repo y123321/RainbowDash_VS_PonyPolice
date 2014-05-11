@@ -21,7 +21,7 @@ public class RainbowDashController extends GameController {
     public RainbowDashView m_RainbowDashView;
     public GameLayoutView m_Layout;
     public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
-        super(context, rainbowDash, rainbowDashView);
+        super(context, rainbowDash, rainbowDashView,false);
         m_RainbowDash = rainbowDash;
         m_RainbowDashView = rainbowDashView;
         m_Layout=m_RainbowDashView.getContainer();
@@ -34,6 +34,7 @@ public class RainbowDashController extends GameController {
     }
 
     public void runUpdate() {
+
         if (m_RainbowDash.isReleased()) {
             releaseFromCage();
         }
@@ -49,7 +50,6 @@ public class RainbowDashController extends GameController {
             pullDown();
             return;
         }
-
         setRainbowDashXY();
 
     }
@@ -69,7 +69,6 @@ public class RainbowDashController extends GameController {
         Loc loc = Common.getViewLocation(m_RainbowDashView);
         float xPoint = m_RainbowDash.getXSpeed() > 1 ? m_RainbowDash.getXSpeed() : 1;
         float yPoint = m_RainbowDash.getYSpeed() >1 ? m_RainbowDash.getYSpeed() : 1;
-        Log.d("test","move Rainbow");
         if (Math.abs(loc.x - m_RainbowDash.goingToX) < xPoint)
             m_RainbowDashView.setDirection(Direction.STOP);
         if (Math.abs(loc.y - m_RainbowDash.goingToY) < yPoint)

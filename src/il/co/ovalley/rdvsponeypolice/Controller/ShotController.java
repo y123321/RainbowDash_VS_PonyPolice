@@ -9,8 +9,8 @@ import il.co.ovalley.rdvsponeypolice.View.ShotView;
  * Created by yuval on 30/04/2014.
  */
 public class ShotController extends GameController {
-    protected ShotController(Context context, Shot gameObject, ShotView gameView) {
-        super(context, gameObject, gameView);
+    protected ShotController(Context context, Shot gameObject, ShotView gameView,boolean isOutOfGame) {
+        super(context, gameObject, gameView,isOutOfGame);
     }
 
     @Override

@@ -9,8 +9,8 @@ import il.co.ovalley.rdvsponeypolice.View.DropView;
  * Created by yuval on 30/04/2014.
  */
 public class DropController extends GameController {
-    public DropController(Context context, Drop gameObject, DropView gameView) {
-        super(context, gameObject, gameView);
+    public DropController(Context context, Drop gameObject, DropView gameView,boolean isOutOfGame) {
+        super(context, gameObject, gameView,isOutOfGame);
     }
 
     @Override
@@ -23,7 +23,8 @@ public class DropController extends GameController {
 
     private void checkIfDead() {
         if (m_View.getY() > Common.getScreenSize(getContext()).y)
-            m_Model.setDead(true);
+            getModel().setDead(true);
+
     }
 
     private void move() {

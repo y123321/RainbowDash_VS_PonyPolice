@@ -16,11 +16,11 @@ abstract public class GameController {
     GameObject m_Model;
     GameView m_View;
     private boolean isOutOfGame;
-    protected GameController(Context context, GameObject gameObject, GameView gameView) {
+    protected GameController(Context context, GameObject gameObject, GameView gameView,boolean isOutOfGame) {
         this.m_Context = context;
         this.m_Model = gameObject;
         this.m_View = gameView;
-        isOutOfGame=false;
+        this.isOutOfGame=isOutOfGame;
     }
 
     public void update(){
@@ -29,7 +29,6 @@ abstract public class GameController {
             @Override
             public void run() {
                 try {
-                    Log.d("test","updated");
                     runUpdate();
                 } catch (Exception e) {
                     Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString() + "\nGameView wasnt updated");
@@ -48,18 +47,6 @@ abstract public class GameController {
     public GameView getView() {
         return m_View;
     }
-
-   /* public void remove(){
-        m_View.getContainer().removeView(m_View);
-        try {
-            Common.getGameManager().removeGameObject(this);
-        } catch (Exception e) {
-            Log.d("test",e.toString());
-            e.printStackTrace();
-        }
-
-    }*/
-
     public boolean isOutOfGame() {
         return isOutOfGame;
     }

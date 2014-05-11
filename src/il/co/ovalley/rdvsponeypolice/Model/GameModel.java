@@ -47,5 +47,6 @@ public class GameModel {
         m_CopsSpawnTime=500;
         m_CopsLimit=40;
 
+
     }
 }

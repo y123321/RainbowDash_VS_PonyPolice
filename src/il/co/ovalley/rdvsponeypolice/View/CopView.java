@@ -55,6 +55,7 @@ public class CopView extends GameView {
         setImageResource(resource);
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
         animation.start();
+        walkAnimation();
 
     }
 

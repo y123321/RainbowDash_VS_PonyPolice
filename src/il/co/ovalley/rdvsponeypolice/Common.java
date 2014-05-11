@@ -15,7 +15,7 @@ import java.util.Random;
 public class Common {
     public static final int SCREEN_BORDERS = 10;
     public static Random random=new Random();
-    public static int ITERATION_PAUSE_TIME=10;
+    public static int ITERATION_PAUSE_TIME=5;
 
 
     public static Point getScreenSize(Context context){
