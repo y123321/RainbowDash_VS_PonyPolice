@@ -6,6 +6,11 @@ package il.co.ovalley.rdvsponeypolice.Model;
 public class Drop extends GameObject {
 
     public Drop() {
+        super();
+    }
+
+    @Override
+    protected void init() {
         setYSpeed(2.5f);
         setWaitTime(3);
     }

@@ -1,5 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
+import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.View.*;
 
@@ -31,5 +32,10 @@ public class GameFactory {
 
     public static RainbowDashController createRainbowDashController(GameLayoutView m_layout) {
         return new RainbowDashController(m_layout.getContext(),new RainbowDash(),new RainbowDashView(m_layout));
+    }
+    public static GameManager createGameManager(GameLayoutView layout){
+        Log.d("test", "factory");
+
+        return new GameManager(new GameModel(),layout);
     }
 }

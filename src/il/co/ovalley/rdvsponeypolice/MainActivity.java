@@ -2,8 +2,10 @@ package il.co.ovalley.rdvsponeypolice;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
@@ -19,6 +21,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+
         new Thread(m_loop).start();
 
 
@@ -26,16 +29,13 @@ public class MainActivity extends Activity {
 
     private void init() {
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
-        Common.setGameManager(new GameManager(this,m_Layout));
-        try {
-            m_loop=new Loop(Common.getGameManager());
-        } catch (Exception e) {
-            GameManager gameManager=new GameManager(this,m_Layout);
-            Common.setGameManager(gameManager);
-            m_loop=new Loop(gameManager);
+            GameManager gameManager= GameFactory.createGameManager(m_Layout);
+        Log.d("test","init");
+
+        m_loop=new Loop(gameManager);
         }
 
-    }
+
 
 
     @Override

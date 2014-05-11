@@ -27,7 +27,7 @@ public class RainbowDashThread implements Runnable {
         while (!m_RainbowDashController.m_RainbowDash.isLost()) {
             try {
                 m_RainbowDashController.update();
-                int i=0;
+               /*int i=0;
                 while (i<m_Drops.size()){
                     if(i<0)i=0;
                     DropController controller=m_Drops.get(i);
@@ -37,7 +37,7 @@ public class RainbowDashThread implements Runnable {
                     if(iterationsCounter%controller.getModel().getWaitTime()==0){
                         controller.update();
                     }
-                }
+                }*/
 
                 Thread.sleep(1);
             } catch (InterruptedException e) {

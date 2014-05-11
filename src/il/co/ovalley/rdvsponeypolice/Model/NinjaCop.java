@@ -8,6 +8,11 @@ import il.co.ovalley.rdvsponeypolice.R;
 public class NinjaCop extends Cop {
     public NinjaCop() {
         super(new CopDrawables(R.drawable.ninja_poney_left,R.drawable.ninja_poney_right,R.drawable.ninja_poney_left,R.drawable.ninja_poney_right));
+
+    }
+
+    @Override
+    protected void init() {
         setShooting(false);
         setLoadingTime(8);
         setLoading(false);

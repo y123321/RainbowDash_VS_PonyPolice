@@ -12,6 +12,11 @@ public class RainbowDashView extends GameView {
 
     public RainbowDashView(GameLayoutView container) {
         super(container);
+
+    }
+
+    @Override
+    protected void init() {
         setX(0);
         setY(0);
     }

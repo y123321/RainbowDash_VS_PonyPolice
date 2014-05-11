@@ -11,12 +11,15 @@ public abstract class GameObject {
     protected float ySpeed;
 
     public GameObject(){
+    initGameObject();
+    }
+    abstract protected void init();
+    public void initGameObject(){
         waitTime=5;
         isDead=false;
         xSpeed=1;
         ySpeed=1;
-
-
+        init();
     }
 
     public int getStepCounter() {

@@ -16,22 +16,17 @@ public abstract class GameView extends ImageView {
     private Direction directionVertical;
     private float xSpeed;
     private float ySpeed;
+    private RelativeLayout.LayoutParams m_params;
     public GameView(GameLayoutView container) {
         super(container.getContext());
         m_container=container;
         container.addView(this);
     }
-    public GameView(final GameLayoutView container,final RelativeLayout.LayoutParams params){
+    public GameView(GameLayoutView container,RelativeLayout.LayoutParams params){
         super(container.getContext());
         m_container=container;
-        final View view=this;
-        Activity activity=(Activity)getContext();
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                m_container.addView(view, params);
-            }
-        });
+        m_params=params;
+
     }
 
 
@@ -66,5 +61,18 @@ public abstract class GameView extends ImageView {
     public void setDirectionVertical(Direction directionVertical) {
         this.directionVertical = directionVertical;
     }
+
+    public void initGameView() {
+        init();
+        final View view=this;
+        Activity activity=(Activity)getContext();
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                m_container.addView(view, m_params);
+            }
+        });
+    }
+    abstract protected void init();
 }
 

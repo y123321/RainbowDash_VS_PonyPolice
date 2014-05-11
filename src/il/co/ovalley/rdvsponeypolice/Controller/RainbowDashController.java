@@ -38,11 +38,9 @@ public class RainbowDashController extends GameController {
             releaseFromCage();
         }
 
-        if (m_RainbowDash.isDead()) {
-            m_RainbowDashView.lockInCage(m_RainbowDashView.getDirection());
-            m_RainbowDash.setCaged(true);
-            m_RainbowDash.setDead(false);
-            m_RainbowDash.increasePullDownSpeed();
+        if (m_RainbowDash.isCaptured()) {
+            cageRainbowDash();
+            setReleaseListener();
 
             return;
         }
@@ -51,8 +49,16 @@ public class RainbowDashController extends GameController {
             pullDown();
             return;
         }
+
         setRainbowDashXY();
 
+    }
+
+    private void cageRainbowDash() {
+        m_RainbowDashView.lockInCage(m_RainbowDashView.getDirection());
+        m_RainbowDash.setCaged(true);
+        m_RainbowDash.setDead(false);
+        m_RainbowDash.increasePullDownSpeed();
     }
 
     private boolean checkIfLost() {
@@ -63,6 +69,7 @@ public class RainbowDashController extends GameController {
         Loc loc = Common.getViewLocation(m_RainbowDashView);
         float xPoint = m_RainbowDash.getXSpeed() > 1 ? m_RainbowDash.getXSpeed() : 1;
         float yPoint = m_RainbowDash.getYSpeed() >1 ? m_RainbowDash.getYSpeed() : 1;
+        Log.d("test","move Rainbow");
         if (Math.abs(loc.x - m_RainbowDash.goingToX) < xPoint)
             m_RainbowDashView.setDirection(Direction.STOP);
         if (Math.abs(loc.y - m_RainbowDash.goingToY) < yPoint)
@@ -187,6 +194,40 @@ public class RainbowDashController extends GameController {
 
             });
         }
+    public void startRDListener() {
+        m_Layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                RainbowDash rd = (RainbowDash) getModel();
+                if (rd.isDead() || rd.isCaged() || rd.isLost()) return true;
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        setGoal(event.getX(), event.getY());
+                        changeDirection();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        setGoal(event.getX(), event.getY());
+                        changeDirection();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        ((RainbowDash) getModel()).setDropping(true);
+                        break;
+                }
+                return true;
+            }
+        });
+        getView().setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+    }
+    public void stopRDListener() {
+        m_Layout.setOnTouchListener(null);
+    }
+
 
     private void releaseAnimation() {
         baseAnimation();

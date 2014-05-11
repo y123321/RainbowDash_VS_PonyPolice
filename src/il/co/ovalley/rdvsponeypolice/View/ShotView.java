@@ -10,4 +10,9 @@ public class ShotView extends GameView {
         super(container);
         setImageResource(R.drawable.circle_small);
     }
+
+    @Override
+    protected void init() {
+
+    }
 }

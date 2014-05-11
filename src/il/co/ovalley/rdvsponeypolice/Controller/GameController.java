@@ -15,12 +15,12 @@ abstract public class GameController {
     Context m_Context;
     GameObject m_Model;
     GameView m_View;
-    RainbowDashController m_RdController;
+    private boolean isOutOfGame;
     protected GameController(Context context, GameObject gameObject, GameView gameView) {
         this.m_Context = context;
         this.m_Model = gameObject;
         this.m_View = gameView;
-
+        isOutOfGame=false;
     }
 
     public void update(){
@@ -29,8 +29,8 @@ abstract public class GameController {
             @Override
             public void run() {
                 try {
+                    Log.d("test","updated");
                     runUpdate();
-                    killDeadObjects();
                 } catch (Exception e) {
                     Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString() + "\nGameView wasnt updated");
                 }
@@ -39,19 +39,6 @@ abstract public class GameController {
     }
     abstract protected void runUpdate();
     protected abstract void changeDirection();
-    public boolean killDeadObjects(){
-        if(getModel().isDead()){
-            m_View.getContainer().removeView(m_View);
-            try {
-                Common.getGameManager().removeGameObject(this);
-            } catch (Exception e) {
-                Log.d("test",e.toString());
-                e.printStackTrace();
-            }
-            return true;
-        }
-        return false;
-    }
 
 
     public GameObject getModel() {
@@ -62,6 +49,35 @@ abstract public class GameController {
         return m_View;
     }
 
+   /* public void remove(){
+        m_View.getContainer().removeView(m_View);
+        try {
+            Common.getGameManager().removeGameObject(this);
+        } catch (Exception e) {
+            Log.d("test",e.toString());
+            e.printStackTrace();
+        }
+
+    }*/
+
+    public boolean isOutOfGame() {
+        return isOutOfGame;
+    }
+    public boolean resurrect(){
+        try {
+            setOutOfGame(false);
+            getModel().initGameObject();
+            getView().initGameView();
+            return true;
+        }
+        catch (Exception e){
+            Log.d("test","Object not resurrected\n"+e.toString());
+            return false;
+        }
+    }
+    public void setOutOfGame(boolean isOutOfGame) {
+        this.isOutOfGame = isOutOfGame;
+    }
 
     public Context getContext() {
         return m_Context;
@@ -70,7 +86,6 @@ abstract public class GameController {
         m_View.setDirection(Direction.RIGHT);
         //      isRight=true;
     }
-
     protected void setUp() {
         m_View.setDirectionVertical(Direction.UP);
     }

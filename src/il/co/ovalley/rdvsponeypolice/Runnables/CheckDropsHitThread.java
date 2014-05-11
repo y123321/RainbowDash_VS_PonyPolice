@@ -1,7 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.graphics.Rect;
-import android.os.Handler;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.CopController;
 import il.co.ovalley.rdvsponeypolice.Controller.DropController;
@@ -22,14 +21,13 @@ public class CheckDropsHitThread implements Runnable {
     public void run() {
         while (true){
         int i=0;
-        while (i<m_Cops.size()){
+        while (i<m_Cops.size() &&i>=0){
             try {
-                if (i < 0) break;
                 CopController cop=m_Cops.get(i);
                 Rect copRect=new Rect();
                 cop.getView().getHitRect(copRect);
                 int j=0;
-                while (j<m_Drops.size()){
+                while (j<m_Drops.size() &&j>=0){
                     DropController drop=m_Drops.get(j);
                     Rect dropRect=new Rect();
                     drop.getView().getHitRect(dropRect);
@@ -58,14 +56,6 @@ public class CheckDropsHitThread implements Runnable {
         drop.getModel().setDead(true);
         cop.getModel().setDead(true);
         Log.d("test","kill!");
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                drop.getView().getContainer().removeView(drop.getView());
-                cop.getView().getContainer().removeView(cop.getView());
 
-
-            }
-        });
     }
     }

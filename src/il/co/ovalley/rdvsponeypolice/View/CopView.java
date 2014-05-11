@@ -17,9 +17,14 @@ public class CopView extends GameView {
 
     public CopView(GameLayoutView container) {
         super(container, Common.getStickToBottomParams());
+
+
+    }
+
+    @Override
+    protected void init() {
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
-
 
     }
 

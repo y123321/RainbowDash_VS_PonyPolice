@@ -6,11 +6,13 @@ package il.co.ovalley.rdvsponeypolice.Model;
 public class Shot extends GameObject {
     public Shot() {
         super();
+    }
 
+    @Override
+    protected void init() {
         setWaitTime(3);
         setYSpeed(3);
     }
-
 
 
 }

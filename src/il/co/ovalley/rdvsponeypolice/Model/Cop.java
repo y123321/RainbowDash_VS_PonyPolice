@@ -8,13 +8,16 @@ public abstract class Cop extends GameObject {
 
     public Cop(CopDrawables copDrawables) {
         super();
-        m_chanceNotToShoot=100;
         drawables=copDrawables;
+        m_chanceNotToShoot=100;
+
+
     }
 
     public CopType getType() {
         return type;
     }
+
 
     public void setType(CopType type) {
         this.type = type;

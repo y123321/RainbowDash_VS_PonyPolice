@@ -1,6 +1,5 @@
 package il.co.ovalley.rdvsponeypolice;
 
-import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
 import il.co.ovalley.rdvsponeypolice.Runnables.RainbowDashThread;
 
@@ -20,11 +19,12 @@ public class Loop implements Runnable {
     }
     @Override
     public void run() {
-        rdThread=new RainbowDashThread(GameFactory.createRainbowDashController(m_GameManager.m_Layout));
-        new Thread(rdThread).start();
-        Thread thread=new Thread(rdThread);
+   //     rdThread=new RainbowDashThread(GameFactory.createRainbowDashController(m_GameManager.m_Layout));
+    //    new Thread(rdThread).start();
+     //   Thread thread=new Thread(rdThread);
         m_isRunning = true;
         while (m_isRunning) {
+
             m_GameManager.action();
             try {
                 Thread.sleep(Common.ITERATION_PAUSE_TIME);
@@ -38,10 +38,10 @@ public class Loop implements Runnable {
             synchronized (m_PauseObject) {
                 m_PauseObject.notify();
             }
-            rdThread.startRDListener();
+//            rdThread.startRDListener();
         }
     public void pauseGame() {
-        rdThread.stopRDListener();
+//        rdThread.stopRDListener();
         m_isPause = true;
 
     }

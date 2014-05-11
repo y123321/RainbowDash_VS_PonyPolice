@@ -9,6 +9,8 @@ public class RainbowDash extends GameObject {
     private boolean isReleased;
 
     private boolean isRight;
+    private boolean isCaptured;
+
     public boolean isRight() {
         return isRight;
     }
@@ -41,7 +43,8 @@ public class RainbowDash extends GameObject {
     public float goingToY;
     private int stepCounter;
     private float rotation;
-    public RainbowDash() {
+    @Override
+    protected void init() {
 
         goingToX=150;
         goingToY=200;
@@ -51,7 +54,10 @@ public class RainbowDash extends GameObject {
         pullDownSpeedAdvance=0.3f;
         pulledDownSpeed=1;
         isDropping=false;
+        isCaptured=false;
+
     }
+
     public void advancePullDownSpeed() {
         pulledDownSpeed+=pullDownSpeedAdvance;
     }
@@ -119,5 +125,9 @@ public class RainbowDash extends GameObject {
 
     public void increasePullDownSpeed() {        pulledDownSpeed += pullDownSpeedAdvance;
 
+    }
+
+    public boolean isCaptured() {
+        return isCaptured;
     }
 }

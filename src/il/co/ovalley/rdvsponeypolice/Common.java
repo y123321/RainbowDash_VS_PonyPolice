@@ -6,7 +6,6 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-import il.co.ovalley.rdvsponeypolice.Controller.GameManager;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 
 import java.util.Random;
@@ -16,12 +15,8 @@ import java.util.Random;
 public class Common {
     public static final int SCREEN_BORDERS = 10;
     public static Random random=new Random();
-    private static GameManager gameManager;
     public static int ITERATION_PAUSE_TIME=10;
-    public static GameManager getGameManager() throws Exception{
-        if (gameManager==null) throw new Exception("null GameManager");
-        return gameManager;
-    }
+
 
     public static Point getScreenSize(Context context){
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -49,7 +44,4 @@ public class Common {
         return loc;
     }
 
-    public static void setGameManager(GameManager gameManager) {
-        Common.gameManager = gameManager;
-    }
 }
