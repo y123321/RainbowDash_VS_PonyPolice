@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.Runnables.CheckDropsHitThread;
@@ -68,12 +69,13 @@ public class GameManager {
         //     Log.d("test", "rainbow dash " + m_RainbowDashController.m_RainbowDash.goingToY);
         if(m_RainbowDashController.m_RainbowDash.isDropping())releaseDrop();
         for (GameController controller : m_Controllers) {
-            if (controller.isOutOfGame()) {
+            if (!controller.isOutOfGame()) {
                 if (controller.getModel().isDead()) remove(controller);
-            }
-            else {
-                if (m_GameModel.get_LoopsCounter() % controller.getModel().getWaitTime() == 0) {
-                    controller.update();
+
+                else {
+                    if (m_GameModel.get_LoopsCounter() % controller.getModel().getWaitTime() == 0) {
+                        controller.update();
+                    }
                 }
             }
 
@@ -87,13 +89,15 @@ public class GameManager {
     }
 
     private void remove(final GameController controller) {
-        controller.setOutOfGame(true);
         ((Activity) m_Context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                m_Layout.removeView(controller.getView());
+                //    m_Layout.removeView(controller.getView());
+                controller.getView().setVisibility(View.INVISIBLE);
+                controller.setOutOfGame(true);
 
             }
+
         });
 
     }

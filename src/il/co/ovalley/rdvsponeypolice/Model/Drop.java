@@ -12,7 +12,7 @@ public class Drop extends GameObject {
     @Override
     protected void init() {
         setYSpeed(2.5f);
-        setWaitTime(3);
+        setWaitTime(1);
     }
 
 }

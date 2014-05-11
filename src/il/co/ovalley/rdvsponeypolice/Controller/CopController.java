@@ -84,11 +84,11 @@ public class CopController extends GameController {
     private void move() {
         if (m_CopObject.getStepCounter() % 3 == 0) {
             m_CopView.walkAnimation();
+        }
             chooseDirectionAndGo();
-            m_CopObject.setStepCounter(m_CopObject.getStepCounter() - (int) m_CopObject.getXSpeed());
+            m_CopObject.setStepCounter(m_CopObject.getStepCounter() -1);
             if (m_CopObject.getStepCounter() == 0) changeDirection();
 
-        }
     }
 
     private void chooseDirectionAndGo() {
@@ -100,7 +100,7 @@ public class CopController extends GameController {
         float x = m_CopView.getX();
         switch (m_CopView.getDirection()) {
             case LEFT:
-                if (x - 1 > 0) {
+                if (x - 1 >= 0) {
                     m_CopView.setX(x - m_CopObject.getXSpeed());
                 } else changeDirection();
                 break;
@@ -108,8 +108,10 @@ public class CopController extends GameController {
                 if (x < m_CopView.getContainer().getWidth()) m_CopView.setX(x + m_CopObject.getXSpeed());
                 else changeDirection();
                 break;
+            default:changeDirection();
 
         }
+
     }
 }
 

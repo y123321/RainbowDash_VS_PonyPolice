@@ -28,11 +28,11 @@ public class CheckDropsHitThread implements Runnable {
     public void run() {
         while (true){
             for(CopController cop:m_Cops){
-                if(cop.isOutOfGame()) continue;
+                if(cop.getModel().isDead()) continue;
                 Rect copRect=new Rect();
                 cop.getView().getHitRect(copRect);
                 for(DropController drop: m_Drops){
-                    if(drop.isOutOfGame()) continue;
+                    if(drop.getModel().isDead()) continue;
                     Rect dropRect=new Rect();
                     drop.getView().getHitRect(dropRect);
                     if(dropRect.intersect(copRect)) kill(drop, cop);

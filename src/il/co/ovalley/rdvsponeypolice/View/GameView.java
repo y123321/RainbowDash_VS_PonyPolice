@@ -20,12 +20,13 @@ public abstract class GameView extends ImageView {
     public GameView(GameLayoutView container) {
         super(container.getContext());
         m_container=container;
-        container.addView(this);
+   //     container.addView(this);
     }
     public GameView(GameLayoutView container,RelativeLayout.LayoutParams params){
         super(container.getContext());
         m_container=container;
         m_params=params;
+   //     m_container.addView(this, m_params);
 
     }
 
@@ -69,7 +70,11 @@ public abstract class GameView extends ImageView {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                m_container.addView(view, m_params);
+              //  if(m_params==null)
+              //      m_container.addView(view);
+         //       else
+         //       m_container.addView(view, m_params);
+                view.setVisibility(VISIBLE);
             }
         });
     }

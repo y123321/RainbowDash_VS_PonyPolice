@@ -1,5 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
@@ -29,6 +30,13 @@ public class RainbowDashController extends GameController {
     }
 
     private void init() {
+        ((Activity)m_Layout.getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                m_Layout.addView(getView());
+
+            }
+        });
         changeDirection();
 
     }

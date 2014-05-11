@@ -71,7 +71,7 @@ abstract public class GameController {
     }
     protected void setRight() {
         m_View.setDirection(Direction.RIGHT);
-        //      isRight=true;
+//              isRight=true;
     }
     protected void setUp() {
         m_View.setDirectionVertical(Direction.UP);

@@ -18,5 +18,6 @@ public class SimpleCop extends Cop {
         setStepsLimit(100);
         setXSpeed(1.5f);
         setType(CopType.SIMPLE);
+
     }
 }

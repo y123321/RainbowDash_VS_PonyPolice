@@ -16,5 +16,6 @@ public class DropView extends GameView {
     protected void init() {
         setImageResource(R.drawable.shit);
 
+
     }
 }
