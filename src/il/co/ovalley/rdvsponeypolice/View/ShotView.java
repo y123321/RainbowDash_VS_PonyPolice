@@ -14,5 +14,6 @@ public class ShotView extends GameView {
     @Override
     protected void init() {
 
+
     }
 }

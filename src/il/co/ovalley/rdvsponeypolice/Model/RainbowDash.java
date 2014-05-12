@@ -8,15 +8,9 @@ public class RainbowDash extends GameObject {
     private float m_pullDownSpeedAdvance;
     private boolean isReleased;
 
-    private boolean isRight;
+
     private boolean isCaptured;
 
-    public boolean isRight() {
-        return isRight;
-    }
-    public void isRight(boolean isRight) {
-        this.isRight=isRight;
-    }
 
     private boolean isCaged;
     private float pulledDownSpeed;
@@ -94,9 +88,6 @@ public class RainbowDash extends GameObject {
         return isReleased;
     }
 
-    public void setRight(boolean isRight) {
-        this.isRight = isRight;
-    }
 
     public float getCustomRotation() {
         return this.rotation;
@@ -132,5 +123,9 @@ public class RainbowDash extends GameObject {
 
     public boolean isCaptured() {
         return isCaptured;
+    }
+
+    public void setCaptured(boolean captured) {
+        this.isCaptured = captured;
     }
 }

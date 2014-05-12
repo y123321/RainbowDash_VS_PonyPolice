@@ -17,13 +17,15 @@ public class Common {
     public static Random random=new Random();
     public static int ITERATION_PAUSE_TIME=5;
 
-
+    private static Point screenSize;
     public static Point getScreenSize(Context context){
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size;
+        if(screenSize==null) {
+            screenSize=new Point();
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            display.getSize(screenSize);
+        }
+        return screenSize;
     }
 
     public static RelativeLayout.LayoutParams getStickToBottomParams() {
@@ -37,8 +39,7 @@ public class Common {
         view.setY(location.y);
     }
 
-    public static Loc getViewLocation(View view) {
-        Loc loc=new Loc();
+    public static Loc getViewLocation(View view,Loc loc) {
         loc.x=view.getX();
         loc.y=view.getY();
         return loc;

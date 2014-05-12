@@ -19,6 +19,7 @@ public class RainbowDashView extends GameView {
     protected void init() {
         setX(0);
         setY(0);
+        setShotPadding(50);
     }
 
 

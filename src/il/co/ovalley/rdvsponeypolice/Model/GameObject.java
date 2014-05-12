@@ -9,7 +9,7 @@ public abstract class GameObject {
     protected int waitTime;//default amount of iterations of game loop for object to update time
     protected float xSpeed;
     protected float ySpeed;
-
+    public Loc loc=new Loc();
     public GameObject(){
     initGameObject();
     }

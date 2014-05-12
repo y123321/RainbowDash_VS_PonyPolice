@@ -1,7 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.content.Context;
-import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.Shot;
 import il.co.ovalley.rdvsponeypolice.View.ShotView;
 
@@ -18,7 +17,6 @@ public class ShotController extends GameController {
 
         move();
         checkIfDead();
-        Log.d("test","suppose to shoot");
     }
 
     private void checkIfDead() {

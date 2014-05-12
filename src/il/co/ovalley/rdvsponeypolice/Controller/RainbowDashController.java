@@ -8,25 +8,35 @@ import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
-import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 import il.co.ovalley.rdvsponeypolice.Model.RainbowDash;
 import il.co.ovalley.rdvsponeypolice.R;
+import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.View.RainbowDashView;
 
 /**
  * Created by yuval on 30/04/2014.
  */
 public class RainbowDashController extends GameController {
-    public RainbowDash m_RainbowDash;
-    public RainbowDashView m_RainbowDashView;
-    public GameLayoutView m_Layout;
+    private RainbowDash m_RainbowDash;
+    private RainbowDashView m_RainbowDashView;
+    private GameLayoutView m_Layout;
     public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
         super(context, rainbowDash, rainbowDashView,false);
         m_RainbowDash = rainbowDash;
         m_RainbowDashView = rainbowDashView;
         m_Layout=m_RainbowDashView.getContainer();
         init();
+    }
+
+    @Override
+    public RainbowDash getModel() {
+        return m_RainbowDash;
+    }
+
+    @Override
+    public RainbowDashView getView() {
+        return m_RainbowDashView;
     }
 
     private void init() {
@@ -74,7 +84,7 @@ public class RainbowDashController extends GameController {
     }
 
     private void setRainbowDashXY() {
-        Loc loc = Common.getViewLocation(m_RainbowDashView);
+        Loc loc = Common.getViewLocation(m_RainbowDashView,m_RainbowDash.loc);
         float xPoint = m_RainbowDash.getXSpeed() > 1 ? m_RainbowDash.getXSpeed() : 1;
         float yPoint = m_RainbowDash.getYSpeed() >1 ? m_RainbowDash.getYSpeed() : 1;
         if (Math.abs(loc.x - m_RainbowDash.goingToX) < xPoint)
@@ -109,7 +119,7 @@ public class RainbowDashController extends GameController {
     }
 
     private void lockInCage() {
-        if (m_RainbowDash.isRight()) m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_caged_right);
+        if (getView().isRight()) m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_caged_right);
         else m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_caged_left);
         AnimationDrawable RDAnimation = (AnimationDrawable) m_RainbowDashView.getDrawable();
         RDAnimation.start();
@@ -124,18 +134,15 @@ public class RainbowDashController extends GameController {
 
     @Override
     public void changeDirection() {
-        Loc loc = Common.getViewLocation(m_RainbowDashView);
+        Loc loc = Common.getViewLocation(m_RainbowDashView,m_RainbowDash.loc);
         m_RainbowDash.setYSpeed(Math.abs((loc.y - m_RainbowDash.goingToY) / (loc.x - m_RainbowDash.goingToX)));
         m_RainbowDash.setYSpeed(m_RainbowDash.getYSpeed() > 2 ? 2 : m_RainbowDash.getYSpeed());
         m_RainbowDash.setCustomRotation((float) Math.toDegrees(Math.atan(m_RainbowDash.getYSpeed())));
 
         if (loc.x < m_RainbowDash.goingToX) {
             setRight();
-            m_RainbowDash.isRight(true);
-
         } else {
             setLeft();
-            m_RainbowDash.isRight(false);
             m_RainbowDash.setCustomRotation(-m_RainbowDash.getCustomRotation());
 
 
@@ -154,7 +161,7 @@ public class RainbowDashController extends GameController {
 
 
     private void baseAnimation() {
-        if (m_RainbowDash.isRight()) {
+        if (getView().isRight()) {
             m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_small_right);
         } else {
             m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_small_left);

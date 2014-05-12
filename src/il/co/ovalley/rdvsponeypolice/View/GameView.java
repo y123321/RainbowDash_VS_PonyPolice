@@ -17,6 +17,17 @@ public abstract class GameView extends ImageView {
     private float xSpeed;
     private float ySpeed;
     private RelativeLayout.LayoutParams m_params;
+
+    public int getShotPadding() {
+        return shotPadding;
+    }
+
+    public void setShotPadding(int shotPadding) {
+        this.shotPadding = shotPadding;
+    }
+
+    private int shotPadding;
+
     public GameView(GameLayoutView container) {
         super(container.getContext());
         m_container=container;
@@ -26,7 +37,6 @@ public abstract class GameView extends ImageView {
         super(container.getContext());
         m_container=container;
         m_params=params;
-   //     m_container.addView(this, m_params);
 
     }
 
@@ -70,14 +80,16 @@ public abstract class GameView extends ImageView {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-              //  if(m_params==null)
-              //      m_container.addView(view);
-         //       else
-         //       m_container.addView(view, m_params);
-                view.setVisibility(VISIBLE);
+                if(m_params==null)
+                    m_container.addView(view);
+                else
+                m_container.addView(view, m_params);
             }
         });
     }
     abstract protected void init();
+    public boolean isRight(){
+        return getDirection()==Direction.RIGHT;
+    }
 }
 

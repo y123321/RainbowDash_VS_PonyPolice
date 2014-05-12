@@ -26,6 +26,16 @@ public class CopController extends GameController {
     }
 
     @Override
+    public Cop getModel() {
+        return m_CopObject;
+    }
+
+    @Override
+    public CopView getView() {
+        return m_CopView;
+    }
+
+    @Override
     public void runUpdate() {
         setCopDirection();
 
@@ -57,7 +67,6 @@ public class CopController extends GameController {
 
     private boolean shootIfShooting() {
         if (m_CopObject.isShooting()) {
-          //  m_CopView.shootAnimation();
             m_CopObject.setShooting(false);
             return true;
         }

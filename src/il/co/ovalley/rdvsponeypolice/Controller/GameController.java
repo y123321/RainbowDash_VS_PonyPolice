@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Rect;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
@@ -15,6 +16,8 @@ abstract public class GameController {
     Context m_Context;
     GameObject m_Model;
     GameView m_View;
+    public Rect hitRect=new Rect();
+
     private boolean isOutOfGame;
     protected GameController(Context context, GameObject gameObject, GameView gameView,boolean isOutOfGame) {
         this.m_Context = context;
@@ -51,16 +54,16 @@ abstract public class GameController {
         return isOutOfGame;
     }
     public boolean resurrect(){
-        try {
+//        try {
             setOutOfGame(false);
             getModel().initGameObject();
             getView().initGameView();
             return true;
-        }
-        catch (Exception e){
-            Log.d("test","Object not resurrected\n"+e.toString());
-            return false;
-        }
+//        }
+//        catch (Exception e){
+//            Log.d("test","Object not resurrected\n"+e.toString());
+//            return false;
+//        }
     }
     public void setOutOfGame(boolean isOutOfGame) {
         this.isOutOfGame = isOutOfGame;
@@ -71,7 +74,7 @@ abstract public class GameController {
     }
     protected void setRight() {
         m_View.setDirection(Direction.RIGHT);
-//              isRight=true;
+        //      isRight=true;
     }
     protected void setUp() {
         m_View.setDirectionVertical(Direction.UP);
