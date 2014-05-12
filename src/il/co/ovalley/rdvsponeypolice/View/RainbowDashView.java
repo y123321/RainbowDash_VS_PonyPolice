@@ -25,7 +25,6 @@ public class RainbowDashView extends GameView {
 
     public void lockInCage(Direction direction) {
         try {
-            Log.d("rd", "rd");
             if (direction==Direction.RIGHT) setImageResource(R.drawable.rainbow_dash_caged_right);
             else setImageResource(R.drawable.rainbow_dash_caged_left);
             AnimationDrawable RDAnimation = (AnimationDrawable) getDrawable();

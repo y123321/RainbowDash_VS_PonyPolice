@@ -16,17 +16,18 @@ abstract public class GameController {
     Context m_Context;
     GameObject m_Model;
     GameView m_View;
-    public Rect hitRect=new Rect();
+    public Rect hitRect = new Rect();
 
     private boolean isOutOfGame;
-    protected GameController(Context context, GameObject gameObject, GameView gameView,boolean isOutOfGame) {
+
+    protected GameController(Context context, GameObject gameObject, GameView gameView, boolean isOutOfGame) {
         this.m_Context = context;
         this.m_Model = gameObject;
         this.m_View = gameView;
-        this.isOutOfGame=isOutOfGame;
+        this.isOutOfGame = isOutOfGame;
     }
 
-    public void update(){
+    public void update() {
         Activity activity = (Activity) getContext();
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -39,7 +40,9 @@ abstract public class GameController {
             }
         });
     }
+
     abstract protected void runUpdate();
+
     protected abstract void changeDirection();
 
 
@@ -50,21 +53,24 @@ abstract public class GameController {
     public GameView getView() {
         return m_View;
     }
+
     public boolean isOutOfGame() {
         return isOutOfGame;
     }
-    public boolean resurrect(){
+
+    public boolean resurrect() {
 //        try {
-            setOutOfGame(false);
-            getModel().initGameObject();
-            getView().initGameView();
-            return true;
+        setOutOfGame(false);
+        getModel().initGameObject();
+        getView().initGameView();
+        return true;
 //        }
 //        catch (Exception e){
 //            Log.d("test","Object not resurrected\n"+e.toString());
 //            return false;
 //        }
     }
+
     public void setOutOfGame(boolean isOutOfGame) {
         this.isOutOfGame = isOutOfGame;
     }
@@ -72,10 +78,12 @@ abstract public class GameController {
     public Context getContext() {
         return m_Context;
     }
+
     protected void setRight() {
         m_View.setDirection(Direction.RIGHT);
         //      isRight=true;
     }
+
     protected void setUp() {
         m_View.setDirectionVertical(Direction.UP);
     }
@@ -87,4 +95,6 @@ abstract public class GameController {
     protected void setLeft() {
         m_View.setDirection(Direction.LEFT);
     }
+
+
 }

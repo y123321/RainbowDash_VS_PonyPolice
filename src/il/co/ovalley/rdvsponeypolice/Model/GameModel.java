@@ -8,6 +8,7 @@ public class GameModel {
     private int m_OnScreenCopsCounter;
     private int m_CopsLimit;
     private volatile int m_CopsSpawnTime;
+    public static volatile boolean isRunning;
 
     public int get_LoopsCounter() {
         return m_LoopsCounter;

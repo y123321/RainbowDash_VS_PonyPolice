@@ -45,10 +45,10 @@ public class RainbowDash extends GameObject {
         pullDownSpeedAdvance=0.3f;
         setWaitTime(1);
         isCaged=false;
-        pullDownSpeedAdvance=0.3f;
-        pulledDownSpeed=1;
-        isDropping=false;
         isCaptured=false;
+        pullDownSpeedAdvance=0.3f;
+        pulledDownSpeed=0.5f;
+        isDropping=false;
         for(int i=0;i<60;i++){
 
         }

@@ -27,6 +27,7 @@ public abstract class GameView extends ImageView {
     }
 
     private int shotPadding;
+    private boolean isRight;
 
     public GameView(GameLayoutView container) {
         super(container.getContext());
@@ -61,6 +62,8 @@ public abstract class GameView extends ImageView {
     }
 
     public void setDirection(Direction direction) {
+        if(direction==Direction.LEFT) isRight=false;
+        if(direction==Direction.RIGHT) isRight=true;
         this.direction = direction;
     }
 
@@ -89,7 +92,7 @@ public abstract class GameView extends ImageView {
     }
     abstract protected void init();
     public boolean isRight(){
-        return getDirection()==Direction.RIGHT;
+        return isRight;
     }
 }
 

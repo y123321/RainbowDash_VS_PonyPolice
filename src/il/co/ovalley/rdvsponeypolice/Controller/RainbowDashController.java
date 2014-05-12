@@ -1,9 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -40,13 +38,8 @@ public class RainbowDashController extends GameController {
     }
 
     private void init() {
-        ((Activity)m_Layout.getContext()).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                m_Layout.addView(getView());
-
-            }
-        });
+        getModel().initGameObject();
+        getView().initGameView();
         changeDirection();
 
     }
@@ -75,8 +68,10 @@ public class RainbowDashController extends GameController {
     private void cageRainbowDash() {
         m_RainbowDashView.lockInCage(m_RainbowDashView.getDirection());
         m_RainbowDash.setCaged(true);
-        m_RainbowDash.setDead(false);
+        m_RainbowDash.setCaptured(false);
         m_RainbowDash.increasePullDownSpeed();
+        setReleaseListener();
+
     }
 
     private boolean checkIfLost() {
@@ -111,10 +106,8 @@ public class RainbowDashController extends GameController {
     }
 
     private void pullDown() {
-
         if (Common.getScreenSize(getContext()).y - m_RainbowDashView.getY() < 1) lose();
         m_RainbowDashView.setY(m_RainbowDashView.getY() + m_RainbowDash.getPulledDownSpeed());
-        setReleaseListener();
         return;
     }
 
@@ -179,6 +172,8 @@ public class RainbowDashController extends GameController {
     private void releaseFromCage() {
         m_RainbowDash.setReleased(false);
         m_RainbowDash.setCaged(false);
+        m_RainbowDash.setCaptured(false);
+        m_RainbowDash.setDropping(false);
         setReleaseListener();
         releaseAnimation();
         m_RainbowDash.increasePullDownSpeed();
@@ -190,10 +185,7 @@ public class RainbowDashController extends GameController {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    m_RainbowDash.setDropping(true);
-                    Log.d("test", "release");
-                    releaseAnimation();
-                    m_RainbowDash.setCaged(false);
+                    m_RainbowDash.setReleased(true);
                     setGoal(v.getX(), v.getY());
                     m_RainbowDashView.setOnTouchListener(new View.OnTouchListener() {
                         @Override

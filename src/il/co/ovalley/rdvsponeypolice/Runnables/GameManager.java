@@ -1,11 +1,14 @@
-package il.co.ovalley.rdvsponeypolice.Controller;
+package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Common;
-import il.co.ovalley.rdvsponeypolice.Model.*;
-import il.co.ovalley.rdvsponeypolice.Runnables.CheckDropsHitThread;
-import il.co.ovalley.rdvsponeypolice.Runnables.CheckShotsHitThread;
+import il.co.ovalley.rdvsponeypolice.Controller.*;
+import il.co.ovalley.rdvsponeypolice.Model.Cop;
+import il.co.ovalley.rdvsponeypolice.Model.CopType;
+import il.co.ovalley.rdvsponeypolice.Model.GameModel;
+import il.co.ovalley.rdvsponeypolice.Model.Loc;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.View.GameView;
 
@@ -14,20 +17,21 @@ import java.util.ArrayList;
 /**
  * Created by yuval on 30/04/2014.
  */
-public class GameManager {
+public class GameManager implements Runnable{
+    Object m_PauseObject;
     public volatile ArrayList<GameController> m_Controllers;
     public GameLayoutView m_Layout;
     private Context m_Context;
     private GameModel m_GameModel = new GameModel();
     private RainbowDashController m_RainbowDashController;
     private LruCacheManager cacheManager=new LruCacheManager();
-    private CheckDropsHitThread checkHits;
+    private boolean m_isPause;
+
     public GameManager(GameModel gameModel, GameLayoutView gameLayoutView) {
         m_Layout = gameLayoutView;
         m_Context = gameLayoutView.getContext();
         m_GameModel = gameModel;
 
-        init();
     }
 
     private void adjustDropLocToGameViewBehind(Loc location, GameView view) {
@@ -52,17 +56,28 @@ public class GameManager {
             m_Controllers.add(GameFactory.createCopController(CopType.SIMPLE, m_Layout));
         }
        // checkHits=new CheckDropsHitThread(m_Controllers);
-        new Thread(new CheckDropsHitThread(m_Controllers)).start();
-        new Thread(new CheckShotsHitThread(m_Controllers,m_RainbowDashController)).start();
+        m_PauseObject=new Object();
+        m_isPause=false;
+        startThreads();
 
 
 
+    }
+
+    private void startThreads() {
+        Thread thread1=new Thread(new CheckDropsHitThread(m_Controllers));
+        Thread thread2=new Thread(new CheckShotsHitThread(m_Controllers,m_RainbowDashController));
+        thread1.setDaemon(true);
+        thread2.setDaemon(true);
+        thread1.start();
+        thread2.start();
     }
 
 
     public void action() {
         //     Log.d("test", "rainbow dash " + m_RainbowDashController.m_RainbowDash.goingToY);
         if(m_RainbowDashController.getModel().isDropping())releaseDrop();
+        if(m_RainbowDashController.getModel().isLost()) GameModel.isRunning=false;
         for (GameController controller : m_Controllers) {
             if (!controller.isOutOfGame()) {
                 if (controller.getModel().isDead()) remove(controller);
@@ -82,11 +97,7 @@ public class GameManager {
 
 
         }
-      //  checkHits.run();
         m_GameModel.increaseLoopsCounter();
-    //    new Thread(new CheckDropsHitThread(m_Controllers)).start();
-
-        if (((RainbowDash) m_RainbowDashController.getModel()).isDropping()) releaseDrop();
         spawnCops();
 
 
@@ -129,11 +140,6 @@ public class GameManager {
 
     }
 
-    private void updateController(GameController controller) {
-        if (m_GameModel.get_LoopsCounter() % controller.getModel().getWaitTime() == 0)
-            controller.update();
-
-    }
 
     private void spawnCops() {
         if (m_GameModel.get_LoopsCounter() % m_GameModel.get_CopsSpawnTime()==0) {
@@ -179,6 +185,41 @@ public class GameManager {
 
     }
 
+    @Override
+    public void run() {
+        GameModel.isRunning=true;
+        init();
+        while (GameModel.isRunning) {
+
+            action();
+            try {
+                Thread.sleep(Common.ITERATION_PAUSE_TIME);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(m_isPause)
+            try {
+                synchronized (m_PauseObject){
+                    m_PauseObject.wait();
+                }
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.d("test", "game thread dead");
+
+    }
+    public void resume(){
+        m_isPause=false;
+        synchronized (m_PauseObject) {
+            m_PauseObject.notify();
+        }
+    }
+    public void pauseGame() {
+        m_isPause = true;
+
+    }
 }
 
 

@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.*;
+import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 import il.co.ovalley.rdvsponeypolice.View.*;
 
 /**
