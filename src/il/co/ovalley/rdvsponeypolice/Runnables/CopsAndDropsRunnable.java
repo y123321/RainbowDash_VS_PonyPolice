@@ -61,7 +61,7 @@ public class CopsAndDropsRunnable  {/*
     }
 
     private void updateCop(Cop cop) {
-        if (m_gameRunnable.getClockCounter() % cop.getWaitTime() == 0) cop.runUpdate();
+        if (m_gameRunnable.getClockCounter() % cop.getWaitTime() == 0) cop.runViewUpdate();
 
     }
 
@@ -90,7 +90,7 @@ public class CopsAndDropsRunnable  {/*
         m_gameRunnable.remove(cop);
         cop.isDead(true);
         Log.d("test","cop rect bottom:"+rect.bottom+" top: "+rect.top+" cop base: "+cop.getBaseline()+" bottom padding: "+cop.getPaddingBottom());
-        cop.runUpdate();
+        cop.runViewUpdate();
         cop=null;
 
     }
@@ -98,7 +98,7 @@ public class CopsAndDropsRunnable  {/*
         if(drop==null) return;
         if(m_drops.contains(drop))m_drops.remove(drop);
         drop.isDead(true);
-        drop.runUpdate();
+        drop.runViewUpdate();
         drop=null;
     }*/
 }

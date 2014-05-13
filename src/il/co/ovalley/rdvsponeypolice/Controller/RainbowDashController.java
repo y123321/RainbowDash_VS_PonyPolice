@@ -16,25 +16,26 @@ import il.co.ovalley.rdvsponeypolice.View.RainbowDashView;
  * Created by yuval on 30/04/2014.
  */
 public class RainbowDashController extends GameController {
-    private RainbowDash m_RainbowDash;
-    private RainbowDashView m_RainbowDashView;
-    private GameLayoutView m_Layout;
+    private RainbowDash mRainbowDashModel;
+    private RainbowDashView mRainbowDashView;
+    private GameLayoutView mLayout;
+    private boolean isDirectionChanged;
     public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
         super(context, rainbowDash, rainbowDashView,false);
-        m_RainbowDash = rainbowDash;
-        m_RainbowDashView = rainbowDashView;
-        m_Layout=m_RainbowDashView.getContainer();
+        mRainbowDashModel = rainbowDash;
+        mRainbowDashView = rainbowDashView;
+        mLayout = mRainbowDashView.getContainer();
         init();
     }
 
     @Override
     public RainbowDash getModel() {
-        return m_RainbowDash;
+        return mRainbowDashModel;
     }
 
     @Override
     public RainbowDashView getView() {
-        return m_RainbowDashView;
+        return mRainbowDashView;
     }
 
     private void init() {
@@ -44,150 +45,197 @@ public class RainbowDashController extends GameController {
 
     }
 
-    public void runUpdate() {
-
-        if (m_RainbowDash.isReleased()) {
+    /**
+     * returns true if view should be updated or false if it shouldn't
+     */
+    @Override
+    protected boolean runModelUpdate() {
+        stopIfArrived();
+        if (mRainbowDashModel.isReleased()) {
             releaseFromCage();
+            return true;
+        }
+        if (checkIfLost()){
+            return false;
         }
 
-        if (m_RainbowDash.isCaptured()) {
-            cageRainbowDash();
-            setReleaseListener();
+        return true;
+    }
 
+    /**
+     * updates on the view, this method runs on UI thread
+     */
+    @Override
+    public void runViewUpdate() {
+
+
+        if(mRainbowDashModel.isReleased()){
+            releaseAnimation();
+            mRainbowDashModel.setReleased(false);
             return;
         }
-        if (m_RainbowDash.isCaged()) {
-            if (checkIfLost()) m_RainbowDash.setLost(true);
+
+        if (mRainbowDashModel.isCaged()) {
             pullDown();
             return;
         }
-        setRainbowDashXY();
+        if(isDirectionChanged){
+            isDirectionChanged=false;
+            mRainbowDashView.setRotation(mRainbowDashModel.getCustomRotation());
+            baseAnimation();
+        }
+        if(mRainbowDashModel.isCaptured()){
+            cageRainbowDash();
+            return;
+        }
+        setNextLocation(Common.getViewLocation(mRainbowDashView, mRainbowDashModel.loc));
+
 
     }
 
     private void cageRainbowDash() {
-        m_RainbowDashView.lockInCage(m_RainbowDashView.getDirection());
-        m_RainbowDash.setCaged(true);
-        m_RainbowDash.setCaptured(false);
-        m_RainbowDash.increasePullDownSpeed();
+        mRainbowDashModel.setCaged(true);
+        mRainbowDashModel.setCaptured(false);
+        mRainbowDashView.lockInCage(mRainbowDashModel.getDirection());
+        mRainbowDashModel.increasePullDownSpeed();
         setReleaseListener();
 
     }
+    @Override
+    protected void changeDirection() {
 
-    private boolean checkIfLost() {
-        return m_RainbowDash.isLost();
+        Loc loc = Common.getViewLocation(mRainbowDashView, mRainbowDashModel.loc);
+        setSpeedAndRotation(loc);
+        if (loc.x < mRainbowDashModel.goingToX) {
+            mRainbowDashModel.setDirection(Direction.RIGHT);
+        } else {
+            mRainbowDashModel.setDirection(Direction.LEFT);
+            mRainbowDashModel.setCustomRotation(-mRainbowDashModel.getCustomRotation());
+
+
+        }
+
+        if (loc.y < mRainbowDashModel.goingToY) {
+            mRainbowDashModel.setDirectionVertical(Direction.DOWN);
+        } else {
+            mRainbowDashModel.setCustomRotation(-mRainbowDashModel.getCustomRotation());
+
+            mRainbowDashModel.setDirectionVertical(Direction.UP);
+        }
+        isDirectionChanged= true;
+
+
     }
 
-    private void setRainbowDashXY() {
-        Loc loc = Common.getViewLocation(m_RainbowDashView,m_RainbowDash.loc);
-        float xPoint = m_RainbowDash.getXSpeed() > 1 ? m_RainbowDash.getXSpeed() : 1;
-        float yPoint = m_RainbowDash.getYSpeed() >1 ? m_RainbowDash.getYSpeed() : 1;
-        if (Math.abs(loc.x - m_RainbowDash.goingToX) < xPoint)
-            m_RainbowDashView.setDirection(Direction.STOP);
-        if (Math.abs(loc.y - m_RainbowDash.goingToY) < yPoint)
-            m_RainbowDashView.setDirectionVertical(Direction.STOP);
-        switch (m_RainbowDashView.getDirection()) {
+    private void setSpeedAndRotation(Loc loc) {
+        mRainbowDashModel.setYSpeed(Math.abs((loc.y - mRainbowDashModel.goingToY) / (loc.x - mRainbowDashModel.goingToX)));
+        mRainbowDashModel.setYSpeed(mRainbowDashModel.getYSpeed() > 2 ? 2 : mRainbowDashModel.getYSpeed());
+        mRainbowDashModel.setCustomRotation((float) Math.toDegrees(Math.atan(mRainbowDashModel.getYSpeed())));
+    }
+
+    private boolean checkIfLost() {
+        return mRainbowDashModel.isLost();
+    }
+
+    private boolean stopIfArrived() {
+        float minSpeed = 2;
+        float xSpeed = getXSpeedOrMin(minSpeed);//getModel().getXSpeed();
+        float ySpeed = getYSpeedOrMin(minSpeed);//getModel().getYSpeed();
+
+        if (checkIfArrivedToGoalY(ySpeed)) {
+            mRainbowDashModel.setDirectionVertical(Direction.STOP);
+        }
+        if (checkIfArrivedToGoalX(xSpeed)) {
+            mRainbowDashModel.setDirection(Direction.STOP);
+            return true;
+        }
+        return false;
+    }
+
+    private void setNextLocation(Loc CurrentLocation) {
+        switch (mRainbowDashModel.getDirection()) {
             case RIGHT:
-                m_RainbowDashView.setX(loc.x + m_RainbowDash.getXSpeed());
+                mRainbowDashView.setX(CurrentLocation.x + mRainbowDashModel.getXSpeed());
                 break;
 
             case LEFT:
-                m_RainbowDashView.setX(loc.x - m_RainbowDash.getXSpeed());
+                mRainbowDashView.setX(CurrentLocation.x - mRainbowDashModel.getXSpeed());
                 break;
         }
-        switch (m_RainbowDashView.getDirectionVertical()) {
+        switch (mRainbowDashModel.getDirectionVertical()) {
             case DOWN:
-                m_RainbowDashView.setY(loc.y + m_RainbowDash.getYSpeed() * m_RainbowDash.getXSpeed());
+                mRainbowDashView.setY(CurrentLocation.y + getYAdvance());
                 break;
             case UP:
-                m_RainbowDashView.setY(loc.y - m_RainbowDash.getYSpeed() * m_RainbowDash.getXSpeed());
+                mRainbowDashView.setY(CurrentLocation.y - getYAdvance());
                 break;
         }
+    }
+
+    private float getYAdvance() {
+        return mRainbowDashModel.getYSpeed() * mRainbowDashModel.getXSpeed();
+    }
+
+    private boolean checkIfArrivedToGoalY(float ySpeed) {
+        return Math.abs(mRainbowDashView.getY() - mRainbowDashModel.goingToY) < ySpeed;
+    }
+
+    private boolean checkIfArrivedToGoalX(float xSpeed) {
+        return Math.abs(mRainbowDashView.getX() - mRainbowDashModel.goingToX) < xSpeed;
+    }
+
+    private float getYSpeedOrMin(float min) {
+        return mRainbowDashModel.getYSpeed() >min ? mRainbowDashModel.getYSpeed() : min;
+    }
+
+    private float getXSpeedOrMin(float min) {
+        return mRainbowDashModel.getXSpeed() > min ? mRainbowDashModel.getXSpeed() : min;
     }
 
     private void pullDown() {
-        if (Common.getScreenSize(getContext()).y - m_RainbowDashView.getY() < 1) lose();
-        m_RainbowDashView.setY(m_RainbowDashView.getY() + m_RainbowDash.getPulledDownSpeed());
+        if (Common.getScreenSize(getContext()).y - mRainbowDashView.getY() < 1) lose();
+        mRainbowDashView.setY(mRainbowDashView.getY() + mRainbowDashModel.getPulledDownSpeed());
         return;
     }
 
-    private void lockInCage() {
-        if (getView().isRight()) m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_caged_right);
-        else m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_caged_left);
-        AnimationDrawable RDAnimation = (AnimationDrawable) m_RainbowDashView.getDrawable();
-        RDAnimation.start();
-        m_RainbowDash.setDead(false);
-        m_RainbowDash.setCaged(true);
-        m_RainbowDash.setLost(false);
-    }
-
     private void lose() {
-        m_RainbowDash.setLost(true);
-    }
-
-    @Override
-    public void changeDirection() {
-        Loc loc = Common.getViewLocation(m_RainbowDashView,m_RainbowDash.loc);
-        m_RainbowDash.setYSpeed(Math.abs((loc.y - m_RainbowDash.goingToY) / (loc.x - m_RainbowDash.goingToX)));
-        m_RainbowDash.setYSpeed(m_RainbowDash.getYSpeed() > 2 ? 2 : m_RainbowDash.getYSpeed());
-        m_RainbowDash.setCustomRotation((float) Math.toDegrees(Math.atan(m_RainbowDash.getYSpeed())));
-
-        if (loc.x < m_RainbowDash.goingToX) {
-            setRight();
-        } else {
-            setLeft();
-            m_RainbowDash.setCustomRotation(-m_RainbowDash.getCustomRotation());
-
-
-        }
-
-        if (loc.y < m_RainbowDash.goingToY) {
-            m_RainbowDashView.setRotation(m_RainbowDash.getCustomRotation());
-            setDown();
-        } else {
-            m_RainbowDashView.setRotation(-m_RainbowDash.getCustomRotation());
-
-            setUp();
-        }
-        baseAnimation();
+        mRainbowDashModel.setLost(true);
     }
 
 
     private void baseAnimation() {
-        if (getView().isRight()) {
-            m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_small_right);
+        if (mRainbowDashModel.isRight()) {
+            mRainbowDashView.setImageResource(R.drawable.rainbow_dash_small_right);
         } else {
-            m_RainbowDashView.setImageResource(R.drawable.rainbow_dash_small_left);
+            mRainbowDashView.setImageResource(R.drawable.rainbow_dash_small_left);
 
         }
-        AnimationDrawable RDAnimation = (AnimationDrawable) m_RainbowDashView.getDrawable();
+        AnimationDrawable RDAnimation = (AnimationDrawable) mRainbowDashView.getDrawable();
         RDAnimation.start();
     }
 
     public void setGoal(float x, float y) {
-        m_RainbowDash.goingToY = y;
-        m_RainbowDash.goingToX = x;
+        mRainbowDashModel.goingToY = y;
+        mRainbowDashModel.goingToX = x;
 
     }
     private void releaseFromCage() {
-        m_RainbowDash.setReleased(false);
-        m_RainbowDash.setCaged(false);
-        m_RainbowDash.setCaptured(false);
-        m_RainbowDash.setDropping(false);
-        setReleaseListener();
-        releaseAnimation();
-        m_RainbowDash.increasePullDownSpeed();
+        mRainbowDashModel.setCaged(false);
+        mRainbowDashModel.setCaptured(false);
+        mRainbowDashModel.setDropping(false);
+        isDirectionChanged=true;
+        mRainbowDashModel.increasePullDownSpeed();
     }
 
 
     private void setReleaseListener() {
-        m_RainbowDashView.setOnTouchListener(new View.OnTouchListener() {
+        mRainbowDashView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    m_RainbowDash.setReleased(true);
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mRainbowDashModel.setReleased(true);
                     setGoal(v.getX(), v.getY());
-                    m_RainbowDashView.setOnTouchListener(new View.OnTouchListener() {
+                    mRainbowDashView.setOnTouchListener(new View.OnTouchListener() {
                         @Override
                         public boolean onTouch(View v, MotionEvent event) {
                             return false;
@@ -198,13 +246,13 @@ public class RainbowDashController extends GameController {
 
             }
 
-            });
+        });
         }
     public void startRDListener() {
-        m_Layout.setOnTouchListener(new View.OnTouchListener() {
+        mLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                RainbowDash rd = (RainbowDash) getModel();
+                RainbowDash rd = getModel();
                 if (rd.isDead() || rd.isCaged() || rd.isLost()) return true;
                 int action = event.getAction();
                 switch (action) {
@@ -217,7 +265,7 @@ public class RainbowDashController extends GameController {
                         changeDirection();
                         break;
                     case MotionEvent.ACTION_UP:
-                        ((RainbowDash) getModel()).setDropping(true);
+                        (getModel()).setDropping(true);
                         break;
                 }
                 return true;
@@ -230,11 +278,6 @@ public class RainbowDashController extends GameController {
             }
         });
     }
-    public void stopRDListener() {
-        m_Layout.setOnTouchListener(null);
-    }
-
-
     private void releaseAnimation() {
         baseAnimation();
     }

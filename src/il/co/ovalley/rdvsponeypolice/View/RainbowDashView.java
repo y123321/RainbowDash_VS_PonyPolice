@@ -12,7 +12,6 @@ public class RainbowDashView extends GameView {
 
     public RainbowDashView(GameLayoutView container) {
         super(container);
-
     }
 
     @Override
@@ -22,24 +21,24 @@ public class RainbowDashView extends GameView {
         setShotPadding(50);
     }
 
-
     public void lockInCage(Direction direction) {
         try {
             if (direction==Direction.RIGHT) setImageResource(R.drawable.rainbow_dash_caged_right);
             else setImageResource(R.drawable.rainbow_dash_caged_left);
             AnimationDrawable RDAnimation = (AnimationDrawable) getDrawable();
             RDAnimation.start();
+
         }
         catch (Exception e){
-            Log.d("rd", e.toString());
+            Log.d("test", e.toString());
         }
     }
-    public void releaseAnimation() {
-        baseAnimation();
+    public void releaseAnimation(Direction direction) {
+        baseAnimation(direction);
     }
-    private void baseAnimation(){
+    private void baseAnimation(Direction direction){
         try {
-            if (getDirection()==Direction.RIGHT) {
+            if (direction==Direction.RIGHT) {
                 setImageResource(R.drawable.rainbow_dash_small_right);
             } else {
                 setImageResource(R.drawable.rainbow_dash_small_left);

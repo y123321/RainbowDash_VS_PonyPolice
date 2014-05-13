@@ -12,24 +12,32 @@ public class ShotController extends GameController {
         super(context, gameObject, gameView,isOutOfGame);
     }
 
+    /**
+     * returns true if view should be updated or false if it shouldn't
+     */
     @Override
-    public void runUpdate() {
+    protected boolean runModelUpdate() {
+        return true;
+    }
+
+    @Override
+    public void runViewUpdate() {
 
         move();
         checkIfDead();
     }
 
     private void checkIfDead() {
-        if(m_View.getY()<1) m_Model.setDead(true);
+        if(mView.getY()<1) mModel.setDead(true);
     }
 
     private void move() {
-        m_View.setY(m_View.getY() - m_Model.getYSpeed());
+        mView.setY(mView.getY() - mModel.getYSpeed());
     }
 
     @Override
     protected void changeDirection() {
-        m_Model.setYSpeed(-m_Model.getYSpeed());
+        mModel.setYSpeed(-mModel.getYSpeed());
     }
 
 }

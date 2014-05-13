@@ -13,26 +13,45 @@ public class DropController extends GameController {
         super(context, gameObject, gameView,isOutOfGame);
     }
 
+
+    /**
+     * returns true if view should be updated or false if it shouldn't
+     */
     @Override
-    public void runUpdate() {
+    protected boolean runModelUpdate() {
+        if(killIfOutOfScreen()) return false;
+        return true;
+    }
+
+    /**
+     * updates on the view, this method runs on UI thread
+     */
+    @Override
+    public void runViewUpdate() {
 
         move();
-        checkIfDead();
 
     }
 
-    private void checkIfDead() {
-        if (m_View.getY() > Common.getScreenSize(getContext()).y)
+    private boolean killIfOutOfScreen() {
+        if (checkIfOutOfScreen()) {
             getModel().setDead(true);
+            return true;
+        }
+        return false;
 
+    }
+
+    private boolean checkIfOutOfScreen() {
+        return mView.getY() > Common.getScreenSize(getContext()).y;
     }
 
     private void move() {
-        m_View.setY(m_View.getY() + m_Model.getYSpeed());
+        mView.setY(mView.getY() + mModel.getYSpeed());
     }
 
     @Override
     protected void changeDirection() {
-        m_View.setY(-m_View.getY());
+        mView.setY(-mView.getY());
     }
 }

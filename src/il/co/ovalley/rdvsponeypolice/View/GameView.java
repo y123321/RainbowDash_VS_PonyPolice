@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import il.co.ovalley.rdvsponeypolice.Model.Direction;
 
 /**
  * Created by yuval on 18/04/2014.
@@ -12,10 +11,8 @@ import il.co.ovalley.rdvsponeypolice.Model.Direction;
 public abstract class GameView extends ImageView {
 
     private GameLayoutView m_container;
-    private Direction direction;
-    private Direction directionVertical;
-    private float xSpeed;
-    private float ySpeed;
+
+
     private RelativeLayout.LayoutParams m_params;
 
     public int getShotPadding() {
@@ -27,7 +24,6 @@ public abstract class GameView extends ImageView {
     }
 
     private int shotPadding;
-    private boolean isRight;
 
     public GameView(GameLayoutView container) {
         super(container.getContext());
@@ -44,9 +40,6 @@ public abstract class GameView extends ImageView {
 
 
 
-    public Direction getDirection() {
-        return direction;
-    }
 
     public GameLayoutView getContainer() {
         return m_container;
@@ -61,20 +54,7 @@ public abstract class GameView extends ImageView {
         m_container = container;
     }
 
-    public void setDirection(Direction direction) {
-        if(direction==Direction.LEFT) isRight=false;
-        if(direction==Direction.RIGHT) isRight=true;
-        this.direction = direction;
-    }
 
-
-    public Direction getDirectionVertical() {
-        return directionVertical;
-    }
-
-    public void setDirectionVertical(Direction directionVertical) {
-        this.directionVertical = directionVertical;
-    }
 
     public void initGameView() {
         init();
@@ -91,8 +71,5 @@ public abstract class GameView extends ImageView {
         });
     }
     abstract protected void init();
-    public boolean isRight(){
-        return isRight;
-    }
 }
 

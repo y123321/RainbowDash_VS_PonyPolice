@@ -6,6 +6,7 @@ import android.graphics.drawable.AnimationDrawable;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.CopDrawables;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
+import il.co.ovalley.rdvsponeypolice.R;
 
 /**
  * Created by yuval on 30/04/2014.
@@ -43,20 +44,25 @@ public class CopView extends GameView {
         Point size=Common.getScreenSize(getContext());
         return Common.random.nextInt(size.x-Common.SCREEN_BORDERS)+Common.SCREEN_BORDERS;
     }
-    public void walkAnimation() {
-        int resource = getDirection() == Direction.LEFT ? getDrawables().baseDrawableLeft : getDrawables().baseDrawableRight;
-        setImageResource(resource);
-        AnimationDrawable animation = (AnimationDrawable) getDrawable();
-        setImageDrawable(animation.getFrame(m_DrawableState));
-        m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
+    public void walkAnimation(Direction direction) {
+        int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;
+        startAnimation(resource);
 
     }
-    public void shootAnimation() {
-        int resource = getDirection() == Direction.LEFT ? getDrawables().shootingLeftDrawable : getDrawables().shootingRightDrawable;
+
+    private void startAnimation(int resource) {
         setImageResource(resource);
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
-        animation.start();
-        walkAnimation();
+
+        setImageDrawable(animation.getFrame(m_DrawableState));
+        m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
+    }
+
+    public void shootAnimation(Direction direction) {
+        int resource = direction == Direction.LEFT ? getDrawables().shootingLeftDrawable: getDrawables().shootingRightDrawable;
+        startAnimation(resource);
+
+        walkAnimation(direction);
 
     }
 
@@ -68,5 +74,7 @@ public class CopView extends GameView {
         this.m_Drawables = drawables;
     }
 
-
+    public void dyingAnimation(){
+        startAnimation(R.drawable.police_pony_shit_left);
+    }
 }

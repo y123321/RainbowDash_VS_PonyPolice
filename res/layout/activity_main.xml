@@ -4,5 +4,6 @@
     android:layout_height="match_parent"
     android:id="@+id/layout"
     android:background="@drawable/equestria"
-    tools:context="il.co.ovalley.dashvsponypolice.app.MainActivity">
+    tools:context="il.co.ovalley.dashvsponypolice.app.MainActivity"
+       >
 </il.co.ovalley.rdvsponeypolice.View.GameLayoutView>

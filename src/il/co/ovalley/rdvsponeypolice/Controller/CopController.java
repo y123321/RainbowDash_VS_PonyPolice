@@ -13,108 +13,149 @@ public class CopController extends GameController {
     public static int SPAWN_TIME=500;
     public static int COPS_RATIO=2;
     public static int COPS_COUNTER=0;
-    private Cop m_CopObject;
-    private CopView m_CopView;
-
+    private Cop mCopModel;
+    private CopView mCopView;
+    public boolean animating;
     protected CopController(Context context, Cop gameObject, CopView gameView,boolean isOutOfGame) {
         super(context, gameObject, gameView,isOutOfGame);
-        m_CopObject = gameObject;
-        m_CopView = gameView;
-        m_CopView.setDrawables(gameObject.getDrawables());
+        mCopModel = gameObject;
+        mCopView = gameView;
+        mCopView.setDrawables(gameObject.getDrawables());
         COPS_COUNTER=0;
+        animating=false;
 
     }
 
+
     @Override
     public Cop getModel() {
-        return m_CopObject;
+        return mCopModel;
     }
 
     @Override
     public CopView getView() {
-        return m_CopView;
+        return mCopView;
     }
-
+    /**
+     * returns true if view should be updated or false if it shouldn't
+     */
     @Override
-    public void runUpdate() {
-        setCopDirection();
+    protected boolean runModelUpdate() {
+        if (animating)return false;
+        if(dieIfDying()) return false;
+        if (shootIfShooting()) return false;
+        if (loadIfLoading()) return false;
+        return true;
 
-        if (shootIfShooting()) return;
-        if (loadIfLoading()) return;
+    }
+    /**
+     * updates on the view, this method runs on UI thread
+     */
+    @Override
+    public void runViewUpdate() {
+        changeCopDirectionOnBorders(Common.SCREEN_BORDERS);
+
         move();
 
         decideIfToShoot();
 
     }
+    /**
+     * change the movement direction on view and model
+     */
+    @Override
+    protected void changeDirection() {
+        mCopModel.setStepCounter(Common.random.nextInt(mCopModel.getStepsLimit()));
+        mCopModel.setDirection(Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT);
+    }
+
+
+    private boolean dieIfDying() {
+        if(getModel().isDying()){
+        /*    getView().dyingAnimation();
+            animating=true;
+            new Thread(new Runnable() {//todo: make animation with events
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(R.integer.simple_cop_shooting_animation*3);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }*/
+                    getModel().setDead(true);
+                    animating=false;
+                    getModel().setDying(false);
+
+                }
+       //     }).start();
+    //        return true;
+  //      }
+        return false;
+    }
 
     private void decideIfToShoot() {
-        int rand = Common.random.nextInt(((int) m_CopObject.getChanceNotToShoot()));
+        int rand = Common.random.nextInt(mCopModel.getChanceNotToShoot());
         if (rand == 1) {
             shoot();
         }
     }
 
     private boolean loadIfLoading() {
-        if (m_CopObject.isLoading()) {
-            if (m_CopObject.getLoadingTimeCounter() == 0) {
-                m_CopObject.setShooting(true);
-                m_CopObject.setLoading(false);
-            } else m_CopObject.decreaseLoadingTimeCounter();
+        if (mCopModel.isLoading()) {
+            if (mCopModel.getLoadingTimeCounter() == 0) {
+                mCopModel.setShooting(true);
+                mCopModel.setLoading(false);
+            } else mCopModel.decreaseLoadingTimeCounter();
             return true;
         }
         return false;
     }
 
     private boolean shootIfShooting() {
-        if (m_CopObject.isShooting()) {
-            m_CopObject.setShooting(false);
+        if (mCopModel.isShooting()) {
+            mCopModel.setShooting(false);
             return true;
         }
         return false;
     }
 
-    private void setCopDirection() {
-        float x = m_CopView.getX();
-        if (x <= Common.SCREEN_BORDERS) m_CopView.setDirection(Direction.RIGHT);
-        else if (x >= Common.getScreenSize(m_CopView.getContext()).x - Common.SCREEN_BORDERS)
-            m_CopView.setDirection(Direction.LEFT);
-    }
-
-    @Override
-    protected void changeDirection() {
-        m_CopObject.setStepCounter(Common.random.nextInt(m_CopObject.getStepsLimit()));
-        m_CopView.setDirection(Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT);
+    private void changeCopDirectionOnBorders(int screenBorders) {
+        float x = mCopView.getX();
+        if (x <= screenBorders) mCopModel.setDirection(Direction.RIGHT);
+        else if (x >= Common.getScreenSize(mCopView.getContext()).x - screenBorders)
+            mCopModel.setDirection(Direction.LEFT);
     }
 
     void shoot() {
-        m_CopObject.makeShot();
+        mCopModel.makeShot();
     }
 
     private void move() {
-        if (m_CopObject.getStepCounter() % 3 == 0) {
-            m_CopView.walkAnimation();
+        if (mCopModel.getStepCounter() % 3 == 0) {
+            mCopView.walkAnimation(mCopModel.getDirection());
         }
             chooseDirectionAndGo();
-            m_CopObject.setStepCounter(m_CopObject.getStepCounter() -1);
-            if (m_CopObject.getStepCounter() == 0) changeDirection();
+            mCopModel.setStepCounter(mCopModel.getStepCounter() -1);
+            if (mCopModel.getStepCounter() == 0) changeDirection();
 
     }
+
 
     private void chooseDirectionAndGo() {
-        if (m_CopView.getDirection() == null) {
+        if (mCopModel.getDirection() == null) {
             Direction direction = Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
 
-            m_CopView.setDirection(direction);
+            mCopModel.setDirection(direction);
     }
-        float x = m_CopView.getX();
-        switch (m_CopView.getDirection()) {
+        float x = mCopView.getX();
+        switch (mCopModel.getDirection()) {
             case LEFT:
                 if (x - 1 >= 0) {
-                    m_CopView.setX(x - m_CopObject.getXSpeed());
+                    mCopView.setX(x - mCopModel.getXSpeed());
                 } else changeDirection();
                 break;
             case RIGHT:
-                if (x < m_CopView.getContainer().getWidth()) m_CopView.setX(x + m_CopObject.getXSpeed());
+                if (x < mCopView.getContainer().getWidth()) mCopView.setX(x + mCopModel.getXSpeed());
                 else changeDirection();
                 break;
             default:changeDirection();

@@ -9,6 +9,9 @@ public abstract class GameObject {
     protected int waitTime;//default amount of iterations of game loop for object to update time
     protected float xSpeed;
     protected float ySpeed;
+    private Direction direction;
+    private Direction directionVertical;
+    private boolean isRight;
     public Loc loc=new Loc();
     public GameObject(){
     initGameObject();
@@ -21,7 +24,40 @@ public abstract class GameObject {
         ySpeed=1;
         init();
     }
+    public void setDirection(Direction direction) {
+        switch (direction) {
+            case LEFT:
+                isRight = false;
+                this.direction = direction;
+                break;
 
+            case RIGHT:
+                isRight = true;
+                this.direction = direction;
+                break;
+            case UP:
+                this.directionVertical = direction;
+                break;
+            case DOWN: this.directionVertical=direction;
+                break;
+            default:this.direction=direction;
+        }
+    }
+    public boolean isRight(){
+        return isRight;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public Direction getDirectionVertical() {
+        return directionVertical;
+    }
+
+    public void setDirectionVertical(Direction directionVertical) {
+        this.directionVertical = directionVertical;
+    }
     public int getStepCounter() {
         return stepCounter;
     }

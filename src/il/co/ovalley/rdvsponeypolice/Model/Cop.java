@@ -10,6 +10,7 @@ public abstract class Cop extends GameObject {
         super();
         drawables=copDrawables;
         m_chanceNotToShoot=100;
+        isDying=false;
 
 
     }
@@ -18,6 +19,13 @@ public abstract class Cop extends GameObject {
         return type;
     }
 
+    public boolean isDying() {
+        return isDying;
+    }
+
+    public void setDying(boolean isDying) {
+        this.isDying = isDying;
+    }
 
     public void setType(CopType type) {
         this.type = type;
@@ -30,7 +38,7 @@ public abstract class Cop extends GameObject {
     private int loadingTime;
     private int loadingTimeCounter;
     private final CopDrawables drawables;
-
+    private boolean isDying;
     public CopDrawables getDrawables() {
         return drawables;
     }

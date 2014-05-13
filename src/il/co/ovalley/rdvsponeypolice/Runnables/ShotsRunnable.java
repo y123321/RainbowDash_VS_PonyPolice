@@ -33,7 +33,7 @@ public class ShotsRunnable  {/*
     private void shotNextMove(Shot shot) {
         Rect RDRect=new Rect();
         m_gameRunnable.getRainbowDash().getHitRect(RDRect);
-        if(m_gameRunnable.getClockCounter()%shot.getWaitTime()==0)shot.runUpdate();
+        if(m_gameRunnable.getClockCounter()%shot.getWaitTime()==0)shot.runViewUpdate();
         Rect shotRect=new Rect();
         shot.getHitRect(shotRect);
         if(shotRect.intersect(RDRect)) hitDash(shot);
@@ -48,7 +48,7 @@ public class ShotsRunnable  {/*
         if(m_shots.contains(shot))m_shots.remove(shot);
         else Log.d("test", "Shot unregisterred. why?");
         shot.isDead(true);
-        shot.runUpdate();
+        shot.runViewUpdate();
         shot=null;
     }*/
 }

@@ -38,11 +38,11 @@ public class CheckDropsHitThread implements Runnable {
         while (GameModel.isRunning) {
             for (CopController cop : m_Cops) {
                 if (cop.getModel().isDead()) continue;
-                Rect copRect = cop.hitRect;
+                Rect copRect = cop.mHitRect;
                 cop.getView().getHitRect(copRect);
                 for (DropController drop : m_Drops) {
                     if (drop.getModel().isDead()) continue;
-                    Rect dropRect = drop.hitRect;
+                    Rect dropRect = drop.mHitRect;
                     drop.getView().getHitRect(dropRect);
                     if (dropRect.intersect(copRect)) kill(drop, cop);
                 }
@@ -59,7 +59,6 @@ public class CheckDropsHitThread implements Runnable {
 
     private void kill(final DropController drop, final CopController cop) {
         drop.getModel().setDead(true);
-        cop.getModel().setDead(true);
-        Log.d("test", "HIT!");
+        if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setDying(true);
     }
 }

@@ -32,10 +32,10 @@ public class CheckShotsHitThread implements Runnable {
             e.printStackTrace();
         }
         while (GameModel.isRunning) {
-            m_RD.getView().getHitRect(m_RD.hitRect);
+            m_RD.getView().getHitRect(m_RD.mHitRect);
             for (ShotController shot : m_Shots) {
-                shot.getView().getHitRect(shot.hitRect);
-                if (shot.hitRect.intersect(m_RD.hitRect)) kill(shot, m_RD);
+                shot.getView().getHitRect(shot.mHitRect);
+                if (shot.mHitRect.intersect(m_RD.mHitRect)) kill(shot, m_RD);
             }
             try {
                 Thread.sleep(Common.ITERATION_PAUSE_TIME);

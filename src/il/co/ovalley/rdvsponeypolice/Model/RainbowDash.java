@@ -39,8 +39,7 @@ public class RainbowDash extends GameObject {
     private float rotation;
     @Override
     protected void init() {
-
-        goingToX=150;
+        goingToX=200;
         goingToY=200;
         pullDownSpeedAdvance=0.3f;
         setWaitTime(1);

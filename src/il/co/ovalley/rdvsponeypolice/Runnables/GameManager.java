@@ -10,7 +10,6 @@ import il.co.ovalley.rdvsponeypolice.Model.CopType;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
-import il.co.ovalley.rdvsponeypolice.View.GameView;
 
 import java.util.ArrayList;
 
@@ -34,9 +33,9 @@ public class GameManager implements Runnable{
 
     }
 
-    private void adjustDropLocToGameViewBehind(Loc location, GameView view) {
-        if (!view.isRight()) {
-            location.x += view.getWidth()-view.getShotPadding();
+    private void adjustDropLocToGameViewBehind(Loc location, GameController controller) {
+        if (!controller.getModel().isRight()) {
+            location.x += controller.getView().getWidth()-controller.getView().getShotPadding();
         }
      //   else location.x+=30;
     }
@@ -47,7 +46,7 @@ public class GameManager implements Runnable{
         m_RainbowDashController = GameFactory.createRainbowDashController(m_Layout);
         m_Controllers.add(m_RainbowDashController);
         m_RainbowDashController.startRDListener();
-        for(int i=0;i<60;i++){
+        for(int i=0;i<50;i++){
             m_Controllers.add(GameFactory.createDropController(m_Layout));
             m_Controllers.add(GameFactory.createShotController(m_Layout));
         }
@@ -143,7 +142,7 @@ public class GameManager implements Runnable{
 
     private void spawnCops() {
         if (m_GameModel.get_LoopsCounter() % m_GameModel.get_CopsSpawnTime()==0) {
-            CopType copType=m_GameModel.get_LoopsCounter()>30000? CopType.NINJA:CopType.SIMPLE;
+            CopType copType=m_GameModel.get_LoopsCounter()>3000? CopType.NINJA:CopType.SIMPLE;
             getNewCop(copType);
         }
             m_GameModel.increaseOnScreenCopsCounter();
@@ -165,7 +164,7 @@ public class GameManager implements Runnable{
             if(controller instanceof DropController && controller.isOutOfGame()){
                 controller.resurrect();
                 Loc rdLocation= Common.getViewLocation(m_RainbowDashController.getView(),m_RainbowDashController.getModel().loc);
-                adjustDropLocToGameViewBehind(rdLocation, m_RainbowDashController.getView());
+                adjustDropLocToGameViewBehind(rdLocation, m_RainbowDashController);
                 Common.setViewLocation(controller.getView(), rdLocation);
                 return;
             }
@@ -176,7 +175,7 @@ public class GameManager implements Runnable{
             if (controller instanceof ShotController && controller.isOutOfGame()) {
                 controller.resurrect();
                 Loc location= Common.getViewLocation(cop.getView(),cop.getModel().loc);
-                adjustDropLocToGameViewBehind(location, cop.getView());
+                adjustDropLocToGameViewBehind(location, cop);
                 Common.setViewLocation(controller.getView(), location);
                 return;
             }

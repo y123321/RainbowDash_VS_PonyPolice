@@ -78,7 +78,7 @@
                     if(m_Pause) synchronized (m_PauseObject){
                         m_PauseObject.wait();
                     }
-                    m_rainbowDash.runUpdate();
+                    m_rainbowDash.runViewUpdate();
                     updateCopsAndDrops();
                     updateDrops();
                     updateShots();
@@ -95,7 +95,7 @@
         private void updateDrops() {
             for(Drop drop:m_drops)
                 if(drop!=null)
-                    if(getClockCounter() % drop.getWaitTime() == 0) drop.runUpdate();
+                    if(getClockCounter() % drop.getWaitTime() == 0) drop.runViewUpdate();
         }
 
         private void stopIfGameLost() {
@@ -153,7 +153,7 @@
         }
 
         protected void shoot(Cop cop){
-            cop.runUpdate();
+            cop.runViewUpdate();
             Rect rect=new Rect();
             cop.getHitRect(rect);
             final Loc hornLocation=getHornLocation(cop, rect);
