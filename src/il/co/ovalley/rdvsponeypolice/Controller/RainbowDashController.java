@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -50,9 +51,7 @@ public class RainbowDashController extends GameController {
      */
     @Override
     protected boolean runModelUpdate() {
-        stopIfArrived();
         if (mRainbowDashModel.isReleased()) {
-            releaseFromCage();
             return true;
         }
         if (checkIfLost()){
@@ -68,13 +67,14 @@ public class RainbowDashController extends GameController {
     @Override
     public void runViewUpdate() {
 
+        if(mRainbowDashView.getY()<0) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
+        if(mRainbowDashView.getY()>800) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
 
         if(mRainbowDashModel.isReleased()){
+            releaseFromCage();
             releaseAnimation();
             mRainbowDashModel.setReleased(false);
-            return;
         }
-
         if (mRainbowDashModel.isCaged()) {
             pullDown();
             return;
@@ -89,6 +89,8 @@ public class RainbowDashController extends GameController {
             return;
         }
         setNextLocation(Common.getViewLocation(mRainbowDashView, mRainbowDashModel.loc));
+        stopIfArrived();
+
 
 
     }
@@ -138,7 +140,7 @@ public class RainbowDashController extends GameController {
     }
 
     private boolean stopIfArrived() {
-        float minSpeed = 2;
+        float minSpeed = getModel().getXSpeed()*2;
         float xSpeed = getXSpeedOrMin(minSpeed);//getModel().getXSpeed();
         float ySpeed = getYSpeedOrMin(minSpeed);//getModel().getYSpeed();
 
@@ -257,12 +259,13 @@ public class RainbowDashController extends GameController {
                 int action = event.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
-                        setGoal(event.getX(), event.getY());
+                        if(Math.abs(event.getY()-mRainbowDashModel.goingToY)>getYSpeedOrMin(rd.getXSpeed())*2) mRainbowDashModel.goingToY=event.getY();
+                        if(Math.abs(event.getX()-mRainbowDashModel.goingToX)>rd.getXSpeed()*2) mRainbowDashModel.goingToX=event.getX();
                         changeDirection();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        setGoal(event.getX(), event.getY());
-                        changeDirection();
+                        if(Math.abs(event.getY()-mRainbowDashModel.goingToY)>rd.getYSpeed()*2) mRainbowDashModel.goingToY=event.getY();
+                        if(Math.abs(event.getX()-mRainbowDashModel.goingToX)>rd.getXSpeed()*2) mRainbowDashModel.goingToX=event.getX();                        changeDirection();
                         break;
                     case MotionEvent.ACTION_UP:
                         (getModel()).setDropping(true);

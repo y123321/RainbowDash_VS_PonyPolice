@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<transition xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/police_pony_brute0_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute10_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute2_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute3_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute4_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute5_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute6_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute7_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute8_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute9_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute10_left_rescaled"/>
+    <item android:drawable="@drawable/police_pony_brute11_left_rescaled"/>
+</transition>

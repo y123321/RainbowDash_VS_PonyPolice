@@ -9,12 +9,13 @@ public class DropView extends GameView {
 
     public DropView(GameLayoutView container) {
         super(container);
+        setImageResource(R.drawable.shit);
+
 
     }
 
     @Override
     protected void init() {
-        setImageResource(R.drawable.shit);
 
 
     }

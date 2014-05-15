@@ -7,3 +7,4 @@ public class Loc {
     public float x;
     public float y;
 }
+

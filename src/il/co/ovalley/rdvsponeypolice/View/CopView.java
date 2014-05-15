@@ -27,7 +27,7 @@ public class CopView extends GameView {
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
         setShotPadding(0);
-
+        setImageResource(R.drawable.police_pony_brute_left);
     }
 
     @Override
@@ -46,14 +46,14 @@ public class CopView extends GameView {
     }
     public void walkAnimation(Direction direction) {
         int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;
-        startAnimation(resource);
 
+        startAnimation(resource);
     }
 
     private void startAnimation(int resource) {
         setImageResource(resource);
+        ;
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
-
         setImageDrawable(animation.getFrame(m_DrawableState));
         m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
     }
