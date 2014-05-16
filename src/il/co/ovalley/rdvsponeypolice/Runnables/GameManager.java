@@ -5,10 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.*;
-import il.co.ovalley.rdvsponeypolice.Model.Cop;
-import il.co.ovalley.rdvsponeypolice.Model.CopType;
-import il.co.ovalley.rdvsponeypolice.Model.GameModel;
-import il.co.ovalley.rdvsponeypolice.Model.Loc;
+import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 import java.util.ArrayList;
@@ -51,8 +48,9 @@ public class GameManager implements Runnable{
             m_Controllers.add(GameFactory.createShotController(m_Layout));
         }
         for(int i=0;i<30;i++){
-            m_Controllers.add(GameFactory.createCopController(CopType.NINJA,m_Layout));
-            m_Controllers.add(GameFactory.createCopController(CopType.SIMPLE, m_Layout));
+            m_Controllers.add(GameFactory.createCopController(new NinjaCop(),m_Layout));
+            m_Controllers.add(GameFactory.createCopController(new SimpleCop(), m_Layout));
+            m_Controllers.add(GameFactory.createCopController(new BruteCop(),m_Layout));
         }
        // checkHits=new CheckDropsHitThread(m_Controllers);
         m_PauseObject=new Object();
@@ -142,12 +140,24 @@ public class GameManager implements Runnable{
 
     private void spawnCops() {
         if (m_GameModel.get_LoopsCounter() % m_GameModel.get_CopsSpawnTime()==0) {
-            CopType copType=m_GameModel.get_LoopsCounter()>3000? CopType.NINJA:CopType.SIMPLE;
+            int type= getNeededCopTypeInt();
+                CopType copType=CopType.values()[type];
             getNewCop(copType);
         }
             m_GameModel.increaseOnScreenCopsCounter();
 
         }
+
+    private int getNeededCopTypeInt() {
+
+        int loopsCounter = m_GameModel.get_LoopsCounter();
+
+        int res = loopsCounter / m_GameModel.getNumberOfLoopsForTypeChange() ;
+        if(res>CopType.values().length-1) res=CopType.values().length-1;
+       // res%=CopType.values().length;
+        if(res!=0)res=Common.random.nextInt()%2==1?res:res-1;
+        return res;
+    }
 
     private void getNewCop(CopType type) {
         for(GameController controller:m_Controllers){

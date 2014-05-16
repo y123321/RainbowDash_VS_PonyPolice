@@ -16,8 +16,11 @@ public class CopView extends GameView {
     private CopDrawables m_Drawables;
 
 
-    public CopView(GameLayoutView container) {
+    public CopView(GameLayoutView container,CopDrawables drawables) {
         super(container, Common.getStickToBottomParams());
+        m_Drawables=drawables;
+
+
 
 
     }
@@ -27,7 +30,7 @@ public class CopView extends GameView {
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
         setShotPadding(0);
-        setImageResource(R.drawable.police_pony_brute_left);
+        m_DrawableState=0;
     }
 
     @Override
@@ -52,11 +55,26 @@ public class CopView extends GameView {
 
     private void startAnimation(int resource) {
         setImageResource(resource);
-        ;
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
+
         setImageDrawable(animation.getFrame(m_DrawableState));
         m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
     }
+   /* private void startAnimation(int resource) {
+//        StateListDrawable drawable = (StateListDrawable) getDrawable();
+        if(getDrawable()==null)setImageResource(resource);
+        AnimationDrawable animation = (AnimationDrawable) getDrawable();
+        boolean oneshot = animation.isOneShot();
+        if(!oneshot) {
+            animation.setOneShot(true);
+        }
+
+//        animation.selectDrawable(m_DrawableState);
+        animation.setVisible(true, true);
+
+        m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
+
+    }*/
 
     public void shootAnimation(Direction direction) {
         int resource = direction == Direction.LEFT ? getDrawables().shootingLeftDrawable: getDrawables().shootingRightDrawable;

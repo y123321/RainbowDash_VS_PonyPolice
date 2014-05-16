@@ -13,16 +13,9 @@ public class GameFactory {
     public GameFactory(){
 
     }
-    public static CopController createCopController(CopType type,GameLayoutView layout){
-        switch (type){
-            case
-                    NINJA:return new CopController(layout.getContext(),new NinjaCop(),new CopView(layout),true);
+    public static CopController createCopController(Cop cop,GameLayoutView layout){
+        return new CopController(layout.getContext(),cop,new CopView(layout,cop.getDrawables()),true);
 
-            case
-                    SIMPLE:return new CopController(layout.getContext(),new SimpleCop(),new CopView(layout),true);
-
-            default:return new CopController(layout.getContext(),new SimpleCop(),new CopView(layout),true);
-        }
     }
     public static DropController createDropController(GameLayoutView layout){
         return new DropController(layout.getContext(),new Drop(),new DropView(layout),true);

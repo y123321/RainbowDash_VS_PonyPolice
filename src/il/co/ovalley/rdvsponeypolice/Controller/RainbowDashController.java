@@ -2,7 +2,6 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -67,8 +66,8 @@ public class RainbowDashController extends GameController {
     @Override
     public void runViewUpdate() {
 
-        if(mRainbowDashView.getY()<0) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
-        if(mRainbowDashView.getY()>800) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
+  //      if(mRainbowDashView.getY()<0) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
+  //      if(mRainbowDashView.getY()>800) Log.d("test","going to "+ mRainbowDashModel.goingToY + " now at "+mRainbowDashView.getY()+" direction "+mRainbowDashModel.getDirectionVertical().toString());
 
         if(mRainbowDashModel.isReleased()){
             releaseFromCage();

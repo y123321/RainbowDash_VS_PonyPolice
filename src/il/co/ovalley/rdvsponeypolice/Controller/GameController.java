@@ -35,7 +35,8 @@ abstract public class GameController {
                     try {
                         runViewUpdate();
                     } catch (Exception e) {
-                        Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString() + "\nGameView wasnt updated");
+                        Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString()+"\n"+e.getStackTrace().toString() + "\nGameView wasnt updated");
+
                     }
                 }
             });

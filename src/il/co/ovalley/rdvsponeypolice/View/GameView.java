@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
 import android.app.Activity;
+import android.graphics.Canvas;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -37,9 +38,11 @@ public abstract class GameView extends ImageView {
 
     }
 
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
 
-
-
+    }
 
     public GameLayoutView getContainer() {
         return m_container;

@@ -10,6 +10,15 @@ public class GameModel {
     private volatile int m_CopsSpawnTime;
     public static volatile boolean isRunning;
 
+    public int getNumberOfLoopsForTypeChange() {
+        return m_NumberOfLoopsForTypeChange;
+    }
+
+    public void setNumberOfLoopsForTypeChange(int m_NumberOfLoopsForTypeChange) {
+        this.m_NumberOfLoopsForTypeChange = m_NumberOfLoopsForTypeChange;
+    }
+
+    private int m_NumberOfLoopsForTypeChange;
     public int get_LoopsCounter() {
         return m_LoopsCounter;
     }
@@ -47,6 +56,7 @@ public class GameModel {
         m_OnScreenCopsCounter=0;
         m_CopsSpawnTime=500;
         m_CopsLimit=40;
+        m_NumberOfLoopsForTypeChange=3000;
 
 
     }

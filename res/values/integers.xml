@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="walking_animation_duration">200</integer>
     <integer name="cage_animation">100</integer>
     <integer name="simple_cop_shooting_animation">200</integer>
     <integer name="simple_cop_walking_animation">500</integer>

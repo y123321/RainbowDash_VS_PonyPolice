@@ -17,7 +17,11 @@ public class SimpleCop extends Cop {
         setLoading(false);
         setStepsLimit(100);
         setXSpeed(1.5f);
-        setType(CopType.SIMPLE);
 
+    }
+
+    @Override
+    public CopType getType() {
+        return CopType.SIMPLE;
     }
 }

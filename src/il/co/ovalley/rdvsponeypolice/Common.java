@@ -31,6 +31,7 @@ public class Common {
     public static RelativeLayout.LayoutParams getStickToBottomParams() {
         RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+     //   params.addRule(RelativeLayout.DRAWING_CACHE_QUALITY_);
         return params;
     }
 

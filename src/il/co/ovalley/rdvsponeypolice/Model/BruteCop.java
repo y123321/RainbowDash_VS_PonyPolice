@@ -3,12 +3,11 @@ package il.co.ovalley.rdvsponeypolice.Model;
 import il.co.ovalley.rdvsponeypolice.R;
 
 /**
- * Created by yuval on 23/04/2014.
+ * Created by yuval on 15/05/2014.
  */
-public class NinjaCop extends Cop {
-    public NinjaCop() {
-        super(new CopDrawables(R.drawable.ninja_poney_left,R.drawable.ninja_poney_right,R.drawable.ninja_poney_left,R.drawable.ninja_poney_right));
-
+public class BruteCop extends Cop {
+    public BruteCop() {
+        super(new CopDrawables(R.drawable.brute_pony__left,R.drawable.brute_pony__right,R.drawable.brute_pony_shooting__left,R.drawable.brute_pony_shooting__right));
     }
 
     @Override
@@ -22,6 +21,6 @@ public class NinjaCop extends Cop {
 
     @Override
     public CopType getType() {
-        return CopType.NINJA;
+        return CopType.BRUTE;
     }
 }

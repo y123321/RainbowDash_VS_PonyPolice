@@ -20,7 +20,7 @@ public class CopController extends GameController {
         super(context, gameObject, gameView,isOutOfGame);
         mCopModel = gameObject;
         mCopView = gameView;
-        mCopView.setDrawables(gameObject.getDrawables());
+
         COPS_COUNTER=0;
         animating=false;
 

@@ -15,9 +15,7 @@ public abstract class Cop extends GameObject {
 
     }
 
-    public CopType getType() {
-        return type;
-    }
+    public abstract CopType getType();
 
     public boolean isDying() {
         return isDying;
@@ -27,9 +25,6 @@ public abstract class Cop extends GameObject {
         this.isDying = isDying;
     }
 
-    public void setType(CopType type) {
-        this.type = type;
-    }
     private CopType type;
     //random number of steps to go iin the same direction before the variable reinitialize
     private int stepsLimit;
@@ -39,6 +34,7 @@ public abstract class Cop extends GameObject {
     private int loadingTimeCounter;
     private final CopDrawables drawables;
     private boolean isDying;
+
     public CopDrawables getDrawables() {
         return drawables;
     }
