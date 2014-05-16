@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
+<item android:drawable="@drawable/camouflage_pony_1_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_2_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_3_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_4_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_5_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_6_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_7_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_8_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/camouflage_pony_9_left" android:duration="@integer/walking_animation_duration"/>
+    <item android:drawable="@drawable/camouflage_pony_10_left" android:duration="@integer/walking_animation_duration"/>
+
+</animation-list>

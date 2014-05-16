@@ -59,6 +59,6 @@ public class CheckDropsHitThread implements Runnable {
 
     private void kill(final DropController drop, final CopController cop) {
         drop.getModel().setDead(true);
-        if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setDying(true);
+        if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setHit(true);
     }
 }

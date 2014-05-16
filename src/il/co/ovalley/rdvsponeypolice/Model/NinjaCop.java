@@ -7,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class NinjaCop extends Cop {
     public NinjaCop() {
-        super(new CopDrawables(R.drawable.ninja_poney_left,R.drawable.ninja_poney_right,R.drawable.ninja_poney_left,R.drawable.ninja_poney_right));
+        super(new CopDrawables(R.drawable.ninja_poney_left,R.drawable.ninja_poney_right));//,R.drawable.ninja_poney_left,R.drawable.ninja_poney_right));
 
     }
 
@@ -18,6 +18,7 @@ public class NinjaCop extends Cop {
         setLoading(false);
         setStepsLimit(150);
         setXSpeed(3);
+        setOriginalHitPoints(3);
     }
 
     @Override

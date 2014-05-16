@@ -7,6 +7,16 @@ public class GameModel {
     private int m_LoopsCounter;
     private int m_OnScreenCopsCounter;
     private int m_CopsLimit;
+    private int m_Score;
+
+    public int getScore() {
+        return m_Score;
+    }
+
+    public void setScore(int m_Score) {
+        this.m_Score = m_Score;
+    }
+
     private volatile int m_CopsSpawnTime;
     public static volatile boolean isRunning;
 

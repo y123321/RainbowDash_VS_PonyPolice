@@ -51,6 +51,7 @@ public class GameManager implements Runnable{
             m_Controllers.add(GameFactory.createCopController(new NinjaCop(),m_Layout));
             m_Controllers.add(GameFactory.createCopController(new SimpleCop(), m_Layout));
             m_Controllers.add(GameFactory.createCopController(new BruteCop(),m_Layout));
+            m_Controllers.add(GameFactory.createCopController(new CamouflageCop(),m_Layout));
         }
        // checkHits=new CheckDropsHitThread(m_Controllers);
         m_PauseObject=new Object();

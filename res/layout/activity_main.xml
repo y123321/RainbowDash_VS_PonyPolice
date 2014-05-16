@@ -6,4 +6,6 @@
     android:background="@drawable/equestria"
     tools:context="il.co.ovalley.dashvsponypolice.app.MainActivity"
        >
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Score"/>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/tvScore"/>
 </il.co.ovalley.rdvsponeypolice.View.GameLayoutView>

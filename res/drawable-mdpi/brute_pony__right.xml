@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
 <item android:drawable="@drawable/brute_pony_1_right" android:duration="@integer/walking_animation_duration"/>
-<item android:drawable="@drawable/brute_pony_10_right" android:duration="@integer/walking_animation_duration"/>
 <item android:drawable="@drawable/brute_pony_2_right" android:duration="@integer/walking_animation_duration"/>
 <item android:drawable="@drawable/brute_pony_3_right" android:duration="@integer/walking_animation_duration"/>
 <item android:drawable="@drawable/brute_pony_4_right" android:duration="@integer/walking_animation_duration"/>
@@ -10,4 +9,6 @@
 <item android:drawable="@drawable/brute_pony_7_right" android:duration="@integer/walking_animation_duration"/>
 <item android:drawable="@drawable/brute_pony_8_right" android:duration="@integer/walking_animation_duration"/>
 <item android:drawable="@drawable/brute_pony_9_right" android:duration="@integer/walking_animation_duration"/>
+    <item android:drawable="@drawable/brute_pony_10_right" android:duration="@integer/walking_animation_duration"/>
+
 </animation-list>

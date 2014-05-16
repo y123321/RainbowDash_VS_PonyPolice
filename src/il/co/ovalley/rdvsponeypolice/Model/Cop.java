@@ -4,16 +4,41 @@ package il.co.ovalley.rdvsponeypolice.Model;
  * Created by yuval on 16/04/2014.
  */
 public abstract class Cop extends GameObject {
+    private int m_ScorePoints;
     private int m_chanceNotToShoot;
-
+    private float m_OriginalHitPoints;
+    private float m_CurrentHitPoints;
+    private boolean m_isHit;
     public Cop(CopDrawables copDrawables) {
         super();
         drawables=copDrawables;
         m_chanceNotToShoot=100;
         isDying=false;
+        m_OriginalHitPoints=2;
+        m_CurrentHitPoints=m_OriginalHitPoints;
+        m_isHit=false;
+        m_ScorePoints=10;
 
 
     }
+    public float getOriginalHitPoints() {
+        return m_OriginalHitPoints;
+    }
+
+    public void setOriginalHitPoints(int hitPoints) {
+        this.m_OriginalHitPoints = hitPoints;
+        this.m_CurrentHitPoints=hitPoints;
+    }
+
+    public float getCurrentHitPoints() {
+        return m_CurrentHitPoints;
+    }
+
+    public void decreaseCurrentHitPoints() {
+        this.m_CurrentHitPoints--;
+    }
+
+
 
     public abstract CopType getType();
 
@@ -93,5 +118,21 @@ public abstract class Cop extends GameObject {
     public void makeShot() {
         setLoading(true);
         loadingTimeCounter=loadingTime;
+    }
+
+    public boolean isHit() {
+        return m_isHit;
+    }
+
+    public void setHit(boolean m_isHit) {
+        this.m_isHit = m_isHit;
+    }
+
+    public int getScorePoints() {
+        return m_ScorePoints;
+    }
+
+    public void setScorePoints(int m_ScorePoints) {
+        this.m_ScorePoints = m_ScorePoints;
     }
 }

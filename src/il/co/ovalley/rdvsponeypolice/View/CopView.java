@@ -31,6 +31,8 @@ public class CopView extends GameView {
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
         setShotPadding(0);
         m_DrawableState=0;
+
+
     }
 
     @Override
@@ -77,9 +79,8 @@ public class CopView extends GameView {
     }*/
 
     public void shootAnimation(Direction direction) {
-        int resource = direction == Direction.LEFT ? getDrawables().shootingLeftDrawable: getDrawables().shootingRightDrawable;
-        startAnimation(resource);
-
+      //  int resource = direction == Direction.LEFT ? getDrawables().shootingLeftDrawable: getDrawables().shootingRightDrawable;
+     //   startAnimation(resource);
         walkAnimation(direction);
 
     }
@@ -95,4 +96,6 @@ public class CopView extends GameView {
     public void dyingAnimation(){
         startAnimation(R.drawable.police_pony_shit_left);
     }
+
+
 }
