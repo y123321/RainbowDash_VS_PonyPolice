@@ -4,11 +4,13 @@ package il.co.ovalley.rdvsponeypolice.Model;
  * Created by yuval on 08/05/2014.
  */
 public class GameModel {
+    private int numberOfDrops;
     private int m_LoopsCounter;
     private int m_OnScreenCopsCounter;
     private int m_CopsLimit;
     private int m_Score;
-    public static int ITERATION_PAUSE_TIME=5;
+    public static int ITERATION_PAUSE_TIME=10;
+    private int numberOfCopsPerType;
 
     public int getScore() {
         return m_Score;
@@ -72,8 +74,16 @@ public class GameModel {
         m_CopsLimit=40;
         m_NumberOfLoopsForTypeChange=3000;
         m_Score=0;
-
+        numberOfCopsPerType = 30;
+        numberOfDrops=50;
 
     }
 
+    public int getNumberOfCopsPerType() {
+        return numberOfCopsPerType;
+    }
+
+    public int getNumberOfDrops() {
+        return numberOfDrops;
+    }
 }

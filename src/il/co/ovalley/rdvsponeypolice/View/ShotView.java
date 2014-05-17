@@ -8,8 +8,9 @@ import il.co.ovalley.rdvsponeypolice.R;
 public class ShotView extends GameView {
     public ShotView(GameLayoutView container) {
         super(container);
-        setImageResource(R.drawable.circle_small);
+        setImageResource(R.drawable.shot);
     }
+
 
     @Override
     protected void init() {

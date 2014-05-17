@@ -44,7 +44,7 @@ public class CopController extends GameController {
     protected boolean runModelUpdate() {
         if (animating) return false;
         dieIfDying();
-        if (shootIfShooting()) return false;
+  //      if (shootIfShooting()) return false;
         if (loadIfLoading()) return false;
         return true;
 

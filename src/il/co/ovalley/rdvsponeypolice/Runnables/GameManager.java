@@ -9,14 +9,12 @@ import il.co.ovalley.rdvsponeypolice.Controller.*;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
-import java.util.ArrayList;
-
 /**
  * Created by yuval on 30/04/2014.
  */
 public class GameManager implements Runnable{
     Object m_PauseObject;
-    public volatile ArrayList<GameController> m_Controllers;
+    public volatile GameController[] m_Controllers;// ArrayList<GameController> m_Controllers;
     public GameLayoutView m_Layout;
     private Context m_Context;
     private GameModel m_GameModel = new GameModel();
@@ -43,19 +41,21 @@ public class GameManager implements Runnable{
 
     private void init() {
 
-        m_Controllers = new ArrayList<GameController>();
+  //      m_Controllers = new ArrayList<GameController>();
         m_RainbowDashController = GameFactory.createRainbowDashController(m_Layout);
-        m_Controllers.add(m_RainbowDashController);
+    //    m_Controllers.add(m_RainbowDashController);
         m_RainbowDashController.startRDListener();
-        for(int i=0;i<50;i++){
-            m_Controllers.add(GameFactory.createDropController(m_Layout));
-            m_Controllers.add(GameFactory.createShotController(m_Layout));
+        m_Controllers=new GameController[m_GameModel.getNumberOfCopsPerType()*CopType.values().length+m_GameModel.getNumberOfDrops()+1];
+        m_Controllers[0]=m_RainbowDashController;
+        for(int i=1;i<=m_GameModel.getNumberOfDrops();i+=2){
+            m_Controllers[i]=GameFactory.createDropController(m_Layout);
+            m_Controllers[i+1]=GameFactory.createShotController(m_Layout);
         }
-        for(int i=0;i<30;i++){
-            m_Controllers.add(GameFactory.createCopController(new NinjaCop(),m_Layout));
-            m_Controllers.add(GameFactory.createCopController(new SimpleCop(), m_Layout));
-            m_Controllers.add(GameFactory.createCopController(new BruteCop(),m_Layout));
-            m_Controllers.add(GameFactory.createCopController(new CamouflageCop(),m_Layout));
+        for(int i=m_GameModel.getNumberOfDrops()+1;i< m_Controllers.length;i+=CopType.values().length){
+            m_Controllers[i]=GameFactory.createCopController(new NinjaCop(),m_Layout);
+            m_Controllers[i+1]=GameFactory.createCopController(new SimpleCop(), m_Layout);
+            m_Controllers[i+2]=GameFactory.createCopController(new BruteCop(),m_Layout);
+            m_Controllers[i+3]=(GameFactory.createCopController(new CamouflageCop(),m_Layout));
         }
        // checkHits=new CheckDropsHitThread(m_Controllers);
         m_PauseObject=new Object();
@@ -105,7 +105,9 @@ public class GameManager implements Runnable{
                         controller.update();
                         if(controller instanceof CopController){
                             CopController cop=(CopController)controller;
-                            if (cop.getModel().isShooting()) shoot(cop);
+                            if (cop.getModel().isShooting()) {
+                                shoot(cop);
+                            }
                         }
                     }
                 }
@@ -136,6 +138,8 @@ public class GameManager implements Runnable{
             @Override
             public void run() {
                 getNewShot(cop);
+                cop.getModel().setShooting(false);
+
 
             }
         });

@@ -17,7 +17,7 @@ public class CheckDropsHitThread implements Runnable {
     volatile ArrayList<CopController> m_Cops;
     volatile ArrayList<DropController> m_Drops;
 
-    public CheckDropsHitThread(ArrayList<GameController> controllers) {
+    public CheckDropsHitThread(GameController[] controllers) {
         m_Cops = new ArrayList<CopController>();
         m_Drops = new ArrayList<DropController>();
         for (GameController controller : controllers) {
