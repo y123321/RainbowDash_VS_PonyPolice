@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
-    <item android:drawable="@drawable/police_pony_shooting_left1" android:duration="@integer/simple_cop_shooting_animation"/>
-    <item android:drawable="@drawable/police_pony_shooting_left2" android:duration="@integer/simple_cop_shooting_animation"/>
-    <item android:drawable="@drawable/police_pony_shooting_left3" android:duration="@integer/simple_cop_shooting_animation"/>
-</animation-list>

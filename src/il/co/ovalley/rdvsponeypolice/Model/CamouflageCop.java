@@ -19,6 +19,7 @@ public class CamouflageCop extends Cop {
     protected void init() {
         setOriginalHitPoints(3);
         setScorePoints(55);
+        setXSpeed(3.5f);
 
     }
 }

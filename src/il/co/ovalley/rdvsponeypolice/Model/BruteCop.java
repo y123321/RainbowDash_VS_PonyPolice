@@ -19,6 +19,7 @@ public class BruteCop extends Cop {
         setXSpeed(3);
         setOriginalHitPoints(4);
         setScorePoints(50);
+
     }
 
     @Override

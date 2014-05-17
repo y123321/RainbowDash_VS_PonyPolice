@@ -8,19 +8,25 @@ public abstract class Cop extends GameObject {
     private int m_chanceNotToShoot;
     private float m_OriginalHitPoints;
     private float m_CurrentHitPoints;
-    private boolean m_isHit;
+    private boolean[] m_isHit;
     public Cop(CopDrawables copDrawables) {
         super();
         drawables=copDrawables;
         m_chanceNotToShoot=100;
         isDying=false;
         m_OriginalHitPoints=2;
-        m_CurrentHitPoints=m_OriginalHitPoints;
-        m_isHit=false;
+        m_isHit=new boolean[(int)Math.floor(m_OriginalHitPoints)];
         m_ScorePoints=10;
 
 
     }
+
+    @Override
+    public void initGameObject() {
+        m_CurrentHitPoints=m_OriginalHitPoints;
+        super.initGameObject();
+    }
+
     public float getOriginalHitPoints() {
         return m_OriginalHitPoints;
     }
@@ -121,11 +127,22 @@ public abstract class Cop extends GameObject {
     }
 
     public boolean isHit() {
-        return m_isHit;
+        return m_isHit[0];
     }
 
-    public void setHit(boolean m_isHit) {
-        this.m_isHit = m_isHit;
+    public void setHit() {
+        for (int i=0;i<m_isHit.length;i++)
+            if(m_isHit[i] == false){
+             m_isHit[i]=true;
+                return;
+            }
+    }
+    public void removeHit(){
+        for (int i=m_isHit.length;i>0;i--)
+            if(m_isHit[i-1] == true){
+                m_isHit[i-1]=false;
+                return;
+            }
     }
 
     public int getScorePoints() {

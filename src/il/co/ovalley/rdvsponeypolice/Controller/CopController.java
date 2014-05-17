@@ -45,14 +45,6 @@ public class CopController extends GameController {
         if (dieIfDying()) return false;
         if (shootIfShooting()) return false;
         if (loadIfLoading()) return false;
-        if (getModel().isHit()) {
-            getModel().decreaseCurrentHitPoints();
-            if (getModel().getCurrentHitPoints() <= 0) {
-                getModel().setDying(true);
-            }
-            return true;
-
-        }
         return true;
 
 
@@ -64,12 +56,13 @@ public class CopController extends GameController {
     public void runViewUpdate() {
         changeCopDirectionOnBorders(Common.SCREEN_BORDERS);
         if(getModel().isHit()){
+            getModel().decreaseCurrentHitPoints();
+            if (getModel().getCurrentHitPoints() <= 0) {
+                getModel().setDying(true);
+            }
+            getModel().removeHit();
                 getView().setAlpha(getModel().getCurrentHitPoints() / getModel().getOriginalHitPoints());
-            getModel().setHit(false);
-
-
-
-        }
+                   }
         move();
 
         decideIfToShoot();

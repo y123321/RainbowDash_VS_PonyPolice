@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.Log;
-import il.co.ovalley.rdvsponeypolice.Model.Direction;
 import il.co.ovalley.rdvsponeypolice.Model.GameObject;
 import il.co.ovalley.rdvsponeypolice.View.GameView;
 
@@ -32,12 +31,12 @@ abstract public class GameController {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
+               //     try {
                         runViewUpdate();
-                    } catch (Exception e) {
-                        Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString()+"\n"+e.getStackTrace().toString() + "\nGameView wasnt updated");
-
-                    }
+//                    } catch (Exception e) {
+//                        Log.d("test", "GameView of type" + getClass().getName() + " threw exception: " + e.toString()+"\n"+e.getStackTrace().toString() + "\nGameView wasnt updated");
+//
+//                    }
                 }
             });
         }

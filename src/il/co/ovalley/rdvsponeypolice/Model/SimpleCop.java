@@ -7,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class SimpleCop extends Cop {
     public SimpleCop() {
-        super(new CopDrawables(R.drawable.police_pony_small_left,R.drawable.police_pony_small_right));//,R.drawable.police_pony_shooting_left,R.drawable.police_pony_shooting_right));
+        super(new CopDrawables(R.drawable.simple_cop__left,R.drawable.simple_cop__right));//,R.drawable.police_pony_shooting_left,R.drawable.police_pony_shooting_right));
     }
 
     @Override

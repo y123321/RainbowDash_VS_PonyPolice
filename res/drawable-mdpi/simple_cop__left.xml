@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
+<item android:drawable="@drawable/simple_cop_1_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_2_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_3_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_4_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_5_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_6_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_7_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_8_left" android:duration="@integer/walking_animation_duration"/>
+<item android:drawable="@drawable/simple_cop_9_left" android:duration="@integer/walking_animation_duration"/>
+    <item android:drawable="@drawable/simple_cop_10_left" android:duration="@integer/walking_animation_duration"/>
+
+</animation-list>

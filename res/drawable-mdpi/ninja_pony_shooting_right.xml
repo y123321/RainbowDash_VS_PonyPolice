@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ninja_pony_small_right1" android:duration="@integer/ninja_shooting_animation"/>
-    <item android:drawable="@drawable/ninja_pony_small_right1" android:duration="@integer/ninja_shooting_animation"/>
-</animation-list>
