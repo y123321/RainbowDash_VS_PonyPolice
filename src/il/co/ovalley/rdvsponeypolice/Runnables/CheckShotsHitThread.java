@@ -1,7 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.util.Log;
-import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.GameController;
 import il.co.ovalley.rdvsponeypolice.Controller.RainbowDashController;
 import il.co.ovalley.rdvsponeypolice.Controller.ShotController;
@@ -38,7 +37,7 @@ public class CheckShotsHitThread implements Runnable {
                 if (shot.mHitRect.intersect(m_RD.mHitRect)) kill(shot, m_RD);
             }
             try {
-                Thread.sleep(Common.ITERATION_PAUSE_TIME);
+                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
  * Created by yuval on 18/04/2014.
  */
 public abstract class GameView extends ImageView {
+    public static final int SCREEN_BORDERS = 10;
 
     private GameLayoutView m_container;
 

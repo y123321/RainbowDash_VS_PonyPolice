@@ -13,9 +13,7 @@ import java.util.Random;
  * Created by yuval on 17/04/2014.
  */
 public class Common {
-    public static final int SCREEN_BORDERS = 10;
     public static Random random=new Random();
-    public static int ITERATION_PAUSE_TIME=5;
 
     private static Point screenSize;
     public static Point getScreenSize(Context context){

@@ -8,11 +8,15 @@ public class GameModel {
     private int m_OnScreenCopsCounter;
     private int m_CopsLimit;
     private int m_Score;
+    public static int ITERATION_PAUSE_TIME=5;
 
     public int getScore() {
         return m_Score;
     }
 
+    public void addToScore(int score) {
+        this.m_Score += score;
+    }
     public void setScore(int m_Score) {
         this.m_Score = m_Score;
     }
@@ -67,7 +71,9 @@ public class GameModel {
         m_CopsSpawnTime=500;
         m_CopsLimit=40;
         m_NumberOfLoopsForTypeChange=3000;
+        m_Score=0;
 
 
     }
+
 }

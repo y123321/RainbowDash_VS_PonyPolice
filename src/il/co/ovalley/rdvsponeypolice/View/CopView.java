@@ -46,7 +46,7 @@ public class CopView extends GameView {
     }
     private int getRandomWidth() {
         Point size=Common.getScreenSize(getContext());
-        return Common.random.nextInt(size.x-Common.SCREEN_BORDERS)+Common.SCREEN_BORDERS;
+        return Common.random.nextInt(size.x-SCREEN_BORDERS)+SCREEN_BORDERS;
     }
     public void walkAnimation(Direction direction) {
         int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;

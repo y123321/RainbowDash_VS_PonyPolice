@@ -1,14 +1,16 @@
 package il.co.ovalley.rdvsponeypolice;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
+import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
-import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 
@@ -28,12 +30,21 @@ public class MainActivity extends Activity {
     }
 
     private void init() {
+        TextView tv=(TextView)findViewById(R.id.tvScore);
+
+            tv.setText("0");
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
-        mGameManager = GameFactory.createGameManager(m_Layout);
+        mGameManager = GameFactory.createGameManager(m_Layout,tv);
         new Thread(mGameManager).start();
 
     }
 
+private void gotoHighScores(){
+    Intent intent=new Intent(this,HighScoresActivity.class);
+    intent.putExtra("score",mGameManager.getScore());
+    startActivity(intent);
+        
+    }
 
 
 
@@ -63,7 +74,7 @@ public class MainActivity extends Activity {
             case  R.id.action_new_game:
                 GameModel.isRunning=false;
                 try {
-                    Thread.sleep(Common.ITERATION_PAUSE_TIME);
+                    Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

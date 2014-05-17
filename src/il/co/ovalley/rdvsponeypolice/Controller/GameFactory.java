@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.util.Log;
+import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 import il.co.ovalley.rdvsponeypolice.View.*;
@@ -27,9 +28,9 @@ public class GameFactory {
     public static RainbowDashController createRainbowDashController(GameLayoutView m_layout) {
         return new RainbowDashController(m_layout.getContext(),new RainbowDash(),new RainbowDashView(m_layout));
     }
-    public static GameManager createGameManager(GameLayoutView layout){
+    public static GameManager createGameManager(GameLayoutView layout,TextView scoreView){
         Log.d("test", "factory");
 
-        return new GameManager(new GameModel(),layout);
+        return new GameManager(new GameModel(),layout, scoreView);
     }
 }

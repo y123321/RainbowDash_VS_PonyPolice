@@ -5,6 +5,7 @@ import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.Cop;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
 import il.co.ovalley.rdvsponeypolice.View.CopView;
+import il.co.ovalley.rdvsponeypolice.View.GameView;
 
 /**
  * Created by yuval on 30/04/2014.
@@ -42,7 +43,7 @@ public class CopController extends GameController {
     @Override
     protected boolean runModelUpdate() {
         if (animating) return false;
-        if (dieIfDying()) return false;
+        dieIfDying();
         if (shootIfShooting()) return false;
         if (loadIfLoading()) return false;
         return true;
@@ -54,7 +55,7 @@ public class CopController extends GameController {
      */
     @Override
     public void runViewUpdate() {
-        changeCopDirectionOnBorders(Common.SCREEN_BORDERS);
+        changeCopDirectionOnBorders(GameView.SCREEN_BORDERS);
         if(getModel().isHit()){
             getModel().decreaseCurrentHitPoints();
             if (getModel().getCurrentHitPoints() <= 0) {
@@ -80,24 +81,14 @@ public class CopController extends GameController {
 
     private boolean dieIfDying() {
         if(getModel().isDying()){
-        /*    getView().dyingAnimation();
-            animating=true;
-            new Thread(new Runnable() {//todo: make animation with events
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(R.integer.simple_cop_shooting_animation*3);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }*/
+
                     getModel().setDead(true);
                     animating=false;
                     getModel().setDying(false);
 
+
                 }
-       //     }).start();
-    //        return true;
-  //      }
+
         return false;
     }
 

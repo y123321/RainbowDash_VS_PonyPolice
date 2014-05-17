@@ -3,6 +3,7 @@ package il.co.ovalley.rdvsponeypolice.Runnables;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.*;
 import il.co.ovalley.rdvsponeypolice.Model.*;
@@ -20,11 +21,14 @@ public class GameManager implements Runnable{
     private Context m_Context;
     private GameModel m_GameModel = new GameModel();
     private RainbowDashController m_RainbowDashController;
+    private TextView m_ScoreView;
     private LruCacheManager cacheManager=new LruCacheManager();
     private boolean m_isPause;
+    private String m_Name;
 
-    public GameManager(GameModel gameModel, GameLayoutView gameLayoutView) {
+    public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView) {
         m_Layout = gameLayoutView;
+        m_ScoreView = scoreView;
         m_Context = gameLayoutView.getContext();
         m_GameModel = gameModel;
 
@@ -56,6 +60,8 @@ public class GameManager implements Runnable{
        // checkHits=new CheckDropsHitThread(m_Controllers);
         m_PauseObject=new Object();
         m_isPause=false;
+//        m_ScoreView.setText(0);
+
         startThreads();
 
 
@@ -78,7 +84,20 @@ public class GameManager implements Runnable{
         if(m_RainbowDashController.getModel().isLost()) GameModel.isRunning=false;
         for (GameController controller : m_Controllers) {
             if (!controller.isOutOfGame()) {
-                if (controller.getModel().isDead()) remove(controller);
+                if (controller.getModel().isDead()) {
+                    remove(controller);
+                    if(controller.getModel() instanceof Cop){
+                        controller.getModel().setDead(false);
+                        m_GameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
+                        ((Activity)m_Context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                m_ScoreView.setText(m_GameModel.getScore()+"");
+
+                            }
+                        });
+                    }
+                }
 
 
                 else {
@@ -203,7 +222,7 @@ public class GameManager implements Runnable{
 
             action();
             try {
-                Thread.sleep(Common.ITERATION_PAUSE_TIME);
+                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -229,6 +248,10 @@ public class GameManager implements Runnable{
     public void pauseGame() {
         m_isPause = true;
 
+    }
+
+    public int getScore() {
+        return m_GameModel.getScore();
     }
 }
 
