@@ -4,6 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:background="@drawable/high_score_background"
+              android:id="@+id/highScoresLayout"
               android:layout_height="match_parent" android:weightSum="1">
 
     <ListView

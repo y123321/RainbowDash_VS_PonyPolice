@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class Common {
     public static Random random=new Random();
+    public static final int STOPSPLASH = 1;
 
     private static Point screenSize;
     public static Point getScreenSize(Context context){

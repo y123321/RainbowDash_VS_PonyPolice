@@ -5,75 +5,75 @@ package il.co.ovalley.rdvsponeypolice.Model;
  */
 public class GameModel {
     private int numberOfDrops;
-    private int m_LoopsCounter;
-    private int m_OnScreenCopsCounter;
-    private int m_CopsLimit;
-    private int m_Score;
+    private int mLoopsCounter;
+    private int mOnScreenCopsCounter;
+    private int mCopsLimit;
+    private int mScore;
     public static int ITERATION_PAUSE_TIME=10;
     private int numberOfCopsPerType;
 
     public int getScore() {
-        return m_Score;
+        return mScore;
     }
 
     public void addToScore(int score) {
-        this.m_Score += score;
+        this.mScore += score;
     }
-    public void setScore(int m_Score) {
-        this.m_Score = m_Score;
+    public void setScore(int mScore) {
+        this.mScore = mScore;
     }
 
-    private volatile int m_CopsSpawnTime;
+    private volatile int mCopsSpawnTime;
     public static volatile boolean isRunning;
 
     public int getNumberOfLoopsForTypeChange() {
-        return m_NumberOfLoopsForTypeChange;
+        return mNumberOfLoopsForTypeChange;
     }
 
-    public void setNumberOfLoopsForTypeChange(int m_NumberOfLoopsForTypeChange) {
-        this.m_NumberOfLoopsForTypeChange = m_NumberOfLoopsForTypeChange;
+    public void setNumberOfLoopsForTypeChange(int mNumberOfLoopsForTypeChange) {
+        this.mNumberOfLoopsForTypeChange = mNumberOfLoopsForTypeChange;
     }
 
-    private int m_NumberOfLoopsForTypeChange;
-    public int get_LoopsCounter() {
-        return m_LoopsCounter;
+    private int mNumberOfLoopsForTypeChange;
+    public int getLoopsCounter() {
+        return mLoopsCounter;
     }
 
     public void increaseLoopsCounter() {
-        this.m_LoopsCounter++;
+        this.mLoopsCounter++;
     }
 
-    public int get_OnScreenCopsCounter() {
-        return m_OnScreenCopsCounter;
+    public int getOnScreenCopsCounter() {
+        return mOnScreenCopsCounter;
     }
 
     public void increaseOnScreenCopsCounter() {
-        this.m_OnScreenCopsCounter++;
+        this.mOnScreenCopsCounter++;
     }
 
-    public int get_CopsLimit() {
-        return m_CopsLimit;
+    public int getCopsLimit() {
+        return mCopsLimit;
     }
 
-    public void set_CopsLimit(int m_CopsLimit) {
-        this.m_CopsLimit = m_CopsLimit;
+    public void setCopsLimit(int mCopsLimit) {
+        this.mCopsLimit = mCopsLimit;
     }
 
-    public int get_CopsSpawnTime() {
-        return m_CopsSpawnTime;
+    public int getCopsSpawnTime() {
+        return mCopsSpawnTime;
     }
 
-    public void set_CopsSpawnTime(int m_CopsSpawnTime) {
-        this.m_CopsSpawnTime = m_CopsSpawnTime;
+    public void setCopsSpawnTime(int mCopsSpawnTime) {
+        this.mCopsSpawnTime = mCopsSpawnTime;
     }
 
     public GameModel(){
-        m_LoopsCounter=1;//only god can divide by zero
-        m_OnScreenCopsCounter=0;
-        m_CopsSpawnTime=500;
-        m_CopsLimit=40;
-        m_NumberOfLoopsForTypeChange=3000;
-        m_Score=0;
+        mLoopsCounter=1;//only god can divide by zero
+        mOnScreenCopsCounter=0;
+        mCopsSpawnTime=500;
+        mCopsLimit=40;
+        mNumberOfLoopsForTypeChange=3000;
+        mScore=0;
         numberOfCopsPerType = 30;
         numberOfDrops=50;
 
@@ -85,5 +85,9 @@ public class GameModel {
 
     public int getNumberOfDrops() {
         return numberOfDrops;
+    }
+
+    public void decreaseCopsSpawnTime(int mils) {
+        mCopsSpawnTime-=mils;
     }
 }

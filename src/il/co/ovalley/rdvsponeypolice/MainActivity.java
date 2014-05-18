@@ -4,22 +4,26 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
-import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 
 public class MainActivity extends Activity {
-    GameRunnable m_GameRunnable;
-    GameLayoutView m_Layout;
-    GameManager mGameManager;
+    private GameLayoutView m_Layout;
+    private GameManager mGameManager;
+    private ImageView mSplash;
+    private Handler mSplashHandler;
+
     private LruCache mMemoryCache;
 
     @Override
@@ -27,12 +31,14 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-   //     init();
+        Log.d("test","?");
+
         init();
         new Thread(mGameManager).start();
     }
 
     private void init() {
+
         TextView tv=(TextView)findViewById(R.id.tvScore);
         getWindow().setFormat(PixelFormat.RGB_565);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);

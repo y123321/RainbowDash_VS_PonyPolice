@@ -13,22 +13,21 @@ import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
  * Created by yuval on 30/04/2014.
  */
 public class GameManager implements Runnable{
-    Object m_PauseObject;
-    public volatile GameController[] m_Controllers;// ArrayList<GameController> m_Controllers;
-    public GameLayoutView m_Layout;
-    private Context m_Context;
-    private GameModel m_GameModel = new GameModel();
-    private RainbowDashController m_RainbowDashController;
-    private TextView m_ScoreView;
+    Object mPauseObject;
+    public volatile GameController[] mControllers;// ArrayList<GameController> mControllers;
+    public GameLayoutView mLayout;
+    private Context mContext;
+    private GameModel mGameModel = new GameModel();
+    private RainbowDashController mRainbowDashController;
+    private TextView mScoreView;
     private LruCacheManager cacheManager=new LruCacheManager();
-    private boolean m_isPause;
-    private String m_Name;
-
+    private boolean misPause;
+    private String mName;
     public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView) {
-        m_Layout = gameLayoutView;
-        m_ScoreView = scoreView;
-        m_Context = gameLayoutView.getContext();
-        m_GameModel = gameModel;
+        mLayout = gameLayoutView;
+        mScoreView = scoreView;
+        mContext = gameLayoutView.getContext();
+        mGameModel = gameModel;
 
     }
 
@@ -48,36 +47,42 @@ public class GameManager implements Runnable{
 
     private void init() {
 
-  //      m_Controllers = new ArrayList<GameController>();
-        m_RainbowDashController = GameFactory.createRainbowDashController(m_Layout);
-    //    m_Controllers.add(m_RainbowDashController);
-        m_RainbowDashController.startRDListener();
-        m_Controllers=new GameController[m_GameModel.getNumberOfCopsPerType()*CopType.values().length+m_GameModel.getNumberOfDrops()+1];
-        m_Controllers[0]=m_RainbowDashController;
-        for(int i=1;i<=m_GameModel.getNumberOfDrops();i+=2){
-            m_Controllers[i]=GameFactory.createDropController(m_Layout);
-            m_Controllers[i+1]=GameFactory.createShotController(m_Layout);
+  //      mControllers = new ArrayList<GameController>();
+        mRainbowDashController = GameFactory.createRainbowDashController(mLayout);
+    //    mControllers.add(mRainbowDashController);
+        mRainbowDashController.startRDListener();
+        mControllers=new GameController[mGameModel.getNumberOfCopsPerType()*CopType.values().length+mGameModel.getNumberOfDrops()+1];
+        mControllers[0]=mRainbowDashController;
+        for(int i=1;i<=mGameModel.getNumberOfDrops();i+=2){
+            mControllers[i]=GameFactory.createDropController(mLayout);
+            mControllers[i+1]=GameFactory.createShotController(mLayout);
         }
-        for(int i=m_GameModel.getNumberOfDrops()+1;i< m_Controllers.length;i+=CopType.values().length){
-            m_Controllers[i]=GameFactory.createCopController(new NinjaCop(),m_Layout);
-            m_Controllers[i+1]=GameFactory.createCopController(new SimpleCop(), m_Layout);
-            m_Controllers[i+2]=GameFactory.createCopController(new BruteCop(),m_Layout);
-            m_Controllers[i+3]=(GameFactory.createCopController(new CamouflageCop(),m_Layout));
+        for(int i=mGameModel.getNumberOfDrops()+1;i< mControllers.length;i+=CopType.values().length){
+            mControllers[i]=GameFactory.createCopController(new NinjaCop(),mLayout);
+            mControllers[i+1]=GameFactory.createCopController(new SimpleCop(), mLayout);
+            mControllers[i+2]=GameFactory.createCopController(new BruteCop(),mLayout);
+            mControllers[i+3]=(GameFactory.createCopController(new CamouflageCop(),mLayout));
         }
-       // checkHits=new CheckDropsHitThread(m_Controllers);
-        m_PauseObject=new Object();
-        m_isPause=false;
-//        m_ScoreView.setText(0);
+        for(int i=0;i<mControllers.length;i++){
+            mControllers[i].getView().initGameView();
+        }
+        for(int i=1;i<mControllers.length;i++){
+            remove(mControllers[i]);
+
+        }
+       // checkHits=new CheckDropsHitThread(mControllers);
+        mPauseObject=new Object();
+        misPause=false;
+//        mScoreView.setText(0);
 
         startThreads();
-
 
 
     }
 
     private void startThreads() {
-        Thread thread1=new Thread(new CheckDropsHitThread(m_Controllers));
-        Thread thread2=new Thread(new CheckShotsHitThread(m_Controllers,m_RainbowDashController));
+        Thread thread1=new Thread(new CheckDropsHitThread(mControllers));
+        Thread thread2=new Thread(new CheckShotsHitThread(mControllers,mRainbowDashController));
         thread1.setDaemon(true);
         thread2.setDaemon(true);
         thread1.start();
@@ -86,19 +91,21 @@ public class GameManager implements Runnable{
 
 
     public void action() {
-        //     Log.d("test", "rainbow dash " + m_RainbowDashController.m_RainbowDash.goingToY);
-        if(m_RainbowDashController.getModel().isDropping())releaseDrop();
-        if(m_RainbowDashController.getModel().isLost()) GameModel.isRunning=false;
-        for (GameController controller : m_Controllers) {
+
+        //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
+        if(mGameModel.getLoopsCounter()%10000==0)mGameModel.decreaseCopsSpawnTime(10);
+        if(mRainbowDashController.getModel().isDropping())releaseDrop();
+        if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
+        for (GameController controller : mControllers) {
             if (!controller.isOutOfGame()) {
                 if (controller.getModel().isDead()) {
                     remove(controller);
                     if(controller.getModel() instanceof Cop){
-                        m_GameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
-                        ((Activity)m_Context).runOnUiThread(new Runnable() {
+                        mGameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
+                        ((Activity)mContext).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                m_ScoreView.setText(m_GameModel.getScore()+"");
+                                mScoreView.setText(mGameModel.getScore()+"");
 
                             }
                         });
@@ -107,7 +114,7 @@ public class GameManager implements Runnable{
 
 
                 else {
-                    if (m_GameModel.get_LoopsCounter() % controller.getModel().getWaitTime() == 0) {
+                    if (mGameModel.getLoopsCounter() % controller.getModel().getWaitTime() == 0) {
                         controller.update();
                         if(controller instanceof CopController){
                             CopController cop=(CopController)controller;
@@ -122,14 +129,14 @@ public class GameManager implements Runnable{
 
 
         }
-        m_GameModel.increaseLoopsCounter();
+        mGameModel.increaseLoopsCounter();
         spawnCops();
 
 
     }
     private void releaseDrop() {
-        m_RainbowDashController.getModel().setDropping(false);
-        ((Activity)m_Context).runOnUiThread(new Runnable() {
+        mRainbowDashController.getModel().setDropping(false);
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getNewDrop();
@@ -140,7 +147,7 @@ public class GameManager implements Runnable{
     }
     private void shoot(final CopController cop) {
         cop.getModel().setShooting(false);
-        ((Activity)m_Context).runOnUiThread(new Runnable() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getNewShot(cop);
@@ -155,10 +162,10 @@ public class GameManager implements Runnable{
 
 
     private void remove(final GameController controller) {
-        ((Activity) m_Context).runOnUiThread(new Runnable() {
+        ((Activity) mContext).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                m_Layout.removeView(controller.getView());
+                mLayout.removeView(controller.getView());
                 controller.setOutOfGame(true);
 
             }
@@ -169,20 +176,20 @@ public class GameManager implements Runnable{
 
 
     private void spawnCops() {
-        if (m_GameModel.get_LoopsCounter() % m_GameModel.get_CopsSpawnTime()==0) {
+        if (mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime()==0) {
             int type= getNeededCopTypeInt();
                 CopType copType=CopType.values()[type];
             getNewCop(copType);
         }
-            m_GameModel.increaseOnScreenCopsCounter();
+            mGameModel.increaseOnScreenCopsCounter();
 
         }
 
     private int getNeededCopTypeInt() {
 
-        int loopsCounter = m_GameModel.get_LoopsCounter();
+        int loopsCounter = mGameModel.getLoopsCounter();
 
-        int res = loopsCounter / m_GameModel.getNumberOfLoopsForTypeChange() ;
+        int res = loopsCounter / mGameModel.getNumberOfLoopsForTypeChange() ;
         if(res>CopType.values().length-1) res=CopType.values().length-1;
        // res%=CopType.values().length;
         if(res!=0)res=Common.random.nextInt()%2==1?res:res-1;
@@ -190,7 +197,7 @@ public class GameManager implements Runnable{
     }
 
     private void getNewCop(CopType type) {
-        for(GameController controller:m_Controllers){
+        for(GameController controller:mControllers){
             if(controller instanceof CopController && controller.isOutOfGame()) {
                 if (((Cop) controller.getModel()).getType() == type) {
                     controller.resurrect();
@@ -200,18 +207,18 @@ public class GameManager implements Runnable{
         }
     }
     private void getNewDrop() {
-        for(GameController controller:m_Controllers){
+        for(GameController controller:mControllers){
             if(controller instanceof DropController && controller.isOutOfGame()){
                 controller.resurrect();
-                Loc rdLocation= Common.getViewLocation(m_RainbowDashController.getView(),m_RainbowDashController.getModel().loc);
-                adjustDropLocToGameViewBehind(rdLocation, m_RainbowDashController);
+                Loc rdLocation= Common.getViewLocation(mRainbowDashController.getView(),mRainbowDashController.getModel().loc);
+                adjustDropLocToGameViewBehind(rdLocation, mRainbowDashController);
                 Common.setViewLocation(controller.getView(), rdLocation);
                 return;
             }
         }
     }
     private void getNewShot(CopController cop) {
-        for (GameController controller : m_Controllers) {
+        for (GameController controller : mControllers) {
             if (controller instanceof ShotController && controller.isOutOfGame()) {
                 controller.resurrect();
                 Loc location= Common.getViewLocation(cop.getView(),cop.getModel().loc);
@@ -227,6 +234,24 @@ public class GameManager implements Runnable{
     @Override
     public void run() {
         GameModel.isRunning=true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(500);
+                    mRainbowDashController.getModel().goingToX=60;
+                    ((Activity)mContext).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRainbowDashController.changeDirection();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         init();
         while (GameModel.isRunning) {
 
@@ -236,10 +261,10 @@ public class GameManager implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(m_isPause)
+            if(misPause)
             try {
-                synchronized (m_PauseObject){
-                    m_PauseObject.wait();
+                synchronized (mPauseObject){
+                    mPauseObject.wait();
                 }
             }
             catch (InterruptedException e) {
@@ -250,18 +275,18 @@ public class GameManager implements Runnable{
 
     }
     public void resume(){
-        m_isPause=false;
-        synchronized (m_PauseObject) {
-            m_PauseObject.notify();
+        misPause=false;
+        synchronized (mPauseObject) {
+            mPauseObject.notify();
         }
     }
     public void pauseGame() {
-        m_isPause = true;
+        misPause = true;
 
     }
 
     public int getScore() {
-        return m_GameModel.getScore();
+        return mGameModel.getScore();
     }
 }
 

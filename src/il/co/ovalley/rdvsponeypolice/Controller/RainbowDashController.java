@@ -39,7 +39,8 @@ public class RainbowDashController extends GameController {
 
     private void init() {
         getModel().initGameObject();
-        getView().initGameView();
+   //     getView().initGameView();
+        getModel().setDirection(Direction.RIGHT);
         changeDirection();
 
     }
@@ -92,7 +93,7 @@ public class RainbowDashController extends GameController {
 
     }
     @Override
-    protected void changeDirection() {
+    public void changeDirection() {
 
         Loc loc = Common.getViewLocation(mRainbowDashView, mRainbowDashModel.loc);
         setSpeedAndRotation(loc);

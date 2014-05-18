@@ -97,9 +97,22 @@ public class HighScoresActivity extends Activity {
         public void getData(final ListView resultListView){
             if (! isNetworkAvailable())
             {
-                TextView tv=new TextView(this);
-                tv.setText("No internet connection");
-                resultListView.addView(tv);
+
+
+
+                final LinearLayout ll=(LinearLayout)findViewById(R.id.highScoresLayout);
+                ll.removeView(resultListView);
+                final TextView tv=new TextView(this);
+                tv.setText("Check connection and retry");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(HighScoresActivity.this, "No internet connection", Toast.LENGTH_LONG);
+
+                        ll.addView(tv);
+
+                    }
+                });
             }
             else {
                 HttpClient httpclient = new DefaultHttpClient();

@@ -10,7 +10,7 @@ public abstract class GameObject {
     protected float ySpeed;
     private Direction direction;
     private Direction directionVertical;
-    private boolean isRight;
+    protected boolean isRight;
     public Loc loc=new Loc();
     public GameObject(){
     initGameObject();
