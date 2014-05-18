@@ -2,6 +2,6 @@
 
 <animation-list android:oneshot="false" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/rainbow_dash_small_right1" android:duration="500"/>
-    <item android:drawable="@drawable/rainbow_dash_small_right2" android:duration="500"/>
+    <item android:drawable="@drawable/rainbow_dash_small_right1" android:duration="200"/>
+    <item android:drawable="@drawable/rainbow_dash_small_right2" android:duration="200"/>
 </animation-list>

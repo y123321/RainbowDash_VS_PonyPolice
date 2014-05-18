@@ -27,8 +27,9 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+   //     init();
         init();
-
+        new Thread(mGameManager).start();
     }
 
     private void init() {
@@ -38,11 +39,17 @@ public class MainActivity extends Activity {
             tv.setText("0");
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
         mGameManager = GameFactory.createGameManager(m_Layout,tv);
-        new Thread(mGameManager).start();
 
     }
 
-private void gotoHighScores(){
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+    }
+
+    private void gotoHighScores(){
     Intent intent=new Intent(this,HighScoresActivity.class);
     intent.putExtra("score",mGameManager.getScore());
     startActivity(intent);

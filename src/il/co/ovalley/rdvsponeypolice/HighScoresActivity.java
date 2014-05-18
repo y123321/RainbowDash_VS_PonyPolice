@@ -1,6 +1,9 @@
 package il.co.ovalley.rdvsponeypolice;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -85,20 +88,34 @@ public class HighScoresActivity extends Activity {
         });
         // adapter=new Adapter() {
         }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
         public void getData(final ListView resultListView){
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(getHighScoreURL()+"/index");
-            try {
-                HttpResponse response=httpclient.execute(httppost);
-                updateListView(resultListView,decodeJsonArrayResponse(EntityUtils.toString(response.getEntity())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (! isNetworkAvailable())
+            {
+                TextView tv=new TextView(this);
+                tv.setText("No internet connection");
+                resultListView.addView(tv);
+            }
+            else {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost httppost = new HttpPost(getHighScoreURL() + "/index");
+                try {
+                    HttpResponse response = httpclient.execute(httppost);
+                    updateListView(resultListView, decodeJsonArrayResponse(EntityUtils.toString(response.getEntity())));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
+
         public void postData(String name,int score,final ListView resultListView) {
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
