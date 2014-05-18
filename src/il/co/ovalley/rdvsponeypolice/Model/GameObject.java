@@ -5,7 +5,6 @@ package il.co.ovalley.rdvsponeypolice.Model;
  */
 public abstract class GameObject {
     protected boolean isDead;
-    protected int stepCounter;
     protected int waitTime;//default amount of iterations of game loop for object to update time
     protected float xSpeed;
     protected float ySpeed;
@@ -57,13 +56,6 @@ public abstract class GameObject {
 
     public void setDirectionVertical(Direction directionVertical) {
         this.directionVertical = directionVertical;
-    }
-    public int getStepCounter() {
-        return stepCounter;
-    }
-
-    public void setStepCounter(int stepCounter) {
-        this.stepCounter = stepCounter;
     }
 
     public int getWaitTime() {

@@ -20,6 +20,11 @@
             android:orderInCategory="3"
             android:showAsAction="never"
             android:title="New Game"/>
+    <item
+            android:id="@+id/action_high_scores"
+            android:orderInCategory="4"
+            android:showAsAction="never"
+            android:title="High Scores"/>
     <!--item
             android:id="@+id/action_save_game"
             android:orderInCategory="4"

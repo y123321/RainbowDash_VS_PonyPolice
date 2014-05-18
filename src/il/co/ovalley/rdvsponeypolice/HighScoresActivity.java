@@ -2,7 +2,9 @@ package il.co.ovalley.rdvsponeypolice;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.GridView;
+import android.util.Log;
+import android.view.View;
+import android.widget.*;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -11,9 +13,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,35 +52,109 @@ public class HighScoresActivity extends Activity {
      * @see #onRestoreInstanceState
      * @see #onPostCreate
      */
-    String mScore;
+    int mScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
-        GridView gridView=(GridView)findViewById(R.id.gridView);
-        mScore=getIntent().getExtras().getString("score");
+        final ListView listView=(ListView)findViewById(R.id.listView);
+        Button button=(Button)findViewById(R.id.btnSendScore);
+        TextView textView=(TextView)findViewById(R.id.textView);
+        mScore=getIntent().getExtras().getInt("score");
+        textView.setText("Score: "+mScore);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getData(listView);
+            }
+        }).start();
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String name=((EditText)findViewById(R.id.etName)).getText().toString();
+                v.setEnabled(false);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        postData(name,mScore,listView);
+                        mScore=0;
+                       }
+                }).start();
+
+            }
+        });
         // adapter=new Adapter() {
         }
-    public void postData(String name,String score) {
+
+        public void getData(final ListView resultListView){
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(getHighScoreURL()+"/index");
+            try {
+                HttpResponse response=httpclient.execute(httppost);
+                updateListView(resultListView,decodeJsonArrayResponse(EntityUtils.toString(response.getEntity())));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+        public void postData(String name,int score,final ListView resultListView) {
         // Create a new HttpClient and Post Header
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(getHighScoreURL());
+        HttpPost httppost = new HttpPost(getHighScoreURL()+"/create");
 
         try {
             // Add your data
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
             nameValuePairs.add(new BasicNameValuePair("Name", name));
-            nameValuePairs.add(new BasicNameValuePair("Score", score));
+            nameValuePairs.add(new BasicNameValuePair("Score", score+""));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
+            String responseText = EntityUtils.toString(response.getEntity());
+            Log.d("test","resopnse text: "+responseText);
+            ArrayList<HashMap<String, String>> scores = decodeJsonArrayResponse(responseText);
+            updateListView(resultListView, scores);
 
-        } catch (ClientProtocolException e) {
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
         }
+        catch (JSONException e1) {
+            e1.printStackTrace();
+        } catch (ClientProtocolException e1) {
+            e1.printStackTrace();
+        } catch (UnsupportedEncodingException e1) {
+            e1.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+
+    }
+
+    private ArrayList<HashMap<String, String>> decodeJsonArrayResponse(String responseText) throws JSONException {
+        JSONArray jArray = new JSONArray(responseText);
+        ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
+        HashMap<String, String> map = new HashMap<String, String>();
+        for (int i = 0; i < jArray.length(); i++) {
+            map.put("#",(i+1)+"");
+            map.put("name", jArray.getJSONObject(i).getString("Name"));
+            map.put("score",jArray.getJSONObject(i).getString("Score"));
+            mylist.add(map);
+            map=new HashMap<String, String>();
+        }
+        return mylist;
+    }
+
+    private void updateListView(final ListView resultListView, ArrayList<HashMap<String, String>> mylist) {
+        final SimpleAdapter adapter = new SimpleAdapter(this, mylist, R.layout.row,
+                new String[]{"#", "name", "score"}, new int[]{R.id.TRAIN_CELL, R.id.FROM_CELL, R.id.TO_CELL});
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                resultListView.setAdapter(adapter);
+                resultListView.refreshDrawableState();
+            }
+        });
     }
 
     public String getHighScoreURL() {

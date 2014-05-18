@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:color="#ee4144"/>
+    <item android:drawable="@android:drawable/stat_sys_upload" android:color="#f37033"/>
+    <item android:color="#fdf6af"/>
+    <item android:color="#62bc4d"/>
+
+    <item android:color="#1e98d3"/>
+    <item android:color="#672f89"/>
+
+
+</layer-list>

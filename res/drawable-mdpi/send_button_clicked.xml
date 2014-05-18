@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:autoMirrored="true" >
+    <item><shape android:shape="line" android:thickness="5dp"  android:color="#ee4144"> <size android:height="5dp"/></shape> </item>
+    <item><shape android:shape="line" android:thickness="5dp" android:color="#f37033"> <size android:height="5dp"/></shape> </item>
+    <item><shape android:shape="line" android:thickness="5dp" android:color="#fdf6af"> <size android:height="5dp"/></shape> </item>
+    <item><shape android:shape="line" android:thickness="5dp" android:color="#62bc4d"> <size android:height="5dp"/></shape> </item>
+    <item><shape android:shape="line" android:thickness="5dp" android:color="#1e98d3"> <size android:height="5dp"/> </shape></item>
+    <item><shape android:shape="line" android:thickness="5dp" android:color="#672f89"> <size android:height="5dp"/> </shape></item>
+</shape>

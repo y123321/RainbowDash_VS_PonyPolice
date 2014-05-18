@@ -134,7 +134,7 @@ public class CopController extends GameController {
             mCopView.walkAnimation(mCopModel.getDirection());
         }
             chooseDirectionAndGo();
-            mCopModel.setStepCounter(mCopModel.getStepCounter() -1);
+            mCopModel.decreaseStepCounter();
             if (mCopModel.getStepCounter() == 0) changeDirection();
 
     }
@@ -158,7 +158,6 @@ public class CopController extends GameController {
                 else changeDirection();
                 break;
             default:changeDirection();
-
         }
 
     }

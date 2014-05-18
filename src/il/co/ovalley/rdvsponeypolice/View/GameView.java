@@ -2,7 +2,7 @@ package il.co.ovalley.rdvsponeypolice.View;
 
 import android.app.Activity;
 import android.graphics.Canvas;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -28,20 +28,24 @@ public abstract class GameView extends ImageView {
     private int shotPadding;
 
     public GameView(GameLayoutView container) {
-        super(container.getContext());
-        m_container=container;
-   //     container.addView(this);
+        this(container,null);
     }
     public GameView(GameLayoutView container,RelativeLayout.LayoutParams params){
         super(container.getContext());
         m_container=container;
         m_params=params;
-
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        try {
+            super.onDraw(canvas);
+
+        }
+        catch (Exception e){
+            Log.d("test","on draw crashed"+e.getMessage()+"\n"+e.getStackTrace());
+        }
+
 
     }
 
@@ -62,7 +66,7 @@ public abstract class GameView extends ImageView {
 
     public void initGameView() {
         init();
-        final View view=this;
+        final GameView view=this;
         Activity activity=(Activity)getContext();
         activity.runOnUiThread(new Runnable() {
             @Override

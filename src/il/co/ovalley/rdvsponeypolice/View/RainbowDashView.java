@@ -44,8 +44,6 @@ public class RainbowDashView extends GameView {
                 setImageResource(R.drawable.rainbow_dash_small_left);
 
             }
-            AnimationDrawable RDAnimation = (AnimationDrawable) getDrawable();
-            RDAnimation.start();
         }
         catch (Exception e){
             Log.d("test",e.toString());

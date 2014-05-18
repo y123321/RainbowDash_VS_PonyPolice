@@ -2,10 +2,12 @@ package il.co.ovalley.rdvsponeypolice;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Controller.GameRunnable;
@@ -31,7 +33,8 @@ public class MainActivity extends Activity {
 
     private void init() {
         TextView tv=(TextView)findViewById(R.id.tvScore);
-
+        getWindow().setFormat(PixelFormat.RGB_565);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
             tv.setText("0");
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
         mGameManager = GameFactory.createGameManager(m_Layout,tv);
@@ -79,6 +82,9 @@ private void gotoHighScores(){
                     e.printStackTrace();
                 }
                 recreate();
+                return true;
+            case R.id.action_high_scores:
+                gotoHighScores();
                 return true;
             /*case R.id.action_save_game:
                 GameSaverLoader.saveGame(m_GameRunnable,this);

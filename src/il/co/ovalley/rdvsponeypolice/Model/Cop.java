@@ -17,7 +17,8 @@ public abstract class Cop extends GameObject {
         m_OriginalHitPoints=2;
         m_isHit=new boolean[(int)Math.floor(m_OriginalHitPoints)];
         m_ScorePoints=10;
-
+        stepsLimit=100;
+        stepCounter=stepsLimit;
 
     }
 
@@ -59,6 +60,8 @@ public abstract class Cop extends GameObject {
     private CopType type;
     //random number of steps to go iin the same direction before the variable reinitialize
     private int stepsLimit;
+    protected int stepCounter;
+
     private boolean isLoading;
     private boolean isShooting;
     private int loadingTime;
@@ -69,6 +72,13 @@ public abstract class Cop extends GameObject {
     public CopDrawables getDrawables() {
         return drawables;
     }
+    public int getStepCounter() {
+        return stepCounter;
+    }
+    public void StepCounter(int stepCounter) {
+        this.stepCounter = stepCounter;
+    }
+
 
     public int getChanceNotToShoot() {
         return m_chanceNotToShoot;
@@ -151,5 +161,13 @@ public abstract class Cop extends GameObject {
 
     public void setScorePoints(int m_ScorePoints) {
         this.m_ScorePoints = m_ScorePoints;
+    }
+
+    public void decreaseStepCounter() {
+        stepCounter--;
+    }
+
+    public void setStepCounter(int stepCounter) {
+        this.stepCounter = stepCounter;
     }
 }

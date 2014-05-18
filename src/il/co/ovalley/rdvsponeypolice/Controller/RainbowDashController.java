@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -19,7 +20,6 @@ public class RainbowDashController extends GameController {
     private RainbowDash mRainbowDashModel;
     private RainbowDashView mRainbowDashView;
     private GameLayoutView mLayout;
-    private boolean isDirectionChanged;
     public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
         super(context, rainbowDash, rainbowDashView,false);
         mRainbowDashModel = rainbowDash;
@@ -50,13 +50,7 @@ public class RainbowDashController extends GameController {
      */
     @Override
     protected boolean runModelUpdate() {
-        if (mRainbowDashModel.isReleased()) {
-            return true;
-        }
-        if (checkIfLost()){
-            return false;
-        }
-
+        Log.d("test", "rd update " + getView().getY());
         return true;
     }
 
@@ -78,11 +72,7 @@ public class RainbowDashController extends GameController {
             pullDown();
             return;
         }
-        if(isDirectionChanged){
-            isDirectionChanged=false;
-            mRainbowDashView.setRotation(mRainbowDashModel.getCustomRotation());
-            baseAnimation();
-        }
+
         if(mRainbowDashModel.isCaptured()){
             cageRainbowDash();
             return;
@@ -123,14 +113,16 @@ public class RainbowDashController extends GameController {
 
             mRainbowDashModel.setDirectionVertical(Direction.UP);
         }
-        isDirectionChanged= true;
-
+        mRainbowDashView.setRotation(mRainbowDashModel.getCustomRotation());
+        baseAnimation();
 
     }
 
     private void setSpeedAndRotation(Loc loc) {
-        mRainbowDashModel.setYSpeed(Math.abs((loc.y - mRainbowDashModel.goingToY) / (loc.x - mRainbowDashModel.goingToX)));
-        mRainbowDashModel.setYSpeed(mRainbowDashModel.getYSpeed() > 2 ? 2 : mRainbowDashModel.getYSpeed());
+        float ySpeed=2;
+        if(loc.x - mRainbowDashModel.goingToX!=0)
+            ySpeed=Math.abs((loc.y - mRainbowDashModel.goingToY) / (loc.x - mRainbowDashModel.goingToX));
+            mRainbowDashModel.setYSpeed(ySpeed > 2 ? 2 : ySpeed);
         mRainbowDashModel.setCustomRotation((float) Math.toDegrees(Math.atan(mRainbowDashModel.getYSpeed())));
     }
 
@@ -224,7 +216,6 @@ public class RainbowDashController extends GameController {
         mRainbowDashModel.setCaged(false);
         mRainbowDashModel.setCaptured(false);
         mRainbowDashModel.setDropping(false);
-        isDirectionChanged=true;
         mRainbowDashModel.increasePullDownSpeed();
     }
 

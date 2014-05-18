@@ -57,7 +57,7 @@ public class CopView extends GameView {
     private void startAnimation(int resource) {
         setImageResource(resource);
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
-
+     //   animation.setDither(true);
         setImageDrawable(animation.getFrame(m_DrawableState));
         m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
     }
