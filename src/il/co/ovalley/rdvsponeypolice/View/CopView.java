@@ -28,7 +28,7 @@ public class CopView extends GameView {
     protected void init() {
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
-        setShotPadding(0);
+        setShotPadding(20);
         m_DrawableState=0;
         setAlpha(1f);
 

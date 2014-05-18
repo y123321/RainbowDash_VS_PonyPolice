@@ -1,5 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Model;
 
+import il.co.ovalley.rdvsponeypolice.Common;
+
 /**
  * Created by yuval on 16/04/2014.
  */
@@ -19,6 +21,8 @@ public abstract class Cop extends GameObject {
         m_ScorePoints=10;
         stepsLimit=100;
         stepCounter=stepsLimit;
+        Direction randDirection= Common.random.nextBoolean()?Direction.LEFT:Direction.RIGHT;
+        setDirection(randDirection);
 
     }
 

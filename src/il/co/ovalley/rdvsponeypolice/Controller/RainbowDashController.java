@@ -2,7 +2,6 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -50,7 +49,7 @@ public class RainbowDashController extends GameController {
      */
     @Override
     protected boolean runModelUpdate() {
-        Log.d("test", "rd update " + getView().getY());
+   //     Log.d("test", "rd update " + getView().getY());
         return true;
     }
 

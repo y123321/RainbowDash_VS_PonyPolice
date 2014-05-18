@@ -36,7 +36,14 @@ public class GameManager implements Runnable{
         if (!controller.getModel().isRight()) {
             location.x += controller.getView().getWidth()-controller.getView().getShotPadding();
         }
-     //   else location.x+=30;
+    }
+    private void adjustShotLocToCopHorn(Loc location, GameController controller) {
+        switch (controller.getModel().getDirection()){
+            case RIGHT:location.x += controller.getView().getWidth()-controller.getView().getShotPadding();
+                break;
+
+        }
+        location.y-=20;
     }
 
     private void init() {
@@ -87,7 +94,6 @@ public class GameManager implements Runnable{
                 if (controller.getModel().isDead()) {
                     remove(controller);
                     if(controller.getModel() instanceof Cop){
-                        controller.getModel().setDead(false);
                         m_GameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
                         ((Activity)m_Context).runOnUiThread(new Runnable() {
                             @Override
@@ -209,7 +215,7 @@ public class GameManager implements Runnable{
             if (controller instanceof ShotController && controller.isOutOfGame()) {
                 controller.resurrect();
                 Loc location= Common.getViewLocation(cop.getView(),cop.getModel().loc);
-                adjustDropLocToGameViewBehind(location, cop);
+                adjustShotLocToCopHorn(location, cop);
                 Common.setViewLocation(controller.getView(), location);
                 return;
             }

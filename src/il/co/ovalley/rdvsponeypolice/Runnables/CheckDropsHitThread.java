@@ -36,7 +36,7 @@ public class CheckDropsHitThread implements Runnable {
         }
         while (GameModel.isRunning) {
             for (CopController cop : m_Cops) {
-                if (cop.getModel().isDead()) continue;
+                if (cop.getModel().isDead() || cop.isOutOfGame()) continue;
                 Rect copRect = cop.mHitRect;
                 cop.getView().getHitRect(copRect);
                 for (DropController drop : m_Drops) {
@@ -57,6 +57,7 @@ public class CheckDropsHitThread implements Runnable {
     }
 
     private void kill(final DropController drop, final CopController cop) {
+    //    Log.d("test","hit cop: "+cop.getModel().getType()+" x: "+cop.getView().getX()+" y: "+cop.getView().getY());
         drop.getModel().setDead(true);
         if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setHit();
     }
