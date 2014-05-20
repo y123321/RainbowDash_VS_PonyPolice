@@ -33,6 +33,7 @@ public class CheckShotsHitThread implements Runnable {
         while (GameModel.isRunning) {
             m_RD.getView().getHitRect(m_RD.mHitRect);
             for (ShotController shot : m_Shots) {
+                if(shot.isOutOfGame()||shot.getModel().isDead()) continue;
                 shot.getView().getHitRect(shot.mHitRect);
                 if (shot.mHitRect.intersect(m_RD.mHitRect)) kill(shot, m_RD);
             }

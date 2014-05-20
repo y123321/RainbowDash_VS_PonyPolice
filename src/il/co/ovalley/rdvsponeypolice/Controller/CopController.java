@@ -16,14 +16,16 @@ public class CopController extends GameController {
     public static int COPS_COUNTER=0;
     private Cop mCopModel;
     private CopView mCopView;
-    public boolean animating;
+    ClearAnimationAction mClearAnimationAction;
+//    public boolean animating;
     protected CopController(Context context, Cop gameObject, CopView gameView,boolean isOutOfGame) {
         super(context, gameObject, gameView,isOutOfGame);
         mCopModel = gameObject;
         mCopView = gameView;
-
+        mClearAnimationAction=new ClearAnimationAction();
         COPS_COUNTER=0;
-        animating=false;
+        changeDirection();
+  //      animating=false;
 
     }
 
@@ -42,13 +44,8 @@ public class CopController extends GameController {
      */
     @Override
     protected boolean runModelUpdate() {
-        if (animating) return false;
         dieIfDying();
-  //      if (shootIfShooting()) return false;
-        if (loadIfLoading()) return false;
         return true;
-
-
     }
     /**
      * updates on the view, this method runs on UI thread
@@ -56,6 +53,10 @@ public class CopController extends GameController {
     @Override
     public void runViewUpdate() {
         changeCopDirectionOnBorders(GameView.SCREEN_BORDERS);
+        if(loadIfLoading()){
+            getView().clearAnimation();
+            return;
+        }
         if(getModel().isHit()){
             getModel().decreaseCurrentHitPoints();
             if (getModel().getCurrentHitPoints() <= 0) {
@@ -75,7 +76,9 @@ public class CopController extends GameController {
     @Override
     protected void changeDirection() {
         mCopModel.setStepCounter(Common.random.nextInt(mCopModel.getStepsLimit()));
-        mCopModel.setDirection(Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT);
+        Direction direction = Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
+        mCopModel.setDirection(direction);
+        getView().walkAnimation(direction);
     }
 
 
@@ -83,7 +86,6 @@ public class CopController extends GameController {
         if(getModel().isDying()){
 
                     getModel().setDead(true);
-                    animating=false;
                     getModel().setDying(false);
 
 
@@ -104,7 +106,10 @@ public class CopController extends GameController {
             if (mCopModel.getLoadingTimeCounter() == 0) {
                 mCopModel.setShooting(true);
                 mCopModel.setLoading(false);
-            } else mCopModel.decreaseLoadingTimeCounter();
+            } else {
+                mCopModel.decreaseLoadingTimeCounter();
+            }
+
             return true;
         }
         return false;
@@ -120,19 +125,22 @@ public class CopController extends GameController {
 
     private void changeCopDirectionOnBorders(int screenBorders) {
         float x = mCopView.getX();
-        if (x <= screenBorders) mCopModel.setDirection(Direction.RIGHT);
+        Direction direction=null;
+        if (x <= screenBorders)direction=Direction.RIGHT;
         else if (x >= Common.getScreenSize(mCopView.getContext()).x - screenBorders)
-            mCopModel.setDirection(Direction.LEFT);
+            direction=Direction.LEFT;
+        if(direction!=null){
+            getModel().setDirection(direction);
+            getView().walkAnimation(direction);
+        }
     }
 
     void shoot() {
+        getView().shootAnimation(getModel().getDirection());
         mCopModel.makeShot();
     }
 
     private void move() {
-        if (mCopModel.getStepCounter() % 3 == 0) {
-            mCopView.walkAnimation(mCopModel.getDirection());
-        }
             chooseDirectionAndGo();
             mCopModel.decreaseStepCounter();
             if (mCopModel.getStepCounter() == 0) changeDirection();
@@ -160,6 +168,18 @@ public class CopController extends GameController {
             default:changeDirection();
         }
 
+    }
+    private class ClearAnimationAction implements Runnable{
+
+        /**
+         * Starts executing the active part of the class' code. This method is
+         * called when a thread is started that has been created with a class which
+         * implements {@code Runnable}.
+         */
+        @Override
+        public void run() {
+            getView().clearAnimation();
+        }
     }
 }
 

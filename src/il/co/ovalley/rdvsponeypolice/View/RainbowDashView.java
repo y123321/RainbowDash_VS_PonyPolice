@@ -1,7 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
 import android.graphics.drawable.AnimationDrawable;
-import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
 import il.co.ovalley.rdvsponeypolice.R;
 
@@ -9,45 +8,47 @@ import il.co.ovalley.rdvsponeypolice.R;
  * Created by yuval on 30/04/2014.
  */
 public class RainbowDashView extends GameView {
+    AnimationDrawable mLockAnimationLeft;
+    AnimationDrawable mLockAnimationRight;
+    AnimationDrawable mBaseAnimationLeft;
+    AnimationDrawable mBaseAnimationRight;
 
     public RainbowDashView(GameLayoutView container) {
         super(container);
+        setImageResource(R.drawable.rainbow_dash_caged_left);
+        mLockAnimationLeft = (AnimationDrawable) getDrawable();
+        setImageResource(R.drawable.rainbow_dash_caged_right);
+        mLockAnimationRight = (AnimationDrawable) getDrawable();
+        setImageResource(R.drawable.rainbow_dash_small_left);
+        mBaseAnimationLeft = (AnimationDrawable) getDrawable();
+        setImageResource(R.drawable.rainbow_dash_small_right);
+        mBaseAnimationRight = (AnimationDrawable) getDrawable();
     }
 
     @Override
     protected void init() {
         setX(0);
         setY(0);
-        setShotPadding(50);
+        setShotPadding(20);
+
+
+
+
     }
 
     public void lockInCage(Direction direction) {
-        try {
-            if (direction==Direction.RIGHT) setImageResource(R.drawable.rainbow_dash_caged_right);
-            else setImageResource(R.drawable.rainbow_dash_caged_left);
-            AnimationDrawable RDAnimation = (AnimationDrawable) getDrawable();
-            RDAnimation.start();
-
-        }
-        catch (Exception e){
-            Log.d("test", e.toString());
-        }
+        startAnimation(mLockAnimationLeft,mLockAnimationRight,direction);
     }
     public void releaseAnimation(Direction direction) {
         baseAnimation(direction);
     }
-    private void baseAnimation(Direction direction){
-        try {
-            if (direction==Direction.RIGHT) {
-                setImageResource(R.drawable.rainbow_dash_small_right);
-            } else {
-                setImageResource(R.drawable.rainbow_dash_small_left);
-
-            }
-        }
-        catch (Exception e){
-            Log.d("test",e.toString());
-        }
+    public void baseAnimation(Direction direction){
+        startAnimation(mBaseAnimationLeft, mBaseAnimationRight,direction);
     }
+
+
+
+
+
 
 }

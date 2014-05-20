@@ -31,6 +31,6 @@ public class GameFactory {
     public static GameManager createGameManager(GameLayoutView layout,TextView scoreView){
         Log.d("test", "factory");
 
-        return new GameManager(new GameModel(),layout, scoreView);
+        return new GameManager(new GameModel(layout.getContext().getResources()),layout, scoreView);
     }
 }

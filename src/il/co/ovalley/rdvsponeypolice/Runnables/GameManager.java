@@ -17,12 +17,14 @@ public class GameManager implements Runnable{
     public volatile GameController[] mControllers;// ArrayList<GameController> mControllers;
     public GameLayoutView mLayout;
     private Context mContext;
-    private GameModel mGameModel = new GameModel();
+    private GameModel mGameModel;
     private RainbowDashController mRainbowDashController;
     private TextView mScoreView;
     private LruCacheManager cacheManager=new LruCacheManager();
-    private boolean misPause;
-    private String mName;
+    private GetDropAction mGetDropAction;
+    private GetShotAction mGetShotAction;
+    private SetScoreAction mSetScoreAction;
+
     public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView) {
         mLayout = gameLayoutView;
         mScoreView = scoreView;
@@ -50,7 +52,6 @@ public class GameManager implements Runnable{
   //      mControllers = new ArrayList<GameController>();
         mRainbowDashController = GameFactory.createRainbowDashController(mLayout);
     //    mControllers.add(mRainbowDashController);
-        mRainbowDashController.startRDListener();
         mControllers=new GameController[mGameModel.getNumberOfCopsPerType()*CopType.values().length+mGameModel.getNumberOfDrops()+1];
         mControllers[0]=mRainbowDashController;
         for(int i=1;i<=mGameModel.getNumberOfDrops();i+=2){
@@ -67,14 +68,16 @@ public class GameManager implements Runnable{
             mControllers[i].getView().initGameView();
         }
         for(int i=1;i<mControllers.length;i++){
-            remove(mControllers[i]);
+            mControllers[i].remove();
 
         }
        // checkHits=new CheckDropsHitThread(mControllers);
         mPauseObject=new Object();
-        misPause=false;
+        mGameModel.mIsPause =false;
 //        mScoreView.setText(0);
-
+        mGetDropAction=new GetDropAction();
+        mGetShotAction=new GetShotAction();
+        mSetScoreAction=new SetScoreAction();
         startThreads();
 
 
@@ -93,22 +96,16 @@ public class GameManager implements Runnable{
     public void action() {
 
         //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
-        if(mGameModel.getLoopsCounter()%10000==0)mGameModel.decreaseCopsSpawnTime(10);
+        if(mGameModel.getLoopsCounter()%200==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(3);
         if(mRainbowDashController.getModel().isDropping())releaseDrop();
         if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
         for (GameController controller : mControllers) {
             if (!controller.isOutOfGame()) {
                 if (controller.getModel().isDead()) {
-                    remove(controller);
+                    controller.remove();
                     if(controller.getModel() instanceof Cop){
                         mGameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
-                        ((Activity)mContext).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mScoreView.setText(mGameModel.getScore()+"");
-
-                            }
-                        });
+                        ((Activity)mContext).runOnUiThread(mSetScoreAction);
                     }
                 }
 
@@ -136,45 +133,15 @@ public class GameManager implements Runnable{
     }
     private void releaseDrop() {
         mRainbowDashController.getModel().setDropping(false);
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getNewDrop();
-
-            }
-        });
+        ((Activity)mContext).runOnUiThread(mGetDropAction);
 
     }
     private void shoot(final CopController cop) {
         cop.getModel().setShooting(false);
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getNewShot(cop);
-                cop.getModel().setShooting(false);
-
-
-            }
-        });
+        mGetShotAction.cop=cop;
+        ((Activity)mContext).runOnUiThread(mGetShotAction);
 
     }
-
-
-
-    private void remove(final GameController controller) {
-        ((Activity) mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mLayout.removeView(controller.getView());
-                controller.setOutOfGame(true);
-
-            }
-
-        });
-
-    }
-
-
     private void spawnCops() {
         if (mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime()==0) {
             int type= getNeededCopTypeInt();
@@ -234,16 +201,20 @@ public class GameManager implements Runnable{
     @Override
     public void run() {
         GameModel.isRunning=true;
+        init();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    System.gc();
+
                     Thread.sleep(500);
                     mRainbowDashController.getModel().goingToX=60;
                     ((Activity)mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mRainbowDashController.changeDirection();
+                            mRainbowDashController.startRDListener();
                         }
                     });
                 } catch (InterruptedException e) {
@@ -252,7 +223,6 @@ public class GameManager implements Runnable{
             }
         }).start();
 
-        init();
         while (GameModel.isRunning) {
 
             action();
@@ -261,7 +231,7 @@ public class GameManager implements Runnable{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(misPause)
+            if(mGameModel.mIsPause)
             try {
                 synchronized (mPauseObject){
                     mPauseObject.wait();
@@ -275,19 +245,44 @@ public class GameManager implements Runnable{
 
     }
     public void resume(){
-        misPause=false;
+        mGameModel.mIsPause =false;
         synchronized (mPauseObject) {
             mPauseObject.notify();
         }
     }
     public void pauseGame() {
-        misPause = true;
+        mGameModel.mIsPause = true;
 
     }
 
     public int getScore() {
         return mGameModel.getScore();
     }
+    private class GetDropAction implements Runnable {
+        @Override
+        public void run() {
+            getNewDrop();
+
+        }
+    }
+    private class GetShotAction implements Runnable {
+        public CopController cop;
+        @Override
+        public void run() {
+            getNewShot(cop);
+            cop.getModel().setShooting(false);
+
+
+        }
+    }
+    private class SetScoreAction implements Runnable{
+            @Override
+            public void run() {
+                mScoreView.setText(mGameModel.getScore()+"");
+
+            }
+        }
+
 }
 
 

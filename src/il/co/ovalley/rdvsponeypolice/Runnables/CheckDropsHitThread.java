@@ -14,8 +14,8 @@ import java.util.ArrayList;
  */
 public class CheckDropsHitThread implements Runnable {
 
-    volatile ArrayList<CopController> m_Cops;
-    volatile ArrayList<DropController> m_Drops;
+    ArrayList<CopController> m_Cops;
+    ArrayList<DropController> m_Drops;
 
     public CheckDropsHitThread(GameController[] controllers) {
         m_Cops = new ArrayList<CopController>();
@@ -40,10 +40,13 @@ public class CheckDropsHitThread implements Runnable {
                 Rect copRect = cop.mHitRect;
                 cop.getView().getHitRect(copRect);
                 for (DropController drop : m_Drops) {
-                    if (drop.getModel().isDead()) continue;
+                    if (drop.getModel().isDead() || drop.isOutOfGame()) continue;
                     Rect dropRect = drop.mHitRect;
                     drop.getView().getHitRect(dropRect);
-                    if (dropRect.intersect(copRect)) kill(drop, cop);
+                    if (dropRect.intersect(copRect)) {
+                        Log.d("test","cop rect: "+copRect.toString()+" drop rect: "+dropRect.toString());
+                        kill(drop, cop);
+                    }
                 }
             }
             try {
@@ -57,7 +60,7 @@ public class CheckDropsHitThread implements Runnable {
     }
 
     private void kill(final DropController drop, final CopController cop) {
-    //    Log.d("test","hit cop: "+cop.getModel().getType()+" x: "+cop.getView().getX()+" y: "+cop.getView().getY());
+     //   Log.d("test","hit cop: "+cop.getModel().getType()+" x: "+cop.getView().getX()+" y: "+cop.getView().getY());
         drop.getModel().setDead(true);
         if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setHit();
     }

@@ -13,11 +13,18 @@ import il.co.ovalley.rdvsponeypolice.Model.Direction;
 public class CopView extends GameView {
     private int m_DrawableState;
     private CopDrawables m_Drawables;
+    private AnimationDrawable mBaseAnimationLeft;
+    private AnimationDrawable mBaseAnimationRight;
 
 
     public CopView(GameLayoutView container,CopDrawables drawables) {
         super(container, Common.getStickToBottomParams());
         m_Drawables=drawables;
+        setImageResource(drawables.baseDrawableLeft);
+        mBaseAnimationLeft=(AnimationDrawable) getDrawable();
+        setImageResource(drawables.baseDrawableRight);
+        mBaseAnimationRight =(AnimationDrawable) getDrawable();
+
 
 
 
@@ -49,37 +56,24 @@ public class CopView extends GameView {
         return Common.random.nextInt(size.x-SCREEN_BORDERS)+SCREEN_BORDERS;
     }
     public void walkAnimation(Direction direction) {
-        int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;
+     //   int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;
 
-        startAnimation(resource);
+        startAnimation(mBaseAnimationLeft,mBaseAnimationRight,direction);
     }
 
-    private void startAnimation(int resource) {
+   /* private void startAnimation(int resource) {
         setImageResource(resource);
         AnimationDrawable animation = (AnimationDrawable) getDrawable();
      //   animation.setDither(true);
         setImageDrawable(animation.getFrame(m_DrawableState));
         m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
-    }
-   /* private void startAnimation(int resource) {
-//        StateListDrawable drawable = (StateListDrawable) getDrawable();
-        if(getDrawable()==null)setImageResource(resource);
-        AnimationDrawable animation = (AnimationDrawable) getDrawable();
-        boolean oneshot = animation.isOneShot();
-        if(!oneshot) {
-            animation.setOneShot(true);
-        }
-
-//        animation.selectDrawable(m_DrawableState);
-        animation.setVisible(true, true);
-
-        m_DrawableState = m_DrawableState == animation.getNumberOfFrames()-1 ? 0 : m_DrawableState + 1;
-
     }*/
+
 
     public void shootAnimation(Direction direction) {
       //  int resource = direction == Direction.LEFT ? getDrawables().shootingLeftDrawable: getDrawables().shootingRightDrawable;
      //   startAnimation(resource);
+        clearAnimation();
         walkAnimation(direction);
 
     }

@@ -16,7 +16,7 @@ abstract public class GameController {
     GameView mView;
     public Rect mHitRect = new Rect();
 
-    private boolean isOutOfGame;
+    private volatile boolean isOutOfGame;
 
     protected GameController(Context context, GameObject gameObject, GameView gameView, boolean isOutOfGame) {
         this.mContext = context;
@@ -60,13 +60,24 @@ abstract public class GameController {
     public boolean isOutOfGame() {
         return isOutOfGame;
     }
-
+    public void remove(){
+        ((Activity)getContext()).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                getView().getContainer().removeView(getView());
+                setOutOfGame(true);
+            }
+        });
+    }
     public boolean resurrect() {
         try {
-        setOutOfGame(false);
         getModel().initGameObject();
-        getView().initGameView();
-        return true;
+            getView().initGameView();
+
+            setOutOfGame(false);
+
+
+            return true;
         }
         catch (Exception e){
             Log.d("test","Object not resurrected\n"+e.toString());

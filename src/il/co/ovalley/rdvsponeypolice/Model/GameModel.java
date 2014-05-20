@@ -1,5 +1,8 @@
 package il.co.ovalley.rdvsponeypolice.Model;
 
+import android.content.res.Resources;
+import il.co.ovalley.rdvsponeypolice.R;
+
 /**
  * Created by yuval on 08/05/2014.
  */
@@ -11,6 +14,7 @@ public class GameModel {
     private int mScore;
     public static int ITERATION_PAUSE_TIME=10;
     private int numberOfCopsPerType;
+    public volatile boolean mIsPause;
 
     public int getScore() {
         return mScore;
@@ -67,7 +71,7 @@ public class GameModel {
         this.mCopsSpawnTime = mCopsSpawnTime;
     }
 
-    public GameModel(){
+    public GameModel(Resources resources){
         mLoopsCounter=1;//only god can divide by zero
         mOnScreenCopsCounter=0;
         mCopsSpawnTime=500;
@@ -76,6 +80,7 @@ public class GameModel {
         mScore=0;
         numberOfCopsPerType = 30;
         numberOfDrops=50;
+        ITERATION_PAUSE_TIME=resources.getInteger(R.integer.iteration_time);
 
     }
 

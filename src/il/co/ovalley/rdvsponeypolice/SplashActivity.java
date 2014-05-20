@@ -12,7 +12,7 @@ public class SplashActivity extends Activity {
     public class SplashScreen extends Activity {
 
         //how long until we go to the next activity
-        protected int _splashTime = 15000;
+        protected int _splashTime = 5000;
 
         private Thread splashTread;
 
@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
 
                         //start a new activity
                         Intent i = new Intent();
-                        i.setClass(sPlashScreen, MainActivity.class);
+                        i.setClass(sPlashScreen, GameActivity.class);
                         startActivity(i);
 
                         stop();
@@ -56,9 +56,9 @@ public class SplashActivity extends Activity {
         @Override
         public boolean onTouchEvent(MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-          //      synchronized(splashTread){
-        //            splashTread.notifyAll();
-        //        }
+                synchronized(splashTread){
+                    splashTread.notifyAll();
+                }
             }
             return true;
         }

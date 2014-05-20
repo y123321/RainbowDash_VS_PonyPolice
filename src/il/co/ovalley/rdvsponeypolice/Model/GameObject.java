@@ -4,7 +4,7 @@ package il.co.ovalley.rdvsponeypolice.Model;
  * Created by yuval on 30/04/2014.
  */
 public abstract class GameObject {
-    protected boolean isDead;
+    protected volatile boolean isDead;
     protected int waitTime;//default amount of iterations of game loop for object to update time
     protected float xSpeed;
     protected float ySpeed;

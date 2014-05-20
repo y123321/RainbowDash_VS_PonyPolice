@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.util.LruCache;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
@@ -18,14 +15,9 @@ import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 
-public class MainActivity extends Activity {
+public class GameActivity extends Activity {
     private GameLayoutView m_Layout;
     private GameManager mGameManager;
-    private ImageView mSplash;
-    private Handler mSplashHandler;
-
-    private LruCache mMemoryCache;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -34,7 +26,6 @@ public class MainActivity extends Activity {
         Log.d("test","?");
 
         init();
-        new Thread(mGameManager).start();
     }
 
     private void init() {
@@ -45,6 +36,7 @@ public class MainActivity extends Activity {
             tv.setText("0");
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
         mGameManager = GameFactory.createGameManager(m_Layout,tv);
+        new Thread(mGameManager).start();
 
     }
 
@@ -69,8 +61,42 @@ public class MainActivity extends Activity {
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
         return true;
+    }
+
+    /**
+     * Prepare the Screen's standard options menu to be displayed.  This is
+     * called right before the menu is shown, every time it is shown.  You can
+     * use this method to efficiently enable/disable items or otherwise
+     * dynamically modify the contents.
+     * <p/>
+     * <p>The default implementation updates the system menu items based on the
+     * activity's state.  Deriving classes should always call through to the
+     * base class implementation.
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     * @return You must return true for the menu to be displayed;
+     * if you return false it will not be shown.
+     * @see #onCreateOptionsMenu
+     */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mGameManager.pauseGame();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    /**
+     * This hook is called whenever the options menu is being closed (either by the user canceling
+     * the menu with the back/menu button, or when an item is selected).
+     *
+     * @param menu The options menu as last shown or first initialized by
+     *             onCreateOptionsMenu().
+     */
+    @Override
+    public void onOptionsMenuClosed(Menu menu) {
+        super.onOptionsMenuClosed(menu);
+        mGameManager.resume();
     }
 
     @Override
@@ -80,12 +106,6 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
-            case R.id.action_stop:
-                mGameManager.pauseGame();
-                return true;
-            case R.id.action_resume:
-                mGameManager.resume();
-                return true;
 
             case  R.id.action_new_game:
                 GameModel.isRunning=false;
@@ -99,12 +119,6 @@ public class MainActivity extends Activity {
             case R.id.action_high_scores:
                 gotoHighScores();
                 return true;
-            /*case R.id.action_save_game:
-                GameSaverLoader.saveGame(m_GameRunnable,this);
-                return true;
-            case R.id.action_load_game:
-                GameRunnable game=GameSaverLoader.loadGame(m_GameRunnable,this);
-                if(game!=null)m_GameRunnable=game;*/
         }
         return super.onOptionsItemSelected(item);
     }

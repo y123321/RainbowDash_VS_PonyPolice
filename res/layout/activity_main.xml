@@ -11,6 +11,7 @@
             android:id="@+id/textScore"
             android:gravity="top|left"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_orange_light"
             android:text="Score: "/>
     <TextView
             android:layout_width="wrap_content"

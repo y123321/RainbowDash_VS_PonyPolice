@@ -5,7 +5,7 @@
 
 
 
-    <item
+   <!-- <item
             android:id="@+id/action_stop"
             android:orderInCategory="1"
             android:showAsAction="never"
@@ -14,7 +14,7 @@
             android:id="@+id/action_resume"
             android:orderInCategory="2"
             android:showAsAction="never"
-            android:title="Resume"/>
+            android:title="Resume"/>-->
     <item
             android:id="@+id/action_new_game"
             android:orderInCategory="3"
