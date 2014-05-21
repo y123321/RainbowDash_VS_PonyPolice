@@ -81,12 +81,22 @@ public class CopController extends GameController {
         getView().walkAnimation(direction);
     }
 
+    @Override
+    public void remove() {
+
+        super.remove();
+    }
+
+    @Override
+    public boolean resurrect() {
+        return super.resurrect();
+
+    }
 
     private boolean dieIfDying() {
         if(getModel().isDying()){
-
-                    getModel().setDead(true);
-                    getModel().setDying(false);
+            getModel().setDead(true);
+            getModel().setDying(false);
 
 
                 }

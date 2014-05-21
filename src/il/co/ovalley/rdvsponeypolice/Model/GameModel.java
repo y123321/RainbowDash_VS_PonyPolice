@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Model;
 
 import android.content.res.Resources;
+import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.R;
 
 /**
@@ -9,13 +10,17 @@ import il.co.ovalley.rdvsponeypolice.R;
 public class GameModel {
     private int numberOfDrops;
     private int mLoopsCounter;
-    private int mOnScreenCopsCounter;
+    private volatile int mOnScreenCopsCounter;
     private int mCopsLimit;
     private int mScore;
     public static int ITERATION_PAUSE_TIME=10;
     private int numberOfCopsPerType;
     public volatile boolean mIsPause;
+    private int minAmountOfCops;
 
+    public void setOnScreenCopsCounter(int onScreenCopsCounter) {
+        this.mOnScreenCopsCounter = onScreenCopsCounter;
+    }
     public int getScore() {
         return mScore;
     }
@@ -52,7 +57,13 @@ public class GameModel {
     }
 
     public void increaseOnScreenCopsCounter() {
-        this.mOnScreenCopsCounter++;
+        synchronized (this) {
+            mOnScreenCopsCounter++;
+            Log.d("test","no. cops: "+mOnScreenCopsCounter);
+
+            return;
+        }
+
     }
 
     public int getCopsLimit() {
@@ -74,13 +85,14 @@ public class GameModel {
     public GameModel(Resources resources){
         mLoopsCounter=1;//only god can divide by zero
         mOnScreenCopsCounter=0;
-        mCopsSpawnTime=500;
+        mCopsSpawnTime=600;
         mCopsLimit=40;
         mNumberOfLoopsForTypeChange=3000;
         mScore=0;
         numberOfCopsPerType = 30;
         numberOfDrops=50;
         ITERATION_PAUSE_TIME=resources.getInteger(R.integer.iteration_time);
+        minAmountOfCops=3;
 
     }
 
@@ -94,5 +106,21 @@ public class GameModel {
 
     public void decreaseCopsSpawnTime(int mils) {
         mCopsSpawnTime-=mils;
+    }
+
+    public void decreaseOnScreenCopsCounter() {
+        synchronized (this) {
+            mOnScreenCopsCounter--;
+            Log.d("test","no. cops: "+mOnScreenCopsCounter);
+            return;
+        }
+    }
+
+    public int getMinAmountOfCops() {
+        return minAmountOfCops;
+    }
+
+    public void setMinAmountOfCops(int minAmountOfCops) {
+        this.minAmountOfCops = minAmountOfCops;
     }
 }

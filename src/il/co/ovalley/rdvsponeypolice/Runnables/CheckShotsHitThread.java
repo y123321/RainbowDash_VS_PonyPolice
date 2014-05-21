@@ -1,5 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
+import android.graphics.Rect;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.GameController;
 import il.co.ovalley.rdvsponeypolice.Controller.RainbowDashController;
@@ -12,15 +13,18 @@ import java.util.ArrayList;
  * Created by yuval on 12/05/2014.
  */
 public class CheckShotsHitThread implements Runnable {
-    private volatile ArrayList<ShotController> m_Shots;
-    private volatile RainbowDashController m_RD;
-
+    private volatile ArrayList<ShotController> mShots;
+    private volatile RainbowDashController mRD;
+    private Rect shotRect;
+    private Rect rdRect;
     public CheckShotsHitThread(GameController[] controllers, RainbowDashController rainbowDashController) {
-        m_Shots = new ArrayList<ShotController>();
+        mShots = new ArrayList<ShotController>();
         for (GameController controller : controllers) {
-            if (controller instanceof ShotController) m_Shots.add((ShotController) controller);
+            if (controller instanceof ShotController) mShots.add((ShotController) controller);
         }
-        m_RD = rainbowDashController;
+        mRD = rainbowDashController;
+        shotRect=new Rect();
+        rdRect=new Rect();
     }
 
     @Override
@@ -31,11 +35,11 @@ public class CheckShotsHitThread implements Runnable {
             e.printStackTrace();
         }
         while (GameModel.isRunning) {
-            m_RD.getView().getHitRect(m_RD.mHitRect);
-            for (ShotController shot : m_Shots) {
+            mRD.getView().getHitRect(rdRect);
+            for (ShotController shot : mShots) {
                 if(shot.isOutOfGame()||shot.getModel().isDead()) continue;
-                shot.getView().getHitRect(shot.mHitRect);
-                if (shot.mHitRect.intersect(m_RD.mHitRect)) kill(shot, m_RD);
+                shot.getView().getHitRect(shotRect);
+                if (shotRect.intersect(rdRect)) kill(shot, mRD);
             }
             try {
                 Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
@@ -49,7 +53,7 @@ public class CheckShotsHitThread implements Runnable {
     }
 
     private void kill(ShotController shot, RainbowDashController rd) {
-
+        Log.d("test","shot width: "+shot.getView().getWidth()+" RD width:"+rd.getView().getWidth()+" hit rect: "+ rdRect.left+", "+rdRect.right);
         shot.getModel().setDead(true);
         rd.getModel().setCaptured(true);
     }

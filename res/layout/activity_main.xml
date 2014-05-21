@@ -18,4 +18,9 @@
             android:layout_toRightOf="@+id/textScore"
             android:layout_height="wrap_content"
             android:id="@+id/tvScore"/>
+    <ImageView android:layout_width="wrap_content" android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/game_over"
+            android:visibility="invisible"
+            android:id="@+id/gameOver"/>
 </il.co.ovalley.rdvsponeypolice.View.GameLayoutView>

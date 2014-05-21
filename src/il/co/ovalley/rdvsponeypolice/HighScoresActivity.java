@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -66,15 +65,13 @@ public class HighScoresActivity extends Activity {
                 final String name=((EditText)findViewById(R.id.etName)).getText().toString();
                 v.setEnabled(false);
                 float i=9;
-                AttributeSet attr=getResources().getAnimation(R.anim.alpha_disable_anim);
-                AlphaAnimation animation=new AlphaAnimation(HighScoresActivity.this,attr);
-                animation.initialize(v.getWidth(),v.getHeight(),v.getWidth(),v.getHeight());
+                AlphaAnimation animation1 = new AlphaAnimation(1, 0.5f);
+                animation1.setDuration(1000);
+                animation1.setFillAfter(true);
 
-                v.setAnimation(animation);
-                animation.start();
-                v.animate();
-                v.setAlpha(0.5f);
-                Log.d("test","WTF???"+ (animation.getInterpolator())+animation.hasStarted()+                animation.isInitialized()
+v.startAnimation(animation1);
+
+                Log.d("test","WTF???"+ (animation1.getInterpolator())+animation1.hasStarted()+animation1.isInitialized()
 
                 );
                 new Thread(new Runnable() {
@@ -87,7 +84,6 @@ public class HighScoresActivity extends Activity {
 
             }
         });
-        // adapter=new Adapter() {
         }
     public static Bitmap rotateBitmap(Bitmap source, float angle)
     {
@@ -129,6 +125,7 @@ public class HighScoresActivity extends Activity {
                 try {
                     HttpResponse response = httpclient.execute(httppost);
                     updateListView(resultListView, decodeJsonArrayResponseToArrayList(EntityUtils.toString(response.getEntity())));
+                    Log.d("test","get data");
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -174,11 +171,6 @@ public class HighScoresActivity extends Activity {
         JSONArray jArray = new JSONArray(responseText);
         ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("#","#");
-        map.put("name", "Name");
-        map.put("score","Score");
-        mylist.add(map);
-        map=new HashMap<String, String>();
         for (int i = 0; i < jArray.length(); i++) {
             map.put("#",(i+1)+"");
             map.put("name", jArray.getJSONObject(i).getString("Name"));
@@ -190,13 +182,32 @@ public class HighScoresActivity extends Activity {
     }
 
     private void updateListView(final ListView resultListView, ArrayList<HashMap<String, String>> mylist) {
+
         final SimpleAdapter adapter = new SimpleAdapter(this, mylist, R.layout.row,
                 new String[]{"#", "name", "score"}, new int[]{R.id.TRAIN_CELL, R.id.FROM_CELL, R.id.TO_CELL});
-
+        final LinearLayout header=(LinearLayout)getLayoutInflater().inflate(R.layout.header,null);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                resultListView.addHeaderView(header);
                 resultListView.setAdapter(adapter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             }
         });
     }

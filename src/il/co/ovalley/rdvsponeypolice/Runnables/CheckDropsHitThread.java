@@ -14,17 +14,21 @@ import java.util.ArrayList;
  */
 public class CheckDropsHitThread implements Runnable {
 
-    ArrayList<CopController> m_Cops;
-    ArrayList<DropController> m_Drops;
+    ArrayList<CopController> mCops;
+    ArrayList<DropController> mDrops;
+    Rect copRect;
+    Rect dropRect;
 
     public CheckDropsHitThread(GameController[] controllers) {
-        m_Cops = new ArrayList<CopController>();
-        m_Drops = new ArrayList<DropController>();
+        mCops = new ArrayList<CopController>();
+        mDrops = new ArrayList<DropController>();
         for (GameController controller : controllers) {
-            if (controller instanceof CopController) m_Cops.add((CopController) controller);
-            if (controller instanceof DropController) m_Drops.add((DropController) controller);
+            if (controller instanceof CopController) mCops.add((CopController) controller);
+            if (controller instanceof DropController) mDrops.add((DropController) controller);
 
         }
+        copRect=new Rect();
+        dropRect=new Rect();
     }
 
     @Override
@@ -35,16 +39,13 @@ public class CheckDropsHitThread implements Runnable {
             e.printStackTrace();
         }
         while (GameModel.isRunning) {
-            for (CopController cop : m_Cops) {
+            for (CopController cop : mCops) {
                 if (cop.getModel().isDead() || cop.isOutOfGame()) continue;
-                Rect copRect = cop.mHitRect;
                 cop.getView().getHitRect(copRect);
-                for (DropController drop : m_Drops) {
+                for (DropController drop : mDrops) {
                     if (drop.getModel().isDead() || drop.isOutOfGame()) continue;
-                    Rect dropRect = drop.mHitRect;
                     drop.getView().getHitRect(dropRect);
                     if (dropRect.intersect(copRect)) {
-                        Log.d("test","cop rect: "+copRect.toString()+" drop rect: "+dropRect.toString());
                         kill(drop, cop);
                     }
                 }

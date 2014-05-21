@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
 
 /**
@@ -15,9 +15,9 @@ public abstract class GameView extends ImageView {
     public static final int SCREEN_BORDERS = 10;
 
     private GameLayoutView m_container;
+    public boolean isRemoved;
 
-
-    private RelativeLayout.LayoutParams m_params;
+    private ViewGroup.LayoutParams m_params;
     private AddViewAction mAddViewAction;
 
     public int getShotPadding() {
@@ -33,10 +33,11 @@ public abstract class GameView extends ImageView {
     public GameView(GameLayoutView container) {
         this(container,null);
     }
-    public GameView(GameLayoutView container,RelativeLayout.LayoutParams params){
+    public GameView(GameLayoutView container,ViewGroup.LayoutParams params){
         super(container.getContext());
         mAddViewAction=new AddViewAction();
         m_container=container;
+    //    if(params==null) params= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         m_params=params;
     }
     protected void startAnimation(AnimationDrawable leftAnimation, AnimationDrawable rightAnimation,Direction direction) {
@@ -85,6 +86,7 @@ public abstract class GameView extends ImageView {
 
 
     public void initGameView() {
+        isRemoved=false;
         init();
         Activity activity=(Activity)getContext();
 

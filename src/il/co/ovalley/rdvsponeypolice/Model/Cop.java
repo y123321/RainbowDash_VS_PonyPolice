@@ -29,6 +29,7 @@ public abstract class Cop extends GameObject {
     @Override
     public void initGameObject() {
         m_CurrentHitPoints=m_OriginalHitPoints;
+
         super.initGameObject();
     }
 

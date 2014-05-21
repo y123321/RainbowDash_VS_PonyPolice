@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
@@ -23,8 +23,6 @@ public class GameActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("test","?");
-
         init();
     }
 
@@ -35,7 +33,8 @@ public class GameActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
             tv.setText("0");
          m_Layout=(GameLayoutView)findViewById(R.id.layout);
-        mGameManager = GameFactory.createGameManager(m_Layout,tv);
+        ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
+        mGameManager = GameFactory.createGameManager(m_Layout,tv,gameOver);
         new Thread(mGameManager).start();
 
     }

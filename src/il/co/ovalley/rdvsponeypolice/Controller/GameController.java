@@ -2,7 +2,6 @@ package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Model.GameObject;
 import il.co.ovalley.rdvsponeypolice.View.GameView;
@@ -14,7 +13,6 @@ abstract public class GameController {
     Context mContext;
     GameObject mModel;
     GameView mView;
-    public Rect mHitRect = new Rect();
 
     private volatile boolean isOutOfGame;
 
@@ -61,20 +59,23 @@ abstract public class GameController {
         return isOutOfGame;
     }
     public void remove(){
+      //  setOutOfGame(true);
         ((Activity)getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getView().getContainer().removeView(getView());
                 setOutOfGame(true);
+                getModel().setDead(false);
             }
         });
     }
     public boolean resurrect() {
         try {
         getModel().initGameObject();
+            setOutOfGame(false);
+
             getView().initGameView();
 
-            setOutOfGame(false);
 
 
             return true;

@@ -2,7 +2,13 @@ package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.*;
@@ -24,12 +30,13 @@ public class GameManager implements Runnable{
     private GetDropAction mGetDropAction;
     private GetShotAction mGetShotAction;
     private SetScoreAction mSetScoreAction;
-
-    public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView) {
+    private ImageView mGameOver;
+    public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView,ImageView gameOverImage) {
         mLayout = gameLayoutView;
         mScoreView = scoreView;
         mContext = gameLayoutView.getContext();
         mGameModel = gameModel;
+        mGameOver=gameOverImage;
 
     }
 
@@ -71,6 +78,7 @@ public class GameManager implements Runnable{
             mControllers[i].remove();
 
         }
+        mGameModel.setOnScreenCopsCounter(0);
        // checkHits=new CheckDropsHitThread(mControllers);
         mPauseObject=new Object();
         mGameModel.mIsPause =false;
@@ -92,18 +100,18 @@ public class GameManager implements Runnable{
         thread2.start();
     }
 
-
     public void action() {
-
         //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
-        if(mGameModel.getLoopsCounter()%200==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(3);
+        if(mGameModel.getLoopsCounter()%200==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(1);
         if(mRainbowDashController.getModel().isDropping())releaseDrop();
         if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
         for (GameController controller : mControllers) {
             if (!controller.isOutOfGame()) {
-                if (controller.getModel().isDead()) {
+                if (controller.getModel().isDead() && !controller.getView().isRemoved) {
+                    controller.getView().isRemoved=true;
                     controller.remove();
                     if(controller.getModel() instanceof Cop){
+                        mGameModel.decreaseOnScreenCopsCounter();
                         mGameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
                         ((Activity)mContext).runOnUiThread(mSetScoreAction);
                     }
@@ -129,7 +137,6 @@ public class GameManager implements Runnable{
         mGameModel.increaseLoopsCounter();
         spawnCops();
 
-
     }
     private void releaseDrop() {
         mRainbowDashController.getModel().setDropping(false);
@@ -142,15 +149,22 @@ public class GameManager implements Runnable{
         ((Activity)mContext).runOnUiThread(mGetShotAction);
 
     }
-    private void spawnCops() {
-        if (mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime()==0) {
-            int type= getNeededCopTypeInt();
-                CopType copType=CopType.values()[type];
+    private boolean spawnCops() {
+        if ((mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime() == 0)
+               || (mGameModel.getLoopsCounter() > 100 && mGameModel.getOnScreenCopsCounter() < mGameModel.getMinAmountOfCops())) {
+              //  ){
+                mGameModel.increaseOnScreenCopsCounter();
+            int type = getNeededCopTypeInt();
+            CopType copType = CopType.values()[type];
+
             getNewCop(copType);
-        }
-            mGameModel.increaseOnScreenCopsCounter();
+
+            return true;
 
         }
+        return false;
+
+    }
 
     private int getNeededCopTypeInt() {
 
@@ -165,7 +179,7 @@ public class GameManager implements Runnable{
 
     private void getNewCop(CopType type) {
         for(GameController controller:mControllers){
-            if(controller instanceof CopController && controller.isOutOfGame()) {
+            if(controller instanceof CopController && controller.isOutOfGame() &&!controller.getModel().isDead()) {
                 if (((Cop) controller.getModel()).getType() == type) {
                     controller.resurrect();
                     return;
@@ -206,10 +220,9 @@ public class GameManager implements Runnable{
             @Override
             public void run() {
                 try {
-                    System.gc();
 
                     Thread.sleep(500);
-                    mRainbowDashController.getModel().goingToX=60;
+            //        mRainbowDashController.getModel().goingToX=60;
                     ((Activity)mContext).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -241,6 +254,21 @@ public class GameManager implements Runnable{
                 e.printStackTrace();
             }
         }
+        for(final GameController controller:mControllers){
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(controller.getView().getDrawable() instanceof AnimationDrawable)((AnimationDrawable) controller.getView().getDrawable()).stop();
+                }
+            });
+        };
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+         //       mLayout.addView(mGameOver);
+                expand(mGameOver);
+            }
+        });
         Log.d("test", "game thread dead");
 
     }
@@ -282,6 +310,60 @@ public class GameManager implements Runnable{
 
             }
         }
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targtetHeight = v.getMeasuredHeight();
+
+        v.getLayoutParams().height = 0;
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int)(targtetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration(1500);//(int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        a.setStartOffset(0);
+        v.startAnimation(a);
+        v.setVisibility(View.VISIBLE);
+
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1){
+                    v.setVisibility(View.GONE);
+                }else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
 
 }
 
