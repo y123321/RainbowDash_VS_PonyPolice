@@ -41,12 +41,7 @@ public class CopView extends GameView {
 
     }
 
-    @Override
-    public void getHitRect(Rect outRect) {
-        super.getHitRect(outRect);
-        outRect.top+=getPaddingBottom()/2;
-        outRect.bottom-=getPaddingBottom()/2;
-    }
+
     private int getRandomPadding(){
         Point size=Common.getScreenSize(getContext());
         return Common.random.nextInt(size.y/4);

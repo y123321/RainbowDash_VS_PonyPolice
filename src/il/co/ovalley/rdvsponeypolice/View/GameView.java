@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.View;
 
 import android.app.Activity;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -84,7 +85,14 @@ public abstract class GameView extends ImageView {
     }
 
 
+    @Override
+    public void getHitRect(Rect outRect) {
+        outRect.top=(int)getY()-getHeight()/2+getPaddingBottom()/2;;
+        outRect.bottom=(int)getY()+getHeight()/2-getPaddingBottom()/2;;
+        outRect.left=(int)getX()-getWidth()/2;
+        outRect.right=(int)getX()+getWidth()/2;
 
+    }
     public void initGameView() {
         isRemoved=false;
         init();
@@ -101,6 +109,7 @@ public abstract class GameView extends ImageView {
             else
                 m_container.addView(GameView.this, m_params);
         }
+
     }
 }
 

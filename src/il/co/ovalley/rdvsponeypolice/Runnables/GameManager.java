@@ -216,6 +216,7 @@ public class GameManager implements Runnable{
     public void run() {
         GameModel.isRunning=true;
         init();
+        System.gc();
         new Thread(new Runnable() {
             @Override
             public void run() {
