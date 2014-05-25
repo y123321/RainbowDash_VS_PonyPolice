@@ -5,7 +5,6 @@ import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.GameController;
 import il.co.ovalley.rdvsponeypolice.Controller.RainbowDashController;
 import il.co.ovalley.rdvsponeypolice.Controller.ShotController;
-import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 
 import java.util.ArrayList;
 
@@ -26,29 +25,29 @@ public class CheckShotsHitThread implements Runnable {
         shotRect=new Rect();
         rdRect=new Rect();
     }
-
+//using a different thread is alright if i can use dual core, too bad most phones has only one
     @Override
     public void run() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        while (GameModel.isRunning) {
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        while (GameModel.isRunning) {
             mRD.getView().getHitRect(rdRect);
             for (ShotController shot : mShots) {
                 if(shot.isOutOfGame()||shot.getModel().isDead()) continue;
                 shot.getView().getHitRect(shotRect);
                 if (shotRect.intersect(rdRect)) kill(shot, mRD);
-            }
-            try {
-                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+//            }
+//            try {
+//                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//
         }
-        Log.d("test", "shots thread dead");
+   //     Log.d("test", "shots thread dead");
 
     }
 

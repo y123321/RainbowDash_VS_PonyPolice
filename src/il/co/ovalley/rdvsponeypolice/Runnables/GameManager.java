@@ -31,12 +31,15 @@ public class GameManager implements Runnable{
     private GetShotAction mGetShotAction;
     private SetScoreAction mSetScoreAction;
     private ImageView mGameOver;
+    private CheckDropsHitThread mCheckDropsHit;
+    private  CheckShotsHitThread mCheckShotsHit;
     public GameManager(GameModel gameModel, GameLayoutView gameLayoutView, TextView scoreView,ImageView gameOverImage) {
         mLayout = gameLayoutView;
         mScoreView = scoreView;
         mContext = gameLayoutView.getContext();
         mGameModel = gameModel;
         mGameOver=gameOverImage;
+
 
     }
 
@@ -86,7 +89,9 @@ public class GameManager implements Runnable{
         mGetDropAction=new GetDropAction();
         mGetShotAction=new GetShotAction();
         mSetScoreAction=new SetScoreAction();
-        startThreads();
+        mCheckShotsHit=new CheckShotsHitThread(mControllers,mRainbowDashController);
+        mCheckDropsHit=new CheckDropsHitThread(mControllers);
+        //      startThreads();
 
 
     }
@@ -102,6 +107,8 @@ public class GameManager implements Runnable{
 
     public void action() {
         //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
+        mCheckDropsHit.run();
+        mCheckShotsHit.run();
         if(mGameModel.getLoopsCounter()%200==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(1);
         if(mRainbowDashController.getModel().isDropping())releaseDrop();
         if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
@@ -130,9 +137,6 @@ public class GameManager implements Runnable{
                     }
                 }
             }
-
-
-
         }
         mGameModel.increaseLoopsCounter();
         spawnCops();
@@ -216,6 +220,7 @@ public class GameManager implements Runnable{
     public void run() {
         GameModel.isRunning=true;
         init();
+        pauseGame();
         System.gc();
         new Thread(new Runnable() {
             @Override

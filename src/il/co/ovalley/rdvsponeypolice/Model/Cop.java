@@ -89,7 +89,9 @@ public abstract class Cop extends GameObject {
         return m_chanceNotToShoot;
     }
 
-
+    public void setChanceNotToShoot(int m_chanceNotToShoot) {
+        this.m_chanceNotToShoot = m_chanceNotToShoot;
+    }
 
     public boolean isShooting() {
         return isShooting;

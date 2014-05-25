@@ -21,6 +21,7 @@ public class CamouflageCop extends Cop {
         setScorePoints(55);
         setXSpeed(3.5f);
         setStepsLimit(200);
+        setChanceNotToShoot(130);
 
     }
 }

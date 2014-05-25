@@ -20,6 +20,7 @@ public class NinjaCop extends Cop {
         setXSpeed(5);
         setOriginalHitPoints(5);
         setScorePoints(80);
+        setChanceNotToShoot(80);
     }
 
     @Override

@@ -1,11 +1,9 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.graphics.Rect;
-import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.CopController;
 import il.co.ovalley.rdvsponeypolice.Controller.DropController;
 import il.co.ovalley.rdvsponeypolice.Controller.GameController;
-import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 
 import java.util.ArrayList;
 
@@ -30,15 +28,15 @@ public class CheckDropsHitThread implements Runnable {
         copRect=new Rect();
         dropRect=new Rect();
     }
-
+//using a different thread is alright if i can use dual core, too bad most phones has only one
     @Override
     public void run() {
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        while (GameModel.isRunning) {
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        while (GameModel.isRunning) {
             for (CopController cop : mCops) {
                 if (cop.getModel().isDead() || cop.isOutOfGame()) continue;
                 cop.getView().getHitRect(copRect);
@@ -49,15 +47,15 @@ public class CheckDropsHitThread implements Runnable {
                         kill(drop, cop);
                     }
                 }
-            }
-            try {
-                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            }
+//            try {
+//                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
         }
-        Log.d("test","drops thread dead");
+    //    Log.d("test","drops thread dead");
     }
 
     private void kill(final DropController drop, final CopController cop) {

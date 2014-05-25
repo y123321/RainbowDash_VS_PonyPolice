@@ -136,7 +136,8 @@ public class CopController extends GameController {
     private void changeCopDirectionOnBorders(int screenBorders) {
         float x = mCopView.getX();
         Direction direction=null;
-        if (x <= screenBorders)direction=Direction.RIGHT;
+        //because its hard to get them at the left corner
+        if (x <= screenBorders*3)direction=Direction.RIGHT;
         else if (x >= Common.getScreenSize(mCopView.getContext()).x - screenBorders)
             direction=Direction.LEFT;
         if(direction!=null){

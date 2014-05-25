@@ -1,7 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.CopDrawables;
@@ -48,7 +47,7 @@ public class CopView extends GameView {
     }
     private int getRandomWidth() {
         Point size=Common.getScreenSize(getContext());
-        return Common.random.nextInt(size.x-SCREEN_BORDERS)+SCREEN_BORDERS;
+        return Math.abs(Common.random.nextInt(size.x-2*SCREEN_BORDERS))+SCREEN_BORDERS;
     }
     public void walkAnimation(Direction direction) {
      //   int resource = direction == Direction.LEFT ? getDrawables().baseDrawableLeft: getDrawables().baseDrawableRight;

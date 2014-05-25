@@ -6,9 +6,11 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.*;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
 import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
@@ -16,14 +18,22 @@ import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 
 public class GameActivity extends Activity {
-    private GameLayoutView m_Layout;
+    private GameLayoutView mLayout;
     private GameManager mGameManager;
+    private int currentIndex=-1;
+    int imageIds[] = {R.drawable.brute_pony_10_left, R.drawable.brute_pony_10_right, R.drawable.brute_pony_3_left, R.drawable.ninja_pony_10_left, R.drawable.ninja_pony_10_right};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        final ImageSwitcher imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
+        final Button btnNext=(Button) findViewById(R.id.buttonNext);
+        //starts the story board
+        initImageSwitcher(imageSwitcher,btnNext);
+
     }
 
     private void init() {
@@ -32,9 +42,9 @@ public class GameActivity extends Activity {
         getWindow().setFormat(PixelFormat.RGB_565);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
             tv.setText("0");
-         m_Layout=(GameLayoutView)findViewById(R.id.layout);
+         mLayout =(GameLayoutView)findViewById(R.id.layout);
         ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
-        mGameManager = GameFactory.createGameManager(m_Layout,tv,gameOver);
+        mGameManager = GameFactory.createGameManager(mLayout,tv,gameOver);
         new Thread(mGameManager).start();
 
     }
@@ -120,6 +130,52 @@ public class GameActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void initImageSwitcher(final ImageSwitcher imageSwitcher, final Button nextButton) {
+        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+
+            public View makeView() {
+                // TODO Auto-generated method stub
+
+                // Create a new ImageView set it's properties
+                ImageView imageView = new ImageView(getApplicationContext());
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imageView.setLayoutParams(new ImageSwitcher.LayoutParams(ImageSwitcher.LayoutParams.MATCH_PARENT, ImageSwitcher.LayoutParams.MATCH_PARENT));
+                return imageView;
+            }
+
+        });
+
+
+        // ClickListener for NEXT button
+        // When clicked on Button ImageSwitcher will switch between Images
+        // The current Image will go OUT and next Image  will come in with specified animation
+        nextButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                nextImage(imageSwitcher,nextButton);
+            }
+        });
+        // Declare the animations and initialize them
+        Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+        Animation out = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
+
+        // set the animation type to imageSwitcher
+        imageSwitcher.setInAnimation(in);
+        imageSwitcher.setOutAnimation(out);
+        nextImage(imageSwitcher,nextButton);
+    }
+
+    private void nextImage(ImageSwitcher imageSwitcher,Button nextButton) {
+        // TODO Auto-generated method stub
+        currentIndex++;
+        // If index reaches maximum reset it
+        if(currentIndex>=imageIds.length){
+            imageSwitcher.setVisibility(View.GONE);
+            nextButton.setVisibility(View.GONE);
+            mGameManager.resume();
+        }
+        else imageSwitcher.setImageResource(imageIds[currentIndex]);
     }
 
 }

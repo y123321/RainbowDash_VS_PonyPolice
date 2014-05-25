@@ -17,6 +17,7 @@ public class SimpleCop extends Cop {
         setLoading(false);
         setStepsLimit(100);
         setXSpeed(1.5f);
+        setChanceNotToShoot(200);
 
     }
 
