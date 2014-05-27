@@ -8,7 +8,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  * Created by yuval on 08/05/2014.
  */
 public class GameModel {
-    private int numberOfDrops;
+    private int numberOfDropsAndShots;
     private int mLoopsCounter;
     private volatile int mOnScreenCopsCounter;
     private int mCopsLimit;
@@ -89,8 +89,8 @@ public class GameModel {
         mCopsLimit=40;
         mNumberOfLoopsForTypeChange=3000;
         mScore=0;
-        numberOfCopsPerType = 30;
-        numberOfDrops=50;
+        numberOfCopsPerType = 20;
+        numberOfDropsAndShots =50;
         ITERATION_PAUSE_TIME=resources.getInteger(R.integer.iteration_time);
         minAmountOfCops=3;
 
@@ -100,8 +100,8 @@ public class GameModel {
         return numberOfCopsPerType;
     }
 
-    public int getNumberOfDrops() {
-        return numberOfDrops;
+    public int getNumberOfDropsAndShots() {
+        return numberOfDropsAndShots;
     }
 
     public void decreaseCopsSpawnTime(int mils) {

@@ -6,5 +6,5 @@
     <integer name="simple_cop_walking_animation">500</integer>
     <integer name="ninja_walking_animation">500</integer>
     <integer name="ninja_shooting_animation">180</integer>
-    <integer name="iteration_time">6</integer>
+    <integer name="iteration_time">5</integer>
 </resources>

@@ -17,7 +17,7 @@ public class CheckDropsHitThread implements Runnable {
     Rect copRect;
     Rect dropRect;
 
-    public CheckDropsHitThread(GameController[] controllers) {
+    public CheckDropsHitThread(ArrayList<GameController> controllers) {
         mCops = new ArrayList<CopController>();
         mDrops = new ArrayList<DropController>();
         for (GameController controller : controllers) {

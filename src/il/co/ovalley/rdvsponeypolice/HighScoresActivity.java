@@ -3,7 +3,6 @@ package il.co.ovalley.rdvsponeypolice;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
@@ -41,11 +40,12 @@ public class HighScoresActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
+        if(Common.gameManager!=null) Common.gameManager.pauseGame();
         final ListView listView=(ListView)findViewById(R.id.listView);
         Button button=(Button)findViewById(R.id.btnSendScore);
-        TextView textView=(TextView)findViewById(R.id.textView);
+        TextView textView=(TextView)findViewById(R.id.highScored_tvScore);
         mScore=getIntent().getExtras().getInt("score");
-        textView.setText("Score: "+mScore);
+        textView.setText("Score: " + mScore);
 
         int[] colors = new int[] { 0xEE4144,0xf37033,0xfdf6af,
                 0x62bc4d,0x1e98d3,0x672f89};
@@ -53,6 +53,9 @@ public class HighScoresActivity extends Activity {
 
         bm=rotateBitmap(bm,90);
         button.setBackgroundDrawable(new BitmapDrawable(bm));
+        LinearLayout header=(LinearLayout)getLayoutInflater().inflate(R.layout.header,null);
+        listView.setEmptyView(findViewById(R.id.tvLoading));
+        listView.addHeaderView(header);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,7 +67,6 @@ public class HighScoresActivity extends Activity {
             public void onClick(View v) {
                 final String name=((EditText)findViewById(R.id.etName)).getText().toString();
                 v.setEnabled(false);
-                float i=9;
                 AlphaAnimation animation1 = new AlphaAnimation(1, 0.5f);
                 animation1.setDuration(1000);
                 animation1.setFillAfter(true);
@@ -103,18 +105,12 @@ v.startAnimation(animation1);
 
                 Log.d("test","no connection");
 
-                final RelativeLayout rl=(RelativeLayout)findViewById(R.id.highScoresLayout);
-                rl.removeView(resultListView);
-                final TextView tv=new TextView(this);
-                tv.setTextSize(25);
-                tv.setTextColor(Color.RED);
-                tv.setText("Check connection and retry");
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(HighScoresActivity.this, "No internet connection", Toast.LENGTH_LONG).show();
 
-                        rl.addView(tv,0);
+                        ((TextView)findViewById(R.id.tvLoading)).setText("Check connection\n and retry");
 
                     }
                 });
@@ -184,30 +180,11 @@ v.startAnimation(animation1);
     private void updateListView(final ListView resultListView, ArrayList<HashMap<String, String>> mylist) {
 
         final SimpleAdapter adapter = new SimpleAdapter(this, mylist, R.layout.row,
-                new String[]{"#", "name", "score"}, new int[]{R.id.TRAIN_CELL, R.id.FROM_CELL, R.id.TO_CELL});
-        final LinearLayout header=(LinearLayout)getLayoutInflater().inflate(R.layout.header,null);
+                new String[]{"#", "name", "score"}, new int[]{R.id.rank, R.id.name, R.id.score});
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                resultListView.addHeaderView(header);
                 resultListView.setAdapter(adapter);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             }
         });
     }

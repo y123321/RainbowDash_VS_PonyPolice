@@ -16,7 +16,7 @@ public class CheckShotsHitThread implements Runnable {
     private volatile RainbowDashController mRD;
     private Rect shotRect;
     private Rect rdRect;
-    public CheckShotsHitThread(GameController[] controllers, RainbowDashController rainbowDashController) {
+    public CheckShotsHitThread(ArrayList<GameController> controllers, RainbowDashController rainbowDashController) {
         mShots = new ArrayList<ShotController>();
         for (GameController controller : controllers) {
             if (controller instanceof ShotController) mShots.add((ShotController) controller);

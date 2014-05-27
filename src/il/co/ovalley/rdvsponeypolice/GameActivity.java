@@ -13,13 +13,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
 import il.co.ovalley.rdvsponeypolice.Model.GameModel;
-import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
 
 public class GameActivity extends Activity {
     private GameLayoutView mLayout;
-    private GameManager mGameManager;
+    ImageSwitcher mImageSwitcher;
+  //  private GameManager Common.gameManager;
     private int currentIndex=-1;
     int imageIds[] = {R.drawable.brute_pony_10_left, R.drawable.brute_pony_10_right, R.drawable.brute_pony_3_left, R.drawable.ninja_pony_10_left, R.drawable.ninja_pony_10_right};
 
@@ -28,39 +28,35 @@ public class GameActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        init();
-        final ImageSwitcher imageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
-        final Button btnNext=(Button) findViewById(R.id.buttonNext);
-        //starts the story board
-        initImageSwitcher(imageSwitcher,btnNext);
-
-    }
-
-    private void init() {
-
-        TextView tv=(TextView)findViewById(R.id.tvScore);
         getWindow().setFormat(PixelFormat.RGB_565);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DITHER);
-            tv.setText("0");
-         mLayout =(GameLayoutView)findViewById(R.id.layout);
-        ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
-        mGameManager = GameFactory.createGameManager(mLayout,tv,gameOver);
-        new Thread(mGameManager).start();
+        initGame();
+        //image switcher for story board
+        mImageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
+        //button to change to next image in story board
+        final Button btnNext=(Button) findViewById(R.id.buttonNext);
+        //starts the story board
+        initStoryBoard(mImageSwitcher, btnNext);
 
     }
 
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
+    private void initGame() {
+        TextView tvScore=(TextView)findViewById(R.id.tvScore);
+            tvScore.setText("0");
+         mLayout =(GameLayoutView)findViewById(R.id.layout);
+        ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
+        //initiate game manager on which the game loop and all game functionalities run.
+        Common.gameManager = GameFactory.createGameManager(mLayout,tvScore,gameOver);
+        
+        //the thread on which the game is played, separated from UI thread
+        new Thread(Common.gameManager).start();
 
     }
 
     private void gotoHighScores(){
     Intent intent=new Intent(this,HighScoresActivity.class);
-    intent.putExtra("score",mGameManager.getScore());
+    intent.putExtra("score",Common.gameManager.getScore());
     startActivity(intent);
-        
     }
 
 
@@ -91,7 +87,7 @@ public class GameActivity extends Activity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        mGameManager.pauseGame();
+        Common.gameManager.pauseGame();
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -105,7 +101,7 @@ public class GameActivity extends Activity {
     @Override
     public void onOptionsMenuClosed(Menu menu) {
         super.onOptionsMenuClosed(menu);
-        mGameManager.resume();
+        if(mImageSwitcher.getVisibility()==View.GONE)Common.gameManager.resume();
     }
 
     @Override
@@ -131,8 +127,8 @@ public class GameActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void initImageSwitcher(final ImageSwitcher imageSwitcher, final Button nextButton) {
-        imageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+    private void initStoryBoard(final ImageSwitcher mImageSwitcher, final Button nextButton) {
+        mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
                 // TODO Auto-generated method stub
@@ -153,29 +149,29 @@ public class GameActivity extends Activity {
         nextButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                nextImage(imageSwitcher,nextButton);
+                nextImage(mImageSwitcher,nextButton);
             }
         });
         // Declare the animations and initialize them
         Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
         Animation out = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
 
-        // set the animation type to imageSwitcher
-        imageSwitcher.setInAnimation(in);
-        imageSwitcher.setOutAnimation(out);
-        nextImage(imageSwitcher,nextButton);
+        // set the animation type to mImageSwitcher
+        mImageSwitcher.setInAnimation(in);
+        mImageSwitcher.setOutAnimation(out);
+        nextImage(mImageSwitcher,nextButton);
     }
 
-    private void nextImage(ImageSwitcher imageSwitcher,Button nextButton) {
+    private void nextImage(ImageSwitcher mImageSwitcher,Button nextButton) {
         // TODO Auto-generated method stub
         currentIndex++;
         // If index reaches maximum reset it
         if(currentIndex>=imageIds.length){
-            imageSwitcher.setVisibility(View.GONE);
+            mImageSwitcher.setVisibility(View.GONE);
             nextButton.setVisibility(View.GONE);
-            mGameManager.resume();
+            Common.gameManager.resume();
         }
-        else imageSwitcher.setImageResource(imageIds[currentIndex]);
+        else mImageSwitcher.setImageResource(imageIds[currentIndex]);
     }
 
 }

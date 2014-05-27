@@ -4,10 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Common;
@@ -15,18 +11,19 @@ import il.co.ovalley.rdvsponeypolice.Controller.*;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 
+import java.util.ArrayList;
+
 /**
  * Created by yuval on 30/04/2014.
  */
 public class GameManager implements Runnable{
     Object mPauseObject;
-    public volatile GameController[] mControllers;// ArrayList<GameController> mControllers;
+    public volatile ArrayList<GameController> mControllers;
     public GameLayoutView mLayout;
     private Context mContext;
     private GameModel mGameModel;
     private RainbowDashController mRainbowDashController;
     private TextView mScoreView;
-    private LruCacheManager cacheManager=new LruCacheManager();
     private GetDropAction mGetDropAction;
     private GetShotAction mGetShotAction;
     private SetScoreAction mSetScoreAction;
@@ -58,42 +55,196 @@ public class GameManager implements Runnable{
     }
 
     private void init() {
-
-  //      mControllers = new ArrayList<GameController>();
         mRainbowDashController = GameFactory.createRainbowDashController(mLayout);
-    //    mControllers.add(mRainbowDashController);
-        mControllers=new GameController[mGameModel.getNumberOfCopsPerType()*CopType.values().length+mGameModel.getNumberOfDrops()+1];
-        mControllers[0]=mRainbowDashController;
-        for(int i=1;i<=mGameModel.getNumberOfDrops();i+=2){
-            mControllers[i]=GameFactory.createDropController(mLayout);
-            mControllers[i+1]=GameFactory.createShotController(mLayout);
+        mControllers=new ArrayList<GameController>();
+        mControllers.add(mRainbowDashController);
+        mPauseObject=new Object();
+        addDropsAndShots(mGameModel.getNumberOfDropsAndShots());
+        addCops(mGameModel.getNumberOfCopsPerType());
+        initGameViewsForCache();
+        mGameModel.setOnScreenCopsCounter(0);
+        mGameModel.mIsPause =false;
+        initUiRunnables();
+        initHitsDetection();
+        //startThreads();
+
+
+    }
+    @Override
+    public void run() {
+        GameModel.isRunning=true;
+        init();
+
+        pauseGame();
+        pauseIfNeeded();
+        //to prevent gc from starting during the game
+        System.gc();
+        new Thread(new StartRainbowAction()).start();
+        //start game Loop
+        while (GameModel.isRunning) {
+            //all game related functionalities
+            action();
+            //sleep for few ml at the end of each loop
+            try {
+                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            pauseIfNeeded();
         }
-        for(int i=mGameModel.getNumberOfDrops()+1;i< mControllers.length;i+=CopType.values().length){
-            mControllers[i]=GameFactory.createCopController(new NinjaCop(),mLayout);
-            mControllers[i+1]=GameFactory.createCopController(new SimpleCop(), mLayout);
-            mControllers[i+2]=GameFactory.createCopController(new BruteCop(),mLayout);
-            mControllers[i+3]=(GameFactory.createCopController(new CamouflageCop(),mLayout));
+        endGameAnimations();
+        expandGameOver();
+        Log.d("test", "game thread dead");
+
+    }
+
+    private void expandGameOver() {
+        ((Activity)mContext).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //       mLayout.addView(mGameOver);
+                Common.expand(mGameOver);
+            }
+        });
+    }
+
+    private void endGameAnimations() {
+        for(final GameController controller:mControllers){
+            ((Activity)mContext).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(controller.getView().getDrawable() instanceof AnimationDrawable)((AnimationDrawable) controller.getView().getDrawable()).stop();
+                }
+            });
         }
-        for(int i=0;i<mControllers.length;i++){
-            mControllers[i].getView().initGameView();
+        ;
+    }
+
+    private void pauseIfNeeded() {
+        if(mGameModel.mIsPause)
+            try {
+                synchronized (mPauseObject){
+                    mPauseObject.wait();
+                }
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+    }
+
+    public void action() {
+        //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
+        checkHits();
+        int amountOfGameLoops = 200;
+        decreaseCopsSpaenTimeIfNeeded(amountOfGameLoops);
+        releaseDropIfNeeded();
+        loseGameIfNeeded();
+        updateControllers();
+        mGameModel.increaseLoopsCounter();
+        spawnCops();
+
+    }
+
+    private void updateControllers() {
+        for (GameController controller : mControllers) {
+            //remove dead objects if needed
+            if (!controller.isOutOfGame()) {
+                if (onlyModelIsDead(controller)) {
+                    controller.remove();
+                    if(isCop(controller)){
+                        KillCopAndUpdateScore(controller);
+                    }
+                }
+                else {
+                    //update objects
+                    if (isTimeToUpdate(controller)) {
+                        controller.update();
+                        if(isCop(controller)){
+                            CopController cop=(CopController)controller;
+                            shootIfNeeded(cop);
+                        }
+                    }
+                }
+            }
         }
-        for(int i=1;i<mControllers.length;i++){
-            mControllers[i].remove();
+    }
+
+    private void shootIfNeeded(CopController cop) {
+        if (cop.getModel().isShooting()) {
+            shoot(cop);
+        }
+    }
+
+    private boolean isTimeToUpdate(GameController controller) {
+        return mGameModel.getLoopsCounter() % controller.getModel().getWaitTime() == 0;
+    }
+
+    private boolean isCop(GameController controller) {
+        return controller.getModel() instanceof Cop;
+    }
+
+    private void KillCopAndUpdateScore(GameController controller) {
+        mGameModel.decreaseOnScreenCopsCounter();
+        mGameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
+        ((Activity)mContext).runOnUiThread(mSetScoreAction);
+    }
+
+    private boolean onlyModelIsDead(GameController controller) {
+        return controller.getModel().isDead() && !controller.getView().isRemoved;
+    }
+
+    private void loseGameIfNeeded() {
+        if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
+    }
+
+    private void releaseDropIfNeeded() {
+        if(mRainbowDashController.getModel().isDropping())releaseDrop();
+    }
+
+    private void decreaseCopsSpaenTimeIfNeeded(int amountOfGameLoops) {
+        if(mGameModel.getLoopsCounter()% amountOfGameLoops ==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(1);
+    }
+
+    private void checkHits() {
+        mCheckDropsHit.run();
+        mCheckShotsHit.run();
+    }
+
+    private void initGameViewsForCache() {
+        for(int i=0;i<mControllers.size();i++){
+            mControllers.get(i).getView().initGameView();
+        }
+        for(int i=1;i<mControllers.size();i++){
+            mControllers.get(i).remove();
 
         }
-        mGameModel.setOnScreenCopsCounter(0);
-       // checkHits=new CheckDropsHitThread(mControllers);
-        mPauseObject=new Object();
-        mGameModel.mIsPause =false;
-//        mScoreView.setText(0);
+    }
+
+    private void addDropsAndShots(int numberOfDropsAndShots) {
+        for(int i=1;i<=numberOfDropsAndShots;i++){
+            mControllers.add(GameFactory.createDropController(mLayout));
+            mControllers.add(GameFactory.createShotController(mLayout));
+        }
+    }
+
+    private void addCops(int numberOfCopsPerType) {
+        for(int i=0;i< numberOfCopsPerType;i++){
+            mControllers.add(GameFactory.createCopController(new NinjaCop(), mLayout));
+            mControllers.add(GameFactory.createCopController(new SimpleCop(), mLayout));
+            mControllers.add(GameFactory.createCopController(new BruteCop(), mLayout));
+            mControllers.add(GameFactory.createCopController(new CamouflageCop(), mLayout));
+        }
+    }
+
+    private void initHitsDetection() {
+        mCheckShotsHit=new CheckShotsHitThread(mControllers,mRainbowDashController);
+        mCheckDropsHit=new CheckDropsHitThread(mControllers);
+    }
+
+    private void initUiRunnables() {
         mGetDropAction=new GetDropAction();
         mGetShotAction=new GetShotAction();
         mSetScoreAction=new SetScoreAction();
-        mCheckShotsHit=new CheckShotsHitThread(mControllers,mRainbowDashController);
-        mCheckDropsHit=new CheckDropsHitThread(mControllers);
-        //      startThreads();
-
-
     }
 
     private void startThreads() {
@@ -105,43 +256,7 @@ public class GameManager implements Runnable{
         thread2.start();
     }
 
-    public void action() {
-        //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
-        mCheckDropsHit.run();
-        mCheckShotsHit.run();
-        if(mGameModel.getLoopsCounter()%200==0 && mGameModel.getCopsSpawnTime()>30)mGameModel.decreaseCopsSpawnTime(1);
-        if(mRainbowDashController.getModel().isDropping())releaseDrop();
-        if(mRainbowDashController.getModel().isLost()) GameModel.isRunning=false;
-        for (GameController controller : mControllers) {
-            if (!controller.isOutOfGame()) {
-                if (controller.getModel().isDead() && !controller.getView().isRemoved) {
-                    controller.getView().isRemoved=true;
-                    controller.remove();
-                    if(controller.getModel() instanceof Cop){
-                        mGameModel.decreaseOnScreenCopsCounter();
-                        mGameModel.addToScore(((Cop) controller.getModel()).getScorePoints());
-                        ((Activity)mContext).runOnUiThread(mSetScoreAction);
-                    }
-                }
 
-
-                else {
-                    if (mGameModel.getLoopsCounter() % controller.getModel().getWaitTime() == 0) {
-                        controller.update();
-                        if(controller instanceof CopController){
-                            CopController cop=(CopController)controller;
-                            if (cop.getModel().isShooting()) {
-                                shoot(cop);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        mGameModel.increaseLoopsCounter();
-        spawnCops();
-
-    }
     private void releaseDrop() {
         mRainbowDashController.getModel().setDropping(false);
         ((Activity)mContext).runOnUiThread(mGetDropAction);
@@ -216,68 +331,7 @@ public class GameManager implements Runnable{
 
     }
 
-    @Override
-    public void run() {
-        GameModel.isRunning=true;
-        init();
-        pauseGame();
-        System.gc();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
 
-                    Thread.sleep(500);
-            //        mRainbowDashController.getModel().goingToX=60;
-                    ((Activity)mContext).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mRainbowDashController.changeDirection();
-                            mRainbowDashController.startRDListener();
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-        while (GameModel.isRunning) {
-
-            action();
-            try {
-                Thread.sleep(GameModel.ITERATION_PAUSE_TIME);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(mGameModel.mIsPause)
-            try {
-                synchronized (mPauseObject){
-                    mPauseObject.wait();
-                }
-            }
-            catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        for(final GameController controller:mControllers){
-            ((Activity)mContext).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(controller.getView().getDrawable() instanceof AnimationDrawable)((AnimationDrawable) controller.getView().getDrawable()).stop();
-                }
-            });
-        };
-        ((Activity)mContext).runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-         //       mLayout.addView(mGameOver);
-                expand(mGameOver);
-            }
-        });
-        Log.d("test", "game thread dead");
-
-    }
     public void resume(){
         mGameModel.mIsPause =false;
         synchronized (mPauseObject) {
@@ -309,6 +363,24 @@ public class GameManager implements Runnable{
 
         }
     }
+    private class StartRainbowAction implements Runnable{
+        @Override
+        public void run() {
+            try {
+                //to prevent problems from loading animations too soon
+                Thread.sleep(500);
+                ((Activity)mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRainbowDashController.changeDirection();
+                        mRainbowDashController.startRDListener();
+                    }
+                });
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     private class SetScoreAction implements Runnable{
             @Override
             public void run() {
@@ -316,60 +388,7 @@ public class GameManager implements Runnable{
 
             }
         }
-    public static void expand(final View v) {
-        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final int targtetHeight = v.getMeasuredHeight();
 
-        v.getLayoutParams().height = 0;
-        Animation a = new Animation()
-        {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1
-                        ? ViewGroup.LayoutParams.WRAP_CONTENT
-                        : (int)(targtetHeight * interpolatedTime);
-                v.requestLayout();
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration(1500);//(int)(targtetHeight / v.getContext().getResources().getDisplayMetrics().density));
-        a.setStartOffset(0);
-        v.startAnimation(a);
-        v.setVisibility(View.VISIBLE);
-
-    }
-
-    public static void collapse(final View v) {
-        final int initialHeight = v.getMeasuredHeight();
-
-        Animation a = new Animation()
-        {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if(interpolatedTime == 1){
-                    v.setVisibility(View.GONE);
-                }else{
-                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-                    v.requestLayout();
-                }
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // 1dp/ms
-        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
-        v.startAnimation(a);
-    }
 
 }
 

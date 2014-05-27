@@ -59,7 +59,7 @@ abstract public class GameController {
         return isOutOfGame;
     }
     public void remove(){
-      //  setOutOfGame(true);
+        getView().isRemoved=true;
         ((Activity)getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
