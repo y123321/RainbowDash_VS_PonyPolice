@@ -36,7 +36,7 @@ public class ShotController extends GameController {
     }
 
     @Override
-    protected void changeDirection() {
+    public void changeDirection() {
         mModel.setYSpeed(-mModel.getYSpeed());
     }
 

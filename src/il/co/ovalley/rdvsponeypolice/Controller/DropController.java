@@ -51,7 +51,7 @@ public class DropController extends GameController {
     }
 
     @Override
-    protected void changeDirection() {
+    public void changeDirection() {
         mView.setY(-mView.getY());
     }
 }

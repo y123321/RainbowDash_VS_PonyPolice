@@ -74,7 +74,7 @@ public class CopController extends GameController {
      * change the movement direction on view and model
      */
     @Override
-    protected void changeDirection() {
+    public void changeDirection() {
         mCopModel.setStepCounter(Common.random.nextInt(mCopModel.getStepsLimit()));
         Direction direction = Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
         mCopModel.setDirection(direction);

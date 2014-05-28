@@ -44,7 +44,7 @@ abstract public class GameController {
     /** updates on the view, this method runs on UI thread*/
     abstract protected void runViewUpdate();
     /**change the movement direction on view and model*/
-    protected abstract void changeDirection();
+    public abstract void changeDirection();
 
 
     public GameObject getModel() {

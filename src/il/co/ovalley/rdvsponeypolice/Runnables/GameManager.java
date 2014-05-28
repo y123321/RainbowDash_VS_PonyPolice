@@ -220,6 +220,8 @@ public class GameManager implements Runnable {
     private void initGameViewsForCache() {
         for (int i = 0; i < mControllers.size(); i++) {
             mControllers.get(i).getView().initGameView();
+            mControllers.get(i).changeDirection();
+            mControllers.get(i).update();
         }
         for (int i = 1; i < mControllers.size(); i++) {
             mControllers.get(i).remove();
