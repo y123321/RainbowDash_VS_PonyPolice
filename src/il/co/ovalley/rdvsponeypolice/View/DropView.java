@@ -1,5 +1,6 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
+import android.view.ViewGroup;
 import il.co.ovalley.rdvsponeypolice.R;
 
 /**
@@ -7,7 +8,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class DropView extends GameView {
 
-    public DropView(GameLayoutView container) {
+    public DropView(ViewGroup container) {
         super(container);
         setImageResource(R.drawable.shit);
 

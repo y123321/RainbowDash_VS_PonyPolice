@@ -4,23 +4,23 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import il.co.ovalley.rdvsponeypolice.Controller.GameFactory;
-import il.co.ovalley.rdvsponeypolice.Model.GameModel;
-import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
+import il.co.ovalley.rdvsponeypolice.Runnables.GameManager;
 
 
 public class GameActivity extends Activity {
-    private GameLayoutView mLayout;
+    private ViewGroup mLayout;
     ImageSwitcher mImageSwitcher;
-  //  private GameManager Common.gameManager;
+    private GameManager mGameManager;
+    private ViewGroup mMenu;
+    private View mOverlay;
     private int currentIndex=-1;
+    private BlockTouch mBlockTouchListener;
+
     int imageIds[] = {R.drawable.brute_pony_10_left, R.drawable.brute_pony_10_right, R.drawable.brute_pony_3_left, R.drawable.ninja_pony_10_left, R.drawable.ninja_pony_10_right};
 
     @Override
@@ -37,37 +37,31 @@ public class GameActivity extends Activity {
         final Button btnNext=(Button) findViewById(R.id.buttonNext);
         //starts the story board
         initStoryBoard(mImageSwitcher, btnNext);
-
+        mBlockTouchListener=new BlockTouch();
     }
 
     private void initGame() {
         TextView tvScore=(TextView)findViewById(R.id.tvScore);
             tvScore.setText("0");
-         mLayout =(GameLayoutView)findViewById(R.id.layout);
+         mLayout =(RelativeLayout)findViewById(R.id.layout);
         ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
         //initiate game manager on which the game loop and all game functionalities run.
-        Common.gameManager = GameFactory.createGameManager(mLayout,tvScore,gameOver);
-        
+        mGameManager = GameFactory.createGameManager(mLayout,tvScore,gameOver);
+        initMenu();
+
+
         //the thread on which the game is played, separated from UI thread
-        new Thread(Common.gameManager).start();
+        new Thread(mGameManager).start();
 
     }
 
-    private void gotoHighScores(){
-    Intent intent=new Intent(this,HighScoresActivity.class);
-    intent.putExtra("score",Common.gameManager.getScore());
-    startActivity(intent);
+    private void gotoHighScores() {
+        Intent intent = new Intent(this, HighScoresActivity.class);
+        intent.putExtra("score", mGameManager.getScore());
+        intent.putExtra("isRunning",mGameManager.isRunning());
+        startActivity(intent);
     }
 
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
 
     /**
      * Prepare the Screen's standard options menu to be displayed.  This is
@@ -87,24 +81,109 @@ public class GameActivity extends Activity {
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Common.gameManager.pauseGame();
-        return super.onPrepareOptionsMenu(menu);
+        showMenu();
+        return true;
     }
 
     /**
-     * This hook is called whenever the options menu is being closed (either by the user canceling
-     * the menu with the back/menu button, or when an item is selected).
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
+     * Called when the activity has detected the user's press of the back
+     * key.  The default implementation simply finishes the current activity,
+     * but you can override this to do whatever you want.
      */
+    @Override
+    public void onBackPressed() {
+        if(mMenu.getVisibility()==View.VISIBLE) hideMenuAndResume();
+        else super.onBackPressed();
+    }
+
+    private void initMenu(){
+        mMenu=(ViewGroup)findViewById(R.id.menu);
+        mOverlay = findViewById(R.id.overlay);
+        Button btnMenu=(Button)findViewById(R.id.btnMenu);
+        Button btnNewGame=(Button)findViewById(R.id.btnNewGame);
+        Button btnHighScore=(Button)findViewById(R.id.btnHighScore);
+        Button btnResume=(Button)findViewById(R.id.btnResume);
+        btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMenu();
+            }
+        });
+        btnHighScore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoHighScores();
+                hideMenuAndResume();
+            }
+        });
+        btnNewGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recreate();
+                hideMenuAndResume();
+            }
+        });
+        btnResume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideMenuAndResume();
+            }
+        });
+
+    }
+
+    private void hideMenuAndResume() {
+        if(mImageSwitcher.getVisibility()!=View.VISIBLE)mGameManager.resume();
+        mOverlay.clearAnimation();
+        mMenu.clearAnimation();
+        mOverlay.setVisibility(View.GONE);
+        mOverlay.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+        mMenu.setVisibility(View.GONE);
+
+    }
+
+    public void showMenu(){
+
+        mGameManager.pauseGame();
+        mOverlay.bringToFront();
+        mOverlay.setVisibility(View.VISIBLE);
+        mOverlay.setOnTouchListener(mBlockTouchListener);
+        mMenu.bringToFront();
+        mMenu.setVisibility(View.VISIBLE);
+        for(int i=0;i<mMenu.getChildCount();i++){
+
+        }
+        Animation overlayAnim=Common.getAlphaAnimation(1000,0,0.5f);
+        Animation menuAnim=Common.getAlphaAnimation(1000,0,1);
+        mOverlay.startAnimation(overlayAnim);
+        mMenu.startAnimation(menuAnim);
+     //   getLayoutInflater().inflate(R.layout.menu, mLayout);
+    }
     @Override
     public void onOptionsMenuClosed(Menu menu) {
         super.onOptionsMenuClosed(menu);
-        if(mImageSwitcher.getVisibility()==View.GONE)Common.gameManager.resume();
+        hideMenuAndResume();
     }
 
     @Override
+    protected void onPause() {
+        mGameManager.pauseGame();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if(mImageSwitcher.getVisibility()==View.GONE)
+        mGameManager.resume();
+        super.onResume();
+    }
+
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -126,7 +205,7 @@ public class GameActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
     private void initStoryBoard(final ImageSwitcher mImageSwitcher, final Button nextButton) {
         mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
@@ -169,9 +248,15 @@ public class GameActivity extends Activity {
         if(currentIndex>=imageIds.length){
             mImageSwitcher.setVisibility(View.GONE);
             nextButton.setVisibility(View.GONE);
-            Common.gameManager.resume();
+            mGameManager.resume();
         }
         else mImageSwitcher.setImageResource(imageIds[currentIndex]);
+    }
+    class BlockTouch implements View.OnTouchListener{
+
+        public boolean onTouch(View v, MotionEvent event) {
+            return true;
+        }
     }
 
 }

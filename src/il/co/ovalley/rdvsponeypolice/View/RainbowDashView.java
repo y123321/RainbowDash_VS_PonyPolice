@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.View;
 
 import android.graphics.drawable.AnimationDrawable;
+import android.view.ViewGroup;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
 import il.co.ovalley.rdvsponeypolice.R;
 
@@ -13,7 +14,7 @@ public class RainbowDashView extends GameView {
     AnimationDrawable mBaseAnimationLeft;
     AnimationDrawable mBaseAnimationRight;
 
-    public RainbowDashView(GameLayoutView container) {
+    public RainbowDashView(ViewGroup container) {
         super(container);
         setImageResource(R.drawable.rainbow_dash_caged_left);
         mLockAnimationLeft = (AnimationDrawable) getDrawable();

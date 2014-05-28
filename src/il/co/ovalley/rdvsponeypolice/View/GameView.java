@@ -15,7 +15,7 @@ import il.co.ovalley.rdvsponeypolice.Model.Direction;
 public abstract class GameView extends ImageView {
     public static final int SCREEN_BORDERS = 10;
 
-    private GameLayoutView m_container;
+    private ViewGroup m_container;
     public boolean isRemoved;
 
     private ViewGroup.LayoutParams m_params;
@@ -31,10 +31,10 @@ public abstract class GameView extends ImageView {
 
     private int shotPadding;
 
-    public GameView(GameLayoutView container) {
+    public GameView(ViewGroup container) {
         this(container,null);
     }
-    public GameView(GameLayoutView container,ViewGroup.LayoutParams params){
+    public GameView(ViewGroup container,ViewGroup.LayoutParams params){
         super(container.getContext());
         mAddViewAction=new AddViewAction();
         m_container=container;
@@ -71,7 +71,7 @@ public abstract class GameView extends ImageView {
 
     }
 
-    public GameLayoutView getContainer() {
+    public ViewGroup getContainer() {
         return m_container;
     }
 
@@ -80,7 +80,7 @@ public abstract class GameView extends ImageView {
     }*/
 
 
-    public void setContainer(GameLayoutView container) {
+    public void setContainer(ViewGroup container) {
         m_container = container;
     }
 

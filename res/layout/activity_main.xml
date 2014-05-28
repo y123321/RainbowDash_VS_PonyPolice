@@ -1,4 +1,4 @@
-<il.co.ovalley.rdvsponeypolice.View.GameLayoutView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,6 +6,28 @@
     android:background="@drawable/equestria"
     tools:context="il.co.ovalley.dashvsponypolice.app.MainActivity"
        >
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:background="@android:color/black"
+            android:id="@+id/overlay"
+            android:orientation="vertical"
+            android:visibility="gone"
+            ></LinearLayout>
+    <LinearLayout android:id="@+id/menu"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:visibility="gone"
+                  android:gravity="center">
+        <Button android:layout_width="wrap_content" android:gravity="center_horizontal|center_vertical" android:layout_height="wrap_content" android:text="New Game" android:id="@+id/btnNewGame"
+                android:layout_gravity="center_horizontal|center_vertical"/>
+        <Button android:layout_width="wrap_content" android:gravity="center" android:layout_height="wrap_content" android:text="High Scores" android:id="@+id/btnHighScore"
+                android:layout_gravity="center_horizontal"/>
+        <Button android:layout_width="wrap_content" android:gravity="center" android:layout_height="wrap_content" android:text="Resume" android:id="@+id/btnResume"
+                android:layout_gravity="center_horizontal"/>
+
+
+
+    </LinearLayout>
     <ImageSwitcher
             android:id="@+id/imageSwitcher1"
             android:layout_width="wrap_content"
@@ -37,4 +59,9 @@
             android:src="@drawable/game_over"
             android:visibility="invisible"
             android:id="@+id/gameOver"/>
-</il.co.ovalley.rdvsponeypolice.View.GameLayoutView>
+    <Button android:layout_width="50dp" android:layout_height="50dp"
+            android:background="@drawable/menu_button"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/btnMenu"/>
+</RelativeLayout>

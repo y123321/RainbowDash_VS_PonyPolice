@@ -2,6 +2,7 @@ package il.co.ovalley.rdvsponeypolice.View;
 
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
+import android.view.ViewGroup;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.CopDrawables;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
@@ -16,7 +17,7 @@ public class CopView extends GameView {
     private AnimationDrawable mBaseAnimationRight;
 
 
-    public CopView(GameLayoutView container,CopDrawables drawables) {
+    public CopView(ViewGroup container,CopDrawables drawables) {
         super(container, Common.getStickToBottomParams());
         m_Drawables=drawables;
         setImageResource(drawables.baseDrawableLeft);

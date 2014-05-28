@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -36,57 +38,112 @@ import java.util.List;
 public class HighScoresActivity extends Activity {
 
     int mScore;
+    private float mMinAlpha=0.5f;
+    private int mMaxAlpha=1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
-        if(Common.gameManager!=null) Common.gameManager.pauseGame();
-        final ListView listView=(ListView)findViewById(R.id.listView);
-        Button button=(Button)findViewById(R.id.btnSendScore);
-        TextView textView=(TextView)findViewById(R.id.highScored_tvScore);
-        mScore=getIntent().getExtras().getInt("score");
+        final ListView listView = (ListView) findViewById(R.id.listView);
+        final Button btnSend = (Button) findViewById(R.id.btnSendScore);
+        TextView textView = (TextView) findViewById(R.id.highScored_tvScore);
+        mScore = getIntent().getExtras().getInt("score");
+        final EditText etName = (EditText) findViewById(R.id.etName);
+
+        disableViewsIfNeeded(btnSend, etName);
         textView.setText("Score: " + mScore);
-
-        int[] colors = new int[] { 0xEE4144,0xf37033,0xfdf6af,
-                0x62bc4d,0x1e98d3,0x672f89};
-                Bitmap bm = Bitmap.createBitmap(colors, colors.length, 1, Bitmap.Config.RGB_565);
-
-        bm=rotateBitmap(bm,90);
-        button.setBackgroundDrawable(new BitmapDrawable(bm));
-        LinearLayout header=(LinearLayout)getLayoutInflater().inflate(R.layout.header,null);
+        Bitmap bm = getStripedBitmap();
+        btnSend.setBackgroundDrawable(new BitmapDrawable(bm));
+        LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.header, null);
         listView.setEmptyView(findViewById(R.id.tvLoading));
         listView.addHeaderView(header);
+        etName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() <= 0 || s.length() >= 30 ||mScore==0) {
+                    disableView(btnSend, true);
+                } else if (!btnSend.isEnabled()) {
+                    enableView(btnSend, true);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 getData(listView);
             }
         }).start();
-        button.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String name=((EditText)findViewById(R.id.etName)).getText().toString();
-                v.setEnabled(false);
-                AlphaAnimation animation1 = new AlphaAnimation(1, 0.5f);
-                animation1.setDuration(1000);
-                animation1.setFillAfter(true);
-
-v.startAnimation(animation1);
-
-                Log.d("test","WTF???"+ (animation1.getInterpolator())+animation1.hasStarted()+animation1.isInitialized()
-
-                );
+                final String name = etName.getText().toString();
+                disableView(v, true);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        postData(name,mScore,listView);
-                        mScore=0;
-                       }
+                        postData(name, mScore, listView);
+                        mScore = 0;
+                    }
                 }).start();
 
             }
         });
+    }
+
+    private void disableViewsIfNeeded(Button btnSend, EditText etName) {
+        boolean isRunning=getIntent().getExtras().getBoolean("isRunning");
+        disableView(btnSend,true);
+        if(isRunning){
+            disableView(etName, false);
         }
+    }
+
+    private void enableView(View v, boolean useAnimation) {
+        v.setEnabled(true);
+        if (useAnimation) {
+            AlphaAnimation animation1 = getAlphaAnimation(250, v.getAlpha(), mMaxAlpha);
+            v.startAnimation(animation1);
+        } else {
+            v.setAlpha(mMaxAlpha);
+        }
+    }
+
+    private void disableView(View v, boolean useAnimation) {
+        v.setEnabled(false);
+        if (useAnimation) {
+            AlphaAnimation animation1 = getAlphaAnimation(250, v.getAlpha(), mMinAlpha);
+            v.startAnimation(animation1);
+        } else {
+            v.setAlpha(mMinAlpha);
+        }
+    }
+
+    private AlphaAnimation getAlphaAnimation(int duration,float from,float to) {
+        return Common.getAlphaAnimation(duration,from,to);
+    }
+
+    private Bitmap getStripedBitmap() {
+        int[] colors = new int[]{0xEE4144, 0xf37033, 0xfdf6af,
+                0x62bc4d, 0x1e98d3, 0x672f89};
+        Bitmap bm = Bitmap.createBitmap(colors, colors.length, 1, Bitmap.Config.RGB_565);
+
+        bm = rotateBitmap(bm, 90);
+        return bm;
+    }
+
     public static Bitmap rotateBitmap(Bitmap source, float angle)
     {
         Matrix matrix = new Matrix();

@@ -7,7 +7,6 @@ import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Model.Direction;
 import il.co.ovalley.rdvsponeypolice.Model.Loc;
 import il.co.ovalley.rdvsponeypolice.Model.RainbowDash;
-import il.co.ovalley.rdvsponeypolice.View.GameLayoutView;
 import il.co.ovalley.rdvsponeypolice.View.RainbowDashView;
 
 /**
@@ -16,7 +15,6 @@ import il.co.ovalley.rdvsponeypolice.View.RainbowDashView;
 public class RainbowDashController extends GameController {
     private RainbowDash mRainbowDashModel;
     private RainbowDashView mRainbowDashView;
-    private GameLayoutView mLayout;
     private View.OnTouchListener mReleaseListener;
     private View.OnTouchListener mMoveListener;
     private View.OnTouchListener mNullListener;
@@ -25,7 +23,6 @@ public class RainbowDashController extends GameController {
         super(context, rainbowDash, rainbowDashView,false);
         mRainbowDashModel = rainbowDash;
         mRainbowDashView = rainbowDashView;
-        mLayout = mRainbowDashView.getContainer();
         init();
     }
 
@@ -285,7 +282,7 @@ public class RainbowDashController extends GameController {
         mRainbowDashView.setOnTouchListener(mReleaseListener);
         }
     public void startRDListener() {
-        mLayout.setOnTouchListener(mMoveListener);
+        getView().getContainer().setOnTouchListener(mMoveListener);
 
         getView().setOnTouchListener(mNullListener);
     }
