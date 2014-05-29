@@ -210,12 +210,12 @@ public class RainbowDashController extends GameController {
             case RIGHT:
 
                 location+= mRainbowDashModel.getXSpeed();
-                layoutX+= mBackgroundMovement;
+                layoutX-= mBackgroundMovement;
                 break;
 
             case LEFT:
                 location-=mRainbowDashModel.getXSpeed();
-                layoutX-=mBackgroundMovement;
+                layoutX+=mBackgroundMovement;
                 break;
         }
         getView().setX(location);
