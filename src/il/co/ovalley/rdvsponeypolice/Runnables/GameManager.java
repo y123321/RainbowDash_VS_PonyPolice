@@ -33,14 +33,14 @@ public class GameManager implements Runnable {
     private ImageView mGameOver;
     private CheckDropsHitThread mCheckDropsHit;
     private CheckShotsHitThread mCheckShotsHit;
-
-    public GameManager(GameModel gameModel, ViewGroup gameLayoutView, TextView scoreView, ImageView gameOverImage) {
+    private View mBackground;
+    public GameManager(GameModel gameModel, ViewGroup gameLayoutView, TextView scoreView, ImageView gameOverImage,View background) {
         mLayout = gameLayoutView;
         mScoreView = scoreView;
         mContext = gameLayoutView.getContext();
         mGameModel = gameModel;
         mGameOver = gameOverImage;
-
+        mBackground=background;
 
     }
 
@@ -99,7 +99,7 @@ public class GameManager implements Runnable {
     }
 
     private void init() {
-        mRainbowDashController = GameFactory.createRainbowDashController(mLayout);
+        mRainbowDashController = GameFactory.createRainbowDashController(mLayout,mBackground);
         mControllers = new ArrayList<GameController>();
         mControllers.add(mRainbowDashController);
         mPauseObject = new Object();

@@ -18,11 +18,14 @@ public class RainbowDashController extends GameController {
     private View.OnTouchListener mReleaseListener;
     private View.OnTouchListener mMoveListener;
     private View.OnTouchListener mNullListener;
+    private View mBackground;
+    private float mBackgroundMovement=0.2f;
 
-    public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView) {
+    public RainbowDashController(Context context, RainbowDash rainbowDash, RainbowDashView rainbowDashView,View background) {
         super(context, rainbowDash, rainbowDashView,false);
         mRainbowDashModel = rainbowDash;
         mRainbowDashView = rainbowDashView;
+        mBackground=background;
         init();
     }
 
@@ -193,6 +196,7 @@ public class RainbowDashController extends GameController {
 
     private void setNextLocation(Loc CurrentLocation) {
         float location=CurrentLocation.x;
+        float layoutX=mBackground.getX();
         int xLimit = Common.getScreenSize(getContext()).x;
         if(location> xLimit){
             location=xLimit-1;
@@ -206,13 +210,16 @@ public class RainbowDashController extends GameController {
             case RIGHT:
 
                 location+= mRainbowDashModel.getXSpeed();
+                layoutX+= mBackgroundMovement;
                 break;
 
             case LEFT:
                 location-=mRainbowDashModel.getXSpeed();
+                layoutX-=mBackgroundMovement;
                 break;
         }
         getView().setX(location);
+        mBackground.setX(layoutX);
         location=CurrentLocation.y;
         int yLimit = Common.getScreenSize(getContext()).y- getView().getHeight()*2;
         if(location> yLimit){

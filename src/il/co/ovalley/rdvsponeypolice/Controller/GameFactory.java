@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Controller;
 
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,12 +31,12 @@ public class GameFactory {
         return new ShotController(layout.getContext(),new Shot(),new ShotView(layout),true);
     }
 
-    public static RainbowDashController createRainbowDashController(ViewGroup m_layout) {
-        return new RainbowDashController(m_layout.getContext(),new RainbowDash(),new RainbowDashView(m_layout));
+    public static RainbowDashController createRainbowDashController(ViewGroup m_layout,View background) {
+        return new RainbowDashController(m_layout.getContext(),new RainbowDash(),new RainbowDashView(m_layout),background);
     }
-    public static GameManager createGameManager(ViewGroup layout,TextView scoreView,ImageView gameOver){
+    public static GameManager createGameManager(ViewGroup layout,TextView scoreView,ImageView gameOver,View background){
         Log.d("test", "factory");
 
-        return new GameManager(new GameModel(layout.getContext().getResources()),layout, scoreView,gameOver);
+        return new GameManager(new GameModel(layout.getContext().getResources()),layout, scoreView,gameOver,background);
     }
 }

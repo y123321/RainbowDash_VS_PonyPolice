@@ -41,12 +41,13 @@ public class GameActivity extends Activity {
     }
 
     private void initGame() {
+        View background=findViewById(R.id.background);
         TextView tvScore=(TextView)findViewById(R.id.tvScore);
             tvScore.setText("0");
          mLayout =(RelativeLayout)findViewById(R.id.layout);
         ImageView gameOver=(ImageView)findViewById(R.id.gameOver);
         //initiate game manager on which the game loop and all game functionalities run.
-        mGameManager = GameFactory.createGameManager(mLayout,tvScore,gameOver);
+        mGameManager = GameFactory.createGameManager(mLayout,tvScore,gameOver,background);
         initMenu();
 
 
