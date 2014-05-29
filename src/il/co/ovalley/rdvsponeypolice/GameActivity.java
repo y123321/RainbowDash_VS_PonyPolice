@@ -64,26 +64,10 @@ public class GameActivity extends Activity {
     }
 
 
-    /**
-     * Prepare the Screen's standard options menu to be displayed.  This is
-     * called right before the menu is shown, every time it is shown.  You can
-     * use this method to efficiently enable/disable items or otherwise
-     * dynamically modify the contents.
-     * <p/>
-     * <p>The default implementation updates the system menu items based on the
-     * activity's state.  Deriving classes should always call through to the
-     * base class implementation.
-     *
-     * @param menu The options menu as last shown or first initialized by
-     *             onCreateOptionsMenu().
-     * @return You must return true for the menu to be displayed;
-     * if you return false it will not be shown.
-     * @see #onCreateOptionsMenu
-     */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         showMenu();
-        return true;
+        return false;
     }
 
     /**
@@ -102,7 +86,7 @@ public class GameActivity extends Activity {
         mOverlay = findViewById(R.id.overlay);
         Button btnMenu=(Button)findViewById(R.id.btnMenu);
         Button btnNewGame=(Button)findViewById(R.id.btnNewGame);
-        Button btnHighScore=(Button)findViewById(R.id.btnHighScore);
+        View btnHighScore=(View)findViewById(R.id.btnHighScore);
         Button btnResume=(Button)findViewById(R.id.btnResume);
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
