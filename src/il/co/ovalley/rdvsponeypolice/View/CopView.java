@@ -11,7 +11,6 @@ import il.co.ovalley.rdvsponeypolice.Model.Direction;
  * Created by yuval on 30/04/2014.
  */
 public class CopView extends GameView {
-    private int m_DrawableState;
     private CopDrawables m_Drawables;
     private AnimationDrawable mBaseAnimationLeft;
     private AnimationDrawable mBaseAnimationRight;
@@ -36,7 +35,6 @@ public class CopView extends GameView {
         setX(getRandomWidth());
         setPadding(0, 0, 0, getRandomPadding());  // left, top, right, bottom
         setShotPadding(20);
-        m_DrawableState=0;
         setAlpha(1f);
 
     }

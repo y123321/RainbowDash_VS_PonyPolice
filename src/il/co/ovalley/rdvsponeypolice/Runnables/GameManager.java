@@ -143,12 +143,13 @@ public class GameManager implements Runnable {
         //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
         checkHits();
         int amountOfGameLoops = 200;
-        decreaseCopsSpaenTimeIfNeeded(amountOfGameLoops);
+        decreaseCopsSpawnTimeIfNeeded(amountOfGameLoops);
         releaseDropIfNeeded();
         loseGameIfNeeded();
         updateControllers();
-        mGameModel.increaseLoopsCounter();
         spawnCops();
+        mGameModel.increaseLoopsCounter();
+
 
     }
 
@@ -207,8 +208,8 @@ public class GameManager implements Runnable {
         if (mRainbowDashController.getModel().isDropping()) releaseDrop();
     }
 
-    private void decreaseCopsSpaenTimeIfNeeded(int amountOfGameLoops) {
-        if (mGameModel.getLoopsCounter() % amountOfGameLoops == 0 && mGameModel.getCopsSpawnTime() > 30)
+    private void decreaseCopsSpawnTimeIfNeeded(int amountOfGameLoops) {
+        if (mGameModel.getLoopsCounter() % amountOfGameLoops == 0 && mGameModel.getCopsSpawnTime() > 100)
             mGameModel.decreaseCopsSpawnTime(1);
     }
 
@@ -280,20 +281,26 @@ public class GameManager implements Runnable {
     }
 
     private boolean spawnCops() {
-        if ((mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime() == 0)
-                || (mGameModel.getLoopsCounter() > 100 && mGameModel.getOnScreenCopsCounter() < mGameModel.getMinAmountOfCops())) {
-            //  ){
-            mGameModel.increaseOnScreenCopsCounter();
+        if (isTimeToSpawn() || isNotEnoughCopsOnScreen()) {
             int type = getNeededCopTypeInt();
             CopType copType = CopType.values()[type];
 
-            getNewCop(copType);
-
+            if(getNewCop(copType))
+            mGameModel.increaseOnScreenCopsCounter();
+            else Log.d("test", "failed to add cop");
             return true;
 
         }
         return false;
 
+    }
+
+    private boolean isTimeToSpawn() {
+        return (mGameModel.getLoopsCounter() % mGameModel.getCopsSpawnTime() == 0);
+    }
+
+    private boolean isNotEnoughCopsOnScreen() {
+        return (mGameModel.getLoopsCounter() > 100 && mGameModel.getOnScreenCopsCounter() < mGameModel.getMinAmountOfCops());
     }
 
     private int getNeededCopTypeInt() {
@@ -307,15 +314,18 @@ public class GameManager implements Runnable {
         return res;
     }
 
-    private void getNewCop(CopType type) {
+    private boolean getNewCop(CopType type) {
         for (GameController controller : mControllers) {
-            if (controller instanceof CopController && controller.isOutOfGame() && !controller.getModel().isDead()) {
+            if (controller instanceof CopController && controller.isOutOfGame() && controller.getView().isRemoved) {
                 if (((Cop) controller.getModel()).getType() == type) {
+                    Log.d("test",type.toString());
                     controller.resurrect();
-                    return;
+                    return true;
                 }
             }
         }
+        Log.d("test",type.toString()+"not found");
+        return false;
     }
 
     private void getNewDrop() {

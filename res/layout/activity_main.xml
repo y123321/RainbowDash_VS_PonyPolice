@@ -37,6 +37,9 @@
         <Button android:layout_width="match_parent" android:gravity="center" android:layout_height="40dp" android:background="@drawable/menu_resume" android:id="@+id/btnResume"
                 android:layout_gravity="center_horizontal" android:paddingTop="@dimen/menu_item_padding"                 android:layout_marginLeft="100dp" android:layout_marginRight="100dp" android:layout_marginTop="@dimen/menu_item_padding"
                 android:layout_marginBottom="@dimen/menu_item_padding"/>
+        <Button android:layout_width="match_parent" android:gravity="center" android:layout_height="40dp" android:background="@drawable/menu_credits" android:id="@+id/btnCredits"
+                android:layout_gravity="center_horizontal" android:paddingTop="@dimen/menu_item_padding"                 android:layout_marginLeft="100dp" android:layout_marginRight="100dp" android:layout_marginTop="@dimen/menu_item_padding"
+                android:layout_marginBottom="@dimen/menu_item_padding"/>
 
 
 
@@ -60,9 +63,10 @@
             android:id="@+id/textScore"
             android:gravity="top|left"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/holo_orange_light"
+            android:textColor="@android:color/black"
             android:text="Score: "/>
     <TextView
+            android:textColor="@android:color/black"
             android:layout_width="wrap_content"
             android:layout_toRightOf="@+id/textScore"
             android:layout_height="wrap_content"

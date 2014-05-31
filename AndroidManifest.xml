@@ -24,5 +24,6 @@
         </activity>
         <activity android:name=".HighScoresActivity"
                 android:screenOrientation="portrait"></activity>
+        <activity android:name=".CreditsActivity"/>
     </application>
 </manifest>

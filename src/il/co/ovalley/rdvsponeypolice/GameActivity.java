@@ -62,6 +62,11 @@ public class GameActivity extends Activity {
         intent.putExtra("isRunning",mGameManager.isRunning());
         startActivity(intent);
     }
+    private void gotoCredits() {
+        Intent intent = new Intent(this, CreditsActivity.class);
+        startActivity(intent);
+
+    }
 
 
     @Override
@@ -84,10 +89,11 @@ public class GameActivity extends Activity {
     private void initMenu(){
         mMenu=(ViewGroup)findViewById(R.id.menu);
         mOverlay = findViewById(R.id.overlay);
-        Button btnMenu=(Button)findViewById(R.id.btnMenu);
-        Button btnNewGame=(Button)findViewById(R.id.btnNewGame);
-        View btnHighScore=(View)findViewById(R.id.btnHighScore);
-        Button btnResume=(Button)findViewById(R.id.btnResume);
+        View btnMenu=(Button)findViewById(R.id.btnMenu);
+        View btnNewGame=findViewById(R.id.btnNewGame);
+        View btnHighScore=findViewById(R.id.btnHighScore);
+        View btnResume=findViewById(R.id.btnResume);
+        View btnCredits=findViewById(R.id.btnCredits);
         btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,8 +120,15 @@ public class GameActivity extends Activity {
                 hideMenuAndResume();
             }
         });
+        btnCredits.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoCredits();
+            }
+        });
 
     }
+
 
     private void hideMenuAndResume() {
         if(mImageSwitcher.getVisibility()!=View.VISIBLE)mGameManager.resume();

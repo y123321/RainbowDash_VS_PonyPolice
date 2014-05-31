@@ -105,15 +105,15 @@ public class GameModel {
     }
 
     public void decreaseCopsSpawnTime(int mils) {
-        mCopsSpawnTime-=mils;
+     //   mCopsSpawnTime-=mils;
     }
 
     public void decreaseOnScreenCopsCounter() {
-        synchronized (this) {
+
             mOnScreenCopsCounter--;
             Log.d("test","no. cops: "+mOnScreenCopsCounter);
             return;
-        }
+
     }
 
     public int getMinAmountOfCops() {

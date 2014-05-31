@@ -65,19 +65,14 @@ abstract public class GameController {
             public void run() {
                 getView().getContainer().removeView(getView());
                 setOutOfGame(true);
-                getModel().setDead(false);
             }
         });
     }
     public boolean resurrect() {
         try {
         getModel().initGameObject();
-            setOutOfGame(false);
-
             getView().initGameView();
-
-
-
+            setOutOfGame(false);
             return true;
         }
         catch (Exception e){

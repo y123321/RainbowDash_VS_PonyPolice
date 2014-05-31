@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Dash VS PonyPolice</string>
     <string name="highScoreURL">http://rdvsponypolice.azurewebsites.net/highscores</string>
+    <string name="credits">Created and developed by Yuval Perelman\n\n Background based on image by  Silentmatten\n\n Ponies images created with General Zoi Pony Creator\n\n Menu buttons and couch to sleep on supplied by Timor Tene aka CyberPony88, thanks dude </string>
 </resources>
