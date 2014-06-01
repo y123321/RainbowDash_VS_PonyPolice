@@ -99,7 +99,7 @@ public class GameManager implements Runnable {
     }
 
     private void init() {
-        mRainbowDashController = GameFactory.createRainbowDashController(mLayout,mBackground);
+        mRainbowDashController = GameFactory.createRainbowDashController(mLayout, mBackground);
         mControllers = new ArrayList<GameController>();
         mControllers.add(mRainbowDashController);
         mPauseObject = new Object();
@@ -142,8 +142,7 @@ public class GameManager implements Runnable {
     public void action() {
         //     Log.d("test", "rainbow dash " + mRainbowDashController.mRainbowDash.goingToY);
         checkHits();
-        int amountOfGameLoops = 200;
-        decreaseCopsSpawnTimeIfNeeded(amountOfGameLoops);
+        decreaseCopsSpawnTimeIfNeeded(mGameModel.mAmountOfLoopsForSpawnTimeDecrease);
         releaseDropIfNeeded();
         loseGameIfNeeded();
         updateControllers();
@@ -209,7 +208,7 @@ public class GameManager implements Runnable {
     }
 
     private void decreaseCopsSpawnTimeIfNeeded(int amountOfGameLoops) {
-        if (mGameModel.getLoopsCounter() % amountOfGameLoops == 0 && mGameModel.getCopsSpawnTime() > 100)
+        if (mGameModel.getLoopsCounter() % amountOfGameLoops == 0 && mGameModel.getCopsSpawnTime() > 70)
             mGameModel.decreaseCopsSpawnTime(1);
     }
 
@@ -318,7 +317,7 @@ public class GameManager implements Runnable {
         for (GameController controller : mControllers) {
             if (controller instanceof CopController && controller.isOutOfGame() && controller.getView().isRemoved) {
                 if (((Cop) controller.getModel()).getType() == type) {
-                    Log.d("test",type.toString());
+                    Log.d("test",controller.getModel().toString());
                     controller.resurrect();
                     return true;
                 }

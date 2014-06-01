@@ -82,11 +82,11 @@ public abstract class GameObject {
         this.ySpeed = ySpeed;
     }
 
-    public boolean isDead() {
+    public synchronized boolean isDead() {
         return isDead;
     }
 
-    public void setDead(boolean isDead) {
+    public synchronized void setDead(boolean isDead) {
         this.isDead = isDead;
     }
 }

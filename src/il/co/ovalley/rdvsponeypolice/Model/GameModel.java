@@ -17,6 +17,7 @@ public class GameModel {
     private int numberOfCopsPerType;
     public volatile boolean mIsPause;
     private int minAmountOfCops;
+    public int mAmountOfLoopsForSpawnTimeDecrease =100;
 
     public void setOnScreenCopsCounter(int onScreenCopsCounter) {
         this.mOnScreenCopsCounter = onScreenCopsCounter;
@@ -105,7 +106,7 @@ public class GameModel {
     }
 
     public void decreaseCopsSpawnTime(int mils) {
-     //   mCopsSpawnTime-=mils;
+        mCopsSpawnTime-=mils;
     }
 
     public void decreaseOnScreenCopsCounter() {

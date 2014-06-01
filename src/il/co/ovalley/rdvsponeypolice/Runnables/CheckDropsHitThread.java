@@ -1,6 +1,7 @@
 package il.co.ovalley.rdvsponeypolice.Runnables;
 
 import android.graphics.Rect;
+import android.util.Log;
 import il.co.ovalley.rdvsponeypolice.Controller.CopController;
 import il.co.ovalley.rdvsponeypolice.Controller.DropController;
 import il.co.ovalley.rdvsponeypolice.Controller.GameController;
@@ -59,8 +60,8 @@ public class CheckDropsHitThread implements Runnable {
     }
 
     private void kill(final DropController drop, final CopController cop) {
-     //   Log.d("test","hit cop: "+cop.getModel().getType()+" x: "+cop.getView().getX()+" y: "+cop.getView().getY());
-        drop.getModel().setDead(true);
-        if(!cop.getModel().isDead()||!cop.getModel().isDying())cop.getModel().setHit();
+            Log.d("test", "hit cop: " + cop.getModel().toString() + " x: " + cop.getView().getX() + " y: " + cop.getView().getY());
+            drop.getModel().setDead(true);
+            if (cop.getModel().getCurrentHitPoints()-cop.getModel().getHitsToHandle()>0 && !cop.getModel().isDying() && !cop.getModel().isDead()) cop.getModel().setHit();
     }
 }

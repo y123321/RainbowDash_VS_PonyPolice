@@ -16,7 +16,7 @@ public abstract class GameView extends ImageView {
     public static final int SCREEN_BORDERS = 10;
 
     private ViewGroup m_container;
-    public boolean isRemoved;
+    public volatile boolean isRemoved;
 
     private ViewGroup.LayoutParams m_params;
     private AddViewAction mAddViewAction;

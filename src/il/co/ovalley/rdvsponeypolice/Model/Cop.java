@@ -10,14 +10,19 @@ public abstract class Cop extends GameObject {
     private int m_chanceNotToShoot;
     private float m_OriginalHitPoints;
     private float m_CurrentHitPoints;
-    private boolean[] m_isHit;
+
+    public int getHitsToHandle() {
+        return mHitsToHandle;
+    }
+
+    private int mHitsToHandle;
     public Cop(CopDrawables copDrawables) {
         super();
         drawables=copDrawables;
         m_chanceNotToShoot=100;
         isDying=false;
         m_OriginalHitPoints=2;
-        m_isHit=new boolean[(int)Math.floor(m_OriginalHitPoints)];
+        mHitsToHandle=0;
         m_ScorePoints=10;
         stepsLimit=100;
         stepCounter=stepsLimit;
@@ -28,9 +33,9 @@ public abstract class Cop extends GameObject {
 
     @Override
     public void initGameObject() {
-        m_CurrentHitPoints=m_OriginalHitPoints;
-
         super.initGameObject();
+        m_CurrentHitPoints=m_OriginalHitPoints;
+        mHitsToHandle=0;
     }
 
     public float getOriginalHitPoints() {
@@ -144,22 +149,16 @@ public abstract class Cop extends GameObject {
     }
 
     public boolean isHit() {
-        return m_isHit[0];
+        return mHitsToHandle>0;
     }
 
     public void setHit() {
-        for (int i=0;i<m_isHit.length;i++)
-            if(m_isHit[i] == false){
-             m_isHit[i]=true;
-                return;
-            }
+        mHitsToHandle++;
+
     }
     public void removeHit(){
-        for (int i=m_isHit.length;i>0;i--)
-            if(m_isHit[i-1] == true){
-                m_isHit[i-1]=false;
-                return;
-            }
+        mHitsToHandle--;
+
     }
 
     public int getScorePoints() {

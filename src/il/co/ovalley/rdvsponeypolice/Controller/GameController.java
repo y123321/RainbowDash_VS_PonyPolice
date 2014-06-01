@@ -73,6 +73,8 @@ abstract public class GameController {
         getModel().initGameObject();
             getView().initGameView();
             setOutOfGame(false);
+            getModel().initGameObject();
+
             return true;
         }
         catch (Exception e){
