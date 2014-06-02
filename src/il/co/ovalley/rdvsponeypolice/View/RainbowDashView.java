@@ -16,13 +16,13 @@ public class RainbowDashView extends GameView {
 
     public RainbowDashView(ViewGroup container) {
         super(container);
-        setImageResource(R.drawable.rainbow_dash_caged_left);
+        setImageResource(R.anim.rainbow_dash_caged_left);
         mLockAnimationLeft = (AnimationDrawable) getDrawable();
-        setImageResource(R.drawable.rainbow_dash_caged_right);
+        setImageResource(R.anim.rainbow_dash_caged_right);
         mLockAnimationRight = (AnimationDrawable) getDrawable();
-        setImageResource(R.drawable.rainbow_dash_small_left);
+        setImageResource(R.anim.rainbow_dash_small_left);
         mBaseAnimationLeft = (AnimationDrawable) getDrawable();
-        setImageResource(R.drawable.rainbow_dash_small_right);
+        setImageResource(R.anim.rainbow_dash_small_right);
         mBaseAnimationRight = (AnimationDrawable) getDrawable();
     }
 

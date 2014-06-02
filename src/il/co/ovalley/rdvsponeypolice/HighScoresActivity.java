@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.*;
 import org.apache.http.HttpResponse;
@@ -40,24 +41,27 @@ public class HighScoresActivity extends Activity {
     int mScore;
     private float mMinAlpha=0.5f;
     private int mMaxAlpha=1;
+    private ListView mListView;
+    private TextView mScoreView;
+    private Button mSendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.high_score);
-        final ListView listView = (ListView) findViewById(R.id.listView);
-        final Button btnSend = (Button) findViewById(R.id.btnSendScore);
-        TextView textView = (TextView) findViewById(R.id.highScored_tvScore);
+        mListView = (ListView) findViewById(R.id.listView);
+        mSendButton = (Button) findViewById(R.id.btnSendScore);
+         mScoreView = (TextView) findViewById(R.id.highScored_tvScore);
         mScore = getIntent().getExtras().getInt("score");
         final EditText etName = (EditText) findViewById(R.id.etName);
 
-        disableViewsIfNeeded(btnSend, etName);
-        textView.setText("Score: " + mScore);
+        hideViewsIfNeeded(mSendButton, etName);
+        mScoreView.setText("Score: " + mScore);
         Bitmap bm = getStripedBitmap();
-        btnSend.setBackgroundDrawable(new BitmapDrawable(bm));
+        mSendButton.setBackgroundDrawable(new BitmapDrawable(bm));
         LinearLayout header = (LinearLayout) getLayoutInflater().inflate(R.layout.header, null);
-        listView.setEmptyView(findViewById(R.id.tvLoading));
-        listView.addHeaderView(header);
+        mListView.setEmptyView(findViewById(R.id.tvLoading));
+        mListView.addHeaderView(header);
         etName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -67,9 +71,9 @@ public class HighScoresActivity extends Activity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() <= 0 || s.length() >= 30 ||mScore==0) {
-                    disableView(btnSend, true);
-                } else if (!btnSend.isEnabled()) {
-                    enableView(btnSend, true);
+                    disableView(mSendButton, true);
+                } else if (!mSendButton.isEnabled()) {
+                    enableView(mSendButton, true);
 
                 }
             }
@@ -83,10 +87,10 @@ public class HighScoresActivity extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getData(listView);
+                getData(mListView);
             }
         }).start();
-        btnSend.setOnClickListener(new View.OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String name = etName.getText().toString();
@@ -94,20 +98,32 @@ public class HighScoresActivity extends Activity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        postData(name, mScore, listView);
+                        postData(name, mScore, mListView);
                         mScore = 0;
                     }
                 }).start();
 
             }
         });
+        etName.setText("");
     }
 
-    private void disableViewsIfNeeded(Button btnSend, EditText etName) {
+
+    private void hideViewsIfNeeded(View btnSend, View etName) {
         boolean isRunning=getIntent().getExtras().getBoolean("isRunning");
-        disableView(btnSend,true);
         if(isRunning){
-            disableView(etName, false);
+            ViewGroup.LayoutParams params=findViewById(R.id.scroll).getLayoutParams();
+            params.height=Common.getScreenSize(this).y;
+            mScoreView.setVisibility(View.GONE);
+            etName.setVisibility(View.GONE);
+//            etName.setY(45);
+           btnSend.setVisibility(View.GONE);
+            int top=mListView.getPaddingTop();
+            int bottom=mListView.getPaddingBottom();
+            int left=mListView.getPaddingLeft();
+            int right=mListView.getPaddingRight();
+            mListView.setPadding(left,top+25,right,bottom+30);
+
         }
     }
 
@@ -204,8 +220,17 @@ public class HighScoresActivity extends Activity {
             HttpResponse response = httpclient.execute(httppost);
             String responseText = EntityUtils.toString(response.getEntity());
             Log.d("test","resopnse text: "+responseText);
-            ArrayList<HashMap<String, String>> scores = decodeJsonArrayResponseToArrayList(responseText);
-            updateListView(resultListView, scores);
+            if(response.getStatusLine().getStatusCode()==200) {
+                ArrayList<HashMap<String, String>> scores = decodeJsonArrayResponseToArrayList(responseText);
+                updateListView(resultListView, scores);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        disableView(mSendButton, true);
+                    }
+                });
+            }
+
 
         }
         catch (JSONException e1) {
@@ -247,7 +272,7 @@ public class HighScoresActivity extends Activity {
     }
 
     public String getHighScoreURL() {
-        return getResources().getString(R.string.highScoreURL);
+        return getResources().getString(R.string.url_high_score_service);
     }
 
     }

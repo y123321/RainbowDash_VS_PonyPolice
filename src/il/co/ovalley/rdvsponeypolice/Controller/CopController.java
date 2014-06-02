@@ -54,16 +54,16 @@ public class CopController extends GameController {
     public void runViewUpdate() {
         changeCopDirectionOnBorders(GameView.SCREEN_BORDERS);
         if(loadIfLoading()){
-            getView().clearAnimation();
+            mCopView.clearAnimation();
             return;
         }
-        if(getModel().isHit()){
-            getModel().decreaseCurrentHitPoints();
-            if (getModel().getCurrentHitPoints() <= 0) {
-                getModel().setDying(true);
+        if(mCopModel.isHit()){
+            mCopModel.decreaseCurrentHitPoints();
+            if (mCopModel.getCurrentHitPoints() <= 0) {
+                mCopModel.setDying(true);
             }
-            getModel().removeHit();
-                getView().setAlpha(getModel().getCurrentHitPoints() / getModel().getOriginalHitPoints());
+            mCopModel.removeHit();
+                mCopView.setAlpha(mCopModel.getCurrentHitPoints() / mCopModel.getOriginalHitPoints());
                    }
         move();
 
@@ -78,7 +78,7 @@ public class CopController extends GameController {
         mCopModel.setStepCounter(Common.random.nextInt(mCopModel.getStepsLimit()));
         Direction direction = Common.random.nextBoolean() ? Direction.LEFT : Direction.RIGHT;
         mCopModel.setDirection(direction);
-        getView().walkAnimation(direction);
+        mCopView.walkAnimation(direction);
     }
 
     @Override
@@ -94,9 +94,9 @@ public class CopController extends GameController {
     }
 
     private boolean dieIfDying() {
-        if(getModel().isDying()){
-            getModel().setDead(true);
-            getModel().setDying(false);
+        if(mCopModel.isDying()){
+            mCopModel.setDead(true);
+            mCopModel.setDying(false);
 
 
                 }
@@ -141,13 +141,13 @@ public class CopController extends GameController {
         else if (x >= Common.getScreenSize(mCopView.getContext()).x - screenBorders)
             direction=Direction.LEFT;
         if(direction!=null){
-            getModel().setDirection(direction);
-            getView().walkAnimation(direction);
+            mCopModel.setDirection(direction);
+            mCopView.walkAnimation(direction);
         }
     }
 
     void shoot() {
-        getView().shootAnimation(getModel().getDirection());
+        mCopView.shootAnimation(mCopModel.getDirection());
         mCopModel.makeShot();
     }
 
@@ -189,7 +189,7 @@ public class CopController extends GameController {
          */
         @Override
         public void run() {
-            getView().clearAnimation();
+            mCopView.clearAnimation();
         }
     }
 }

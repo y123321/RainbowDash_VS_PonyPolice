@@ -33,10 +33,42 @@
                 android:paddingTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/credits"
+                android:text="@string/credits_developer"
                 android:textColor="@android:color/holo_purple"
                 android:lineSpacingExtra="10dp"
-                android:id="@+id/textView3" android:singleLine="false"/>
+                android:id="@+id/tvDeveloperLink" android:singleLine="false"/>
+        <TextView
+                android:paddingTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_ponies"
+                android:textColor="@android:color/holo_purple"
+                android:lineSpacingExtra="10dp"
+                android:id="@+id/tvPoniesLink" android:singleLine="false"/>
+        <TextView
+                android:paddingTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_background_image"
+                android:textColor="@android:color/holo_purple"
+                android:lineSpacingExtra="10dp"
+                android:id="@+id/tvBackgroundImageLink" android:singleLine="false"/>
+        <TextView
+                android:paddingTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_timor"
+                android:textColor="@android:color/holo_purple"
+                android:lineSpacingExtra="10dp"
+                android:id="@+id/tvTimorLink" android:singleLine="false"/>
+        <TextView
+                android:paddingTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credits_copyright"
+                android:textColor="@android:color/holo_purple"
+                android:lineSpacingExtra="10dp"
+                android:id="@+id/tvCopyright" android:singleLine="false"/>
 
     </LinearLayout>
 

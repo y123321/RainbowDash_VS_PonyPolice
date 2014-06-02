@@ -35,7 +35,7 @@ public class DropController extends GameController {
 
     private boolean killIfOutOfScreen() {
         if (checkIfOutOfScreen()) {
-            getModel().setDead(true);
+            mModel.setDead(true);
             return true;
         }
         return false;

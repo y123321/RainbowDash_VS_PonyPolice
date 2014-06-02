@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import il.co.ovalley.rdvsponeypolice.Common;
 import il.co.ovalley.rdvsponeypolice.Controller.*;
+import il.co.ovalley.rdvsponeypolice.GameActivity;
 import il.co.ovalley.rdvsponeypolice.Model.*;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class GameManager implements Runnable {
     private CheckDropsHitThread mCheckDropsHit;
     private CheckShotsHitThread mCheckShotsHit;
     private View mBackground;
+    private int i=0;
     public GameManager(GameModel gameModel, ViewGroup gameLayoutView, TextView scoreView, ImageView gameOverImage,View background) {
         mLayout = gameLayoutView;
         mScoreView = scoreView;
@@ -218,26 +220,26 @@ public class GameManager implements Runnable {
     }
 
     private void initGameViewsForCache() {
-        for (int i = 0; i < mControllers.size(); i++) {
+        for (i = 0; i < mControllers.size(); i++) {
             mControllers.get(i).getView().initGameView();
             mControllers.get(i).changeDirection();
             mControllers.get(i).update();
         }
-        for (int i = 1; i < mControllers.size(); i++) {
+        for (i = 1; i < mControllers.size(); i++) {
             mControllers.get(i).remove();
 
         }
     }
 
     private void addDropsAndShots(int numberOfDropsAndShots) {
-        for (int i = 1; i <= numberOfDropsAndShots; i++) {
+        for (i = 1; i <= numberOfDropsAndShots; i++) {
             mControllers.add(GameFactory.createDropController(mLayout));
             mControllers.add(GameFactory.createShotController(mLayout));
         }
     }
 
     private void addCops(int numberOfCopsPerType) {
-        for (int i = 0; i < numberOfCopsPerType; i++) {
+        for (i = 0; i < numberOfCopsPerType; i++) {
             mControllers.add(GameFactory.createCopController(new NinjaCop(), mLayout));
             mControllers.add(GameFactory.createCopController(new SimpleCop(), mLayout));
             mControllers.add(GameFactory.createCopController(new BruteCop(), mLayout));
@@ -440,7 +442,7 @@ public class GameManager implements Runnable {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                openMenu();
+                gotoHighScore();
             }
 
             @Override
@@ -456,12 +458,12 @@ public class GameManager implements Runnable {
 
     }
 
-    private void openMenu() {
-        final Activity activity=(Activity)mContext;
+    private void gotoHighScore() {
+        final GameActivity activity=(GameActivity)mContext;
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                activity.openOptionsMenu();
+                activity.showFinalStoryBoard();
             }
         });
     }

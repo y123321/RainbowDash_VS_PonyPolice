@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dash VS PonyPolice</string>
-    <string name="highScoreURL">http://rdvsponypolice.azurewebsites.net/highscores</string>
-    <string name="credits">Created and developed by Yuval Perelman\n\n Background based on image by  Silentmatten\n\n Ponies images created with General Zoi Pony Creator\n\n Menu buttons and couch to sleep on supplied by Timor Tene aka CyberPony88, thanks dude </string>
+    <string name="url_high_score_service">http://rdvsponypolice.azurewebsites.net/highscores</string>
+    <string name="credits_developer">Created and developed by Yuval Perelman</string>
+    <string name="credits_background_image">Background based on image by  Silentmatten</string>
+    <string name="credits_ponies">Ponies images created with General Zoi Pony Creator</string>
+    <string name="credits_copyright">Copyright owned by Hasbro and Studio B Productions.</string>
+    <string name="credits_timor">Menu buttons and couch to sleep on supplied by Timor Tene aka CyberPony88, thanks dude </string>
+    <string name="url_background_image">http://silentmatten.deviantart.com/art/Equestria-The-Beginnings-344525925</string>
+    <string name="url_ponies">http://generalzoi.deviantart.com/art/Pony-Creator-Full-Version-254295904</string>
+    <string name="url_timor"></string>
+    <string name="url_developer"></string>
 </resources>

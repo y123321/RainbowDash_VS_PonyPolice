@@ -7,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class OfficerCop extends Cop {
     public OfficerCop() {
-        super(new CopDrawables(R.drawable.ninja_pony__left,R.drawable.simple_cop__right));
+        super(new CopDrawables(R.anim.ninja_pony__left,R.anim.simple_cop__right));
     }
 
     @Override

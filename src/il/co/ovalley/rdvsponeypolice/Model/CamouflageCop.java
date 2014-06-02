@@ -7,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class CamouflageCop extends Cop {
     public CamouflageCop() {
-        super(new CopDrawables(R.drawable.camouflage_pony__left,R.drawable.camouflage_pony__right));
+        super(new CopDrawables(R.anim.camouflage_pony__left,R.anim.camouflage_pony__right));
     }
 
     @Override

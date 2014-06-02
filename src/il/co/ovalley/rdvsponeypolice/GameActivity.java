@@ -20,8 +20,9 @@ public class GameActivity extends Activity {
     private View mOverlay;
     private int currentIndex=-1;
     private BlockTouch mBlockTouchListener;
+    private Button mNextImageButton;
 
-    int imageIds[] = {R.drawable.brute_pony_10_left, R.drawable.brute_pony_10_right, R.drawable.brute_pony_3_left, R.drawable.ninja_pony_10_left, R.drawable.ninja_pony_10_right};
+    int imageIds[] = {R.drawable.story_board_page,R.drawable.story_board_page,R.drawable.story_board_page};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +35,9 @@ public class GameActivity extends Activity {
         //image switcher for story board
         mImageSwitcher = (ImageSwitcher) findViewById(R.id.imageSwitcher1);
         //button to change to next image in story board
-        final Button btnNext=(Button) findViewById(R.id.buttonNext);
+        mNextImageButton=(Button) findViewById(R.id.buttonNext);
         //starts the story board
-        initStoryBoard(mImageSwitcher, btnNext);
+        initStoryBoard();
         mBlockTouchListener=new BlockTouch();
     }
 
@@ -56,7 +57,7 @@ public class GameActivity extends Activity {
 
     }
 
-    private void gotoHighScores() {
+    public void gotoHighScores() {
         Intent intent = new Intent(this, HighScoresActivity.class);
         intent.putExtra("score", mGameManager.getScore());
         intent.putExtra("isRunning",mGameManager.isRunning());
@@ -177,7 +178,7 @@ public class GameActivity extends Activity {
     @Override
     protected void onResume() {
         if(mImageSwitcher.getVisibility()==View.GONE)
-        mGameManager.resume();
+        showMenu();
         super.onResume();
     }
 
@@ -204,7 +205,7 @@ public class GameActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }*/
-    private void initStoryBoard(final ImageSwitcher mImageSwitcher, final Button nextButton) {
+    private void initStoryBoard() {
         mImageSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
 
             public View makeView() {
@@ -219,37 +220,108 @@ public class GameActivity extends Activity {
 
         });
 
+    mImageSwitcher.setOnTouchListener(new OnSwipeTouchListener() {
+        @Override
+        public void onSwipeRight() {
+            // Declare the animations and initialize them
+            int slideInResource = android.R.anim.slide_in_left;
+            int slideOutResource = android.R.anim.slide_out_right;
 
+            setSwipeAnimation(slideInResource, slideOutResource, mImageSwitcher);
+            if(!nextImage(mImageSwitcher, mNextImageButton)) mGameManager.resume();
+
+
+        }
+
+        @Override
+        public void onSwipeLeft() {
+            // Declare the animations and initialize them
+            setSwipeAnimation(R.anim.slide_in_right, R.anim.slide_out_left, mImageSwitcher);
+            previousImage(mImageSwitcher);
+        }
+    });
         // ClickListener for NEXT button
         // When clicked on Button ImageSwitcher will switch between Images
         // The current Image will go OUT and next Image  will come in with specified animation
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        mNextImageButton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                nextImage(mImageSwitcher,nextButton);
-            }
+                if(!nextImage(mImageSwitcher, mNextImageButton)) mGameManager.resume();            }
         });
         // Declare the animations and initialize them
-        Animation in = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-        Animation out = AnimationUtils.loadAnimation(this,android.R.anim.slide_out_right);
+        setSwipeAnimation(android.R.anim.slide_in_left, android.R.anim.slide_out_right, mImageSwitcher);
+        if(!nextImage(mImageSwitcher, mNextImageButton)) mGameManager.resume();    }
+
+    private void setSwipeAnimation(int slideInResource, int slideOutResource, ImageSwitcher mImageSwitcher) {
+        Animation in = AnimationUtils.loadAnimation(this, slideInResource);
+        Animation out = AnimationUtils.loadAnimation(this, slideOutResource);
 
         // set the animation type to mImageSwitcher
         mImageSwitcher.setInAnimation(in);
         mImageSwitcher.setOutAnimation(out);
-        nextImage(mImageSwitcher,nextButton);
     }
 
-    private void nextImage(ImageSwitcher mImageSwitcher,Button nextButton) {
+    private boolean nextImage(ImageSwitcher mImageSwitcher,Button nextButton) {
         // TODO Auto-generated method stub
         currentIndex++;
         // If index reaches maximum reset it
         if(currentIndex>=imageIds.length){
             mImageSwitcher.setVisibility(View.GONE);
             nextButton.setVisibility(View.GONE);
-            mGameManager.resume();
+            return false;
         }
         else mImageSwitcher.setImageResource(imageIds[currentIndex]);
+        return true;
     }
+    private void previousImage(ImageSwitcher mImageSwitcher) {
+        // TODO Auto-generated method stub
+        // If index reaches maximum reset it
+        if(currentIndex>0){
+            currentIndex--;
+            mImageSwitcher.setImageResource(imageIds[currentIndex]);
+        }
+    }
+
+    public void showFinalStoryBoard() {
+        imageIds=new int[]{R.drawable.story_board_page,R.drawable.story_board_page};
+        currentIndex=-1;
+        if(!nextImage(mImageSwitcher, mNextImageButton)) gotoHighScores();
+        mNextImageButton.setVisibility(View.VISIBLE);
+        mImageSwitcher.setVisibility(View.VISIBLE);
+        mImageSwitcher.bringToFront();
+        mNextImageButton.bringToFront();
+        setSwipeAnimation(android.R.anim.slide_in_left, android.R.anim.slide_out_right, mImageSwitcher);
+        mImageSwitcher.setOnTouchListener(new OnSwipeTouchListener() {
+            @Override
+            public void onSwipeRight() {
+                // Declare the animations and initialize them
+                int slideInResource = android.R.anim.slide_in_left;
+                int slideOutResource = android.R.anim.slide_out_right;
+
+                setSwipeAnimation(slideInResource, slideOutResource, mImageSwitcher);
+                if(!nextImage(mImageSwitcher, mNextImageButton)) gotoHighScores();
+
+
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                // Declare the animations and initialize them
+                setSwipeAnimation(R.anim.slide_in_right, R.anim.slide_out_left, mImageSwitcher);
+                previousImage(mImageSwitcher);
+            }
+        });
+        // ClickListener for NEXT button
+        // When clicked on Button ImageSwitcher will switch between Images
+        // The current Image will go OUT and next Image  will come in with specified animation
+        mNextImageButton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                if(!nextImage(mImageSwitcher, mNextImageButton)) gotoHighScores();
+            }
+        });
+    }
+
     class BlockTouch implements View.OnTouchListener{
 
         public boolean onTouch(View v, MotionEvent event) {
@@ -257,4 +329,66 @@ public class GameActivity extends Activity {
         }
     }
 
+}
+class OnSwipeTouchListener implements View.OnTouchListener {
+
+    @SuppressWarnings("deprecation")
+    private final GestureDetector gestureDetector = new GestureDetector(new GestureListener());
+
+    public boolean onTouch(final View v, final MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            onTouch(e);
+            return true;
+        }
+
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
+                        } else {
+                            onSwipeLeft();
+                        }
+                    }
+                } else {
+                    // onTouch(e);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
+        }
+    }
+    public void onTouch(MotionEvent e) {
+    }
+    public void onSwipeRight() {
+    }
+
+    public void onSwipeLeft() {
+    }
+
+    public void onSwipeTop() {
+    }
+
+    public void onSwipeBottom() {
+    }
 }

@@ -7,7 +7,7 @@ import il.co.ovalley.rdvsponeypolice.R;
  */
 public class BruteCop extends Cop {
     public BruteCop() {
-        super(new CopDrawables(R.drawable.brute_pony__left,R.drawable.brute_pony__right));//,R.drawable.brute_pony_shooting__left,R.drawable.brute_pony_shooting__right));
+        super(new CopDrawables(R.anim.brute_pony__left,R.anim.brute_pony__right));//,R.drawable.brute_pony_shooting__left,R.drawable.brute_pony_shooting__right));
     }
 
     @Override
