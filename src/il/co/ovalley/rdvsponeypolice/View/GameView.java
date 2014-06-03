@@ -17,7 +17,7 @@ public abstract class GameView extends ImageView {
 
     private ViewGroup m_container;
     public volatile boolean isRemoved;
-
+    private AnimationDrawable mAnimation;
     private ViewGroup.LayoutParams m_params;
     private AddViewAction mAddViewAction;
 
@@ -42,17 +42,17 @@ public abstract class GameView extends ImageView {
         m_params=params;
     }
     protected void startAnimation(AnimationDrawable leftAnimation, AnimationDrawable rightAnimation,Direction direction) {
-        AnimationDrawable animation;
+
         clearAnimation();
         try {
             if (direction== Direction.RIGHT) {
-                animation= rightAnimation;
+                mAnimation = rightAnimation;
             } else {
-                animation= leftAnimation;
+                mAnimation = leftAnimation;
             }
-            if(animation.isRunning()) animation.stop();
-            setImageDrawable(animation);
-            animation.start();
+            if(mAnimation.isRunning()) mAnimation.stop();
+            setImageDrawable(mAnimation);
+            mAnimation.start();
         }
         catch (Exception e){
             Log.d("test", e.toString());

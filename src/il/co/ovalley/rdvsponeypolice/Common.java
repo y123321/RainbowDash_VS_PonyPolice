@@ -17,11 +17,11 @@ public class Common {
     public static Random random=new Random();
     public static final int STOPSPLASH = 1;
     private static Point screenSize;
+    private static Display display;
     public static Point getScreenSize(Context context){
         if(screenSize==null) {
             screenSize=new Point();
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
+            if(display==null) display = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
             display.getSize(screenSize);
         }
         return screenSize;

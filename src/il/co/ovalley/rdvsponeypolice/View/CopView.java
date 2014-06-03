@@ -14,7 +14,7 @@ public class CopView extends GameView {
     private CopDrawables m_Drawables;
     private AnimationDrawable mBaseAnimationLeft;
     private AnimationDrawable mBaseAnimationRight;
-
+    private Point size;
 
     public CopView(ViewGroup container,CopDrawables drawables) {
         super(container, Common.getStickToBottomParams());
@@ -41,11 +41,11 @@ public class CopView extends GameView {
 
 
     private int getRandomPadding(){
-        Point size=Common.getScreenSize(getContext());
+        size=Common.getScreenSize(getContext());
         return Common.random.nextInt(size.y/4);
     }
     private int getRandomWidth() {
-        Point size=Common.getScreenSize(getContext());
+        size=Common.getScreenSize(getContext());
         return Math.abs(Common.random.nextInt(size.x-2*SCREEN_BORDERS))+SCREEN_BORDERS;
     }
     public void walkAnimation(Direction direction) {
