@@ -17,6 +17,8 @@ public class CheckDropsHitThread implements Runnable {
     ArrayList<DropController> mDrops;
     Rect copRect;
     Rect dropRect;
+    int i;
+    int j;
     public CheckDropsHitThread(ArrayList<GameController> controllers) {
         mCops = new ArrayList<CopController>();
         mDrops = new ArrayList<DropController>();
@@ -37,14 +39,14 @@ public class CheckDropsHitThread implements Runnable {
 //            e.printStackTrace();
 //        }
 //        while (GameModel.isRunning) {
-            for (CopController cop : mCops) {
-                if (cop.getModel().isDead() || cop.isOutOfGame()) continue;
-                cop.getView().getHitRect(copRect);
-                for (DropController drop : mDrops) {
-                    if (drop.getModel().isDead() || drop.isOutOfGame()) continue;
-                    drop.getView().getHitRect(dropRect);
+            for (i=0;i<mCops.size();i++) {
+                if (mCops.get(i).getModel().isDead() || mCops.get(i).isOutOfGame()) continue;
+                mCops.get(i).getView().getHitRect(copRect);
+                for (j=0;j<mDrops.size();j++) {
+                    if (mDrops.get(j).getModel().isDead() || mDrops.get(j).isOutOfGame()) continue;
+                    mDrops.get(j).getView().getHitRect(dropRect);
                     if (dropRect.intersect(copRect)) {
-                        kill(drop, cop);
+                        kill(mDrops.get(j), mCops.get(i));
                     }
                 }
 //            }

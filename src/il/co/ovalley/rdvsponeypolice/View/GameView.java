@@ -89,8 +89,8 @@ public abstract class GameView extends ImageView {
     public void getHitRect(Rect outRect) {
         outRect.top=(int)getY()-getHeight()/2+getPaddingBottom()/2;;
         outRect.bottom=(int)getY()+getHeight()/2-getPaddingBottom()/2;;
-        outRect.left=(int)getX()-getWidth()/2;
-        outRect.right=(int)getX()+getWidth()/2;
+        outRect.left=(int)getX();
+        outRect.right=(int)getX()+getWidth();
 
     }
     public void initGameView() {

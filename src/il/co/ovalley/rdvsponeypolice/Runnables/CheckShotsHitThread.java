@@ -16,10 +16,11 @@ public class CheckShotsHitThread implements Runnable {
     private volatile RainbowDashController mRD;
     private Rect shotRect;
     private Rect rdRect;
+    int i;
     public CheckShotsHitThread(ArrayList<GameController> controllers, RainbowDashController rainbowDashController) {
         mShots = new ArrayList<ShotController>();
-        for (GameController controller : controllers) {
-            if (controller instanceof ShotController) mShots.add((ShotController) controller);
+        for (i=0;i<controllers.size();i++) {
+            if (controllers.get(i) instanceof ShotController) mShots.add((ShotController) controllers.get(i));
         }
         mRD = rainbowDashController;
         shotRect=new Rect();
