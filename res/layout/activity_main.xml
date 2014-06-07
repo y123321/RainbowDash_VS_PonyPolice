@@ -55,9 +55,9 @@
             android:id="@+id/buttonNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/arrow_down_float"
+            android:background="@android:drawable/arrow_up_float"
             android:rotation="90"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/gameOver" android:layout_toLeftOf="@+id/gameOver"/>
     <TextView
             android:layout_width="wrap_content"

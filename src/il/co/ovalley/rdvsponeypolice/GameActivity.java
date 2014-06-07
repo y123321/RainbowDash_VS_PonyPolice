@@ -22,7 +22,7 @@ public class GameActivity extends Activity {
     private BlockTouch mBlockTouchListener;
     private Button mNextImageButton;
 
-    int imageIds[] = {R.drawable.story_board_page,R.drawable.story_board_page,R.drawable.story_board_page};
+    int imageIds[] = {R.drawable.story_board1,R.drawable.story_board2,R.drawable.story_board2_5,R.drawable.story_board3};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,7 +283,7 @@ public class GameActivity extends Activity {
     }
 
     public void showFinalStoryBoard() {
-        imageIds=new int[]{R.drawable.story_board_page,R.drawable.story_board_page};
+        imageIds=new int[]{R.drawable.story_board_end};
         currentIndex=-1;
         if(!nextImage(mImageSwitcher, mNextImageButton)) gotoHighScores();
         mNextImageButton.setVisibility(View.VISIBLE);
