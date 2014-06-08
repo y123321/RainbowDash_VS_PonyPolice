@@ -17,7 +17,7 @@
             android:background="@drawable/scroll"
             android:headerDividersEnabled="false"
             android:paddingLeft="55dp"
-            android:paddingRight="20dp"
+            android:paddingRight="18dp"
             android:layout_gravity="center_horizontal" android:layout_weight="0.4"
             android:divider="@null"
             android:dividerHeight="5dp"
@@ -27,10 +27,10 @@
                 android:layout_height="wrap_content"
                 android:text="Credits:"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 android:id="@+id/textView" android:textColor="@android:color/holo_blue_dark" android:textStyle="bold"/>
         <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credits_developer"
@@ -38,7 +38,7 @@
                 android:lineSpacingExtra="10dp"
                 android:id="@+id/tvDeveloperLink" android:singleLine="false"/>
         <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credits_ponies"
@@ -46,7 +46,15 @@
                 android:lineSpacingExtra="10dp"
                 android:id="@+id/tvPoniesLink" android:singleLine="false"/>
         <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/credit_gilad"
+                android:textColor="@android:color/holo_purple"
+                android:lineSpacingExtra="10dp"
+                android:id="@+id/tvGilad" android:singleLine="false"/>
+        <TextView
+                android:paddingTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credits_background_image"
@@ -54,7 +62,7 @@
                 android:lineSpacingExtra="10dp"
                 android:id="@+id/tvBackgroundImageLink" android:singleLine="false"/>
         <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credits_timor"
@@ -62,7 +70,7 @@
                 android:lineSpacingExtra="10dp"
                 android:id="@+id/tvTimorLink" android:singleLine="false"/>
         <TextView
-                android:paddingTop="20dp"
+                android:paddingTop="18dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/credits_copyright"

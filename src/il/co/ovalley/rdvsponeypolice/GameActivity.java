@@ -283,7 +283,7 @@ public class GameActivity extends Activity {
     }
 
     public void showFinalStoryBoard() {
-        imageIds=new int[]{R.drawable.story_board_end};
+        imageIds=new int[]{R.drawable.story_board_end,R.drawable.story_board_end2};
         currentIndex=-1;
         if(!nextImage(mImageSwitcher, mNextImageButton)) gotoHighScores();
         mNextImageButton.setVisibility(View.VISIBLE);

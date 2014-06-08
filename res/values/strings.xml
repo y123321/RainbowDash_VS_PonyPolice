@@ -10,5 +10,7 @@
     <string name="url_background_image">http://silentmatten.deviantart.com/art/Equestria-The-Beginnings-344525925</string>
     <string name="url_ponies">http://generalzoi.deviantart.com/art/Pony-Creator-Full-Version-254295904</string>
     <string name="url_timor"></string>
+    <string name="credit_gilad">Story board created and written by Gilad Perelman</string>
+    <string name="url_gilad"></string>
     <string name="url_developer"></string>
 </resources>
